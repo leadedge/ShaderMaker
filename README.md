@@ -21,7 +21,7 @@ but hopefully the code and documentation are clear enough.
 Refer to the documentation for further details.
 
 ##Credits
-Implementation by Lynn Jarvis leadedge@adam.com.au
+Implementation by Lynn Jarvis spout@zeal.co
 MacOSX port by Amaury Hazan amaury@billaboop.com
 The MacOSX port was supported by Coldcut/Ninja Tune as a contribution to the Visuals Community
 

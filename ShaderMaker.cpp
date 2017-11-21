@@ -21,10 +21,25 @@
 //		14.04.15	Corrected texture change test in ProcessOpenGL
 //					Recommend setting PluginInfo to FF_SOURCE for shaders that do not require a texture
 //					Version 1.004
+//		02.05.15	Note changes to project file for VS2012 :
+//					  Compiler :
+//						Optimization /O2 from /Od
+//						Enable intrinsic functions (NO)
+//					  Linker :
+//						Debugging - Generate Debug Info (YES)
+//					Version 1.005
+//		21.11.17	- New shadertoy uniforms
+//						iTime
+//						iDeltaTime
+//						iFrame
+//						iFrameRate
+//						iSampleRate
+//					Version 1.006
 //
+//						
 //		------------------------------------------------------------
 //
-//		Copyright (C) 2015. Lynn Jarvis, Leading Edge. Pty. Ltd.
+//		Copyright (C) 2015-2017. Lynn Jarvis, Leading Edge. Pty. Ltd.
 //		Ported to OSX by Amaury Hazan (amaury@billaboop.com)
 //
 //		This program is free software: you can redistribute it and/or modify
@@ -73,10 +88,10 @@ static CFFGLPluginInfo PluginInfo (
 	1,						   			// API major version number 													
 	006,								// API minor version number	
 	1,									// *** Plugin major version number
-	004,								// *** Plugin minor version number
-	FF_EFFECT,							// Plugin type can always be an effect
-	// FF_SOURCE,						// or change this to FF_SOURCE for shaders that do not use a texture
-	"Wraps ShaderToy and GLSLSandbox shaders into a FFGL plugin", // *** Plugin description - you can expand on this
+	006,								// *** Plugin minor version number
+	// FF_EFFECT,							// Plugin type can always be an effect
+	FF_SOURCE,						// or change this to FF_SOURCE for shaders that do not use a texture
+	"ShaderMaker - Version 1.006\nWraps ShaderToy and GLSLSandbox shaders into a FFGL plugin", // *** Plugin description - you can expand on this
 	"by Lynn Jarvis (spout.zeal.co) OSX port by Amaury Hazan (billaboop.com)"			// *** About - use your own name and details
 );
 
@@ -129,6 +144,13 @@ char *fragmentShaderCode = STRINGIFY (
 
 }*/
 
+/*
+// Test using inputColour
+void main(void) {
+    gl_FragColor = vec4(inputColour.r, inputColour.g, inputColour.b, inputColour.a);
+
+}
+*/
 
 /*
 //
@@ -200,7 +222,6 @@ void main()
 }
 */
 
-
 /*
 //
 // Shadertoy example 2 - needs a texture input..
@@ -231,7 +252,6 @@ void main(void)
 
 }
 */
-
 
 /*
 //
@@ -387,6 +407,7 @@ void main(void)
 }
 */
 
+/*
 //
 // Shadertoy example 4
 //
@@ -501,7 +522,64 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 
     fragColor = vec4(col,1.0);
 }
+*/
 
+//
+// ShaderToy - test of iTime instead of iGlobalTime
+//
+// Sine-Wave
+//
+// https://www.shadertoy.com/view/4lGXWD
+//
+float hash(float seed)
+{
+    return fract(sin(seed*1.0));
+}
+
+
+float horizontal(vec2 uv, float r)
+{
+    float result = abs(uv.y)-r;
+    float res2 = 1.0-result;
+    float res3 = result * -1.0;
+    res3 = 1.0 - res3;
+    result = res2 * res3;
+    result = smoothstep(.05/iResolution.y,0.0,1.0-result);
+    return result;
+}
+
+float horiwaves(vec2 uv, float frequency, float Amplitude)
+{
+    float result = sin(uv.x*frequency);
+    return result*Amplitude*sin(uv.x);
+}
+
+vec3 makewave(vec2 uv,float frequency, float amplitude, float zoffset, vec3 color, float speed)
+{
+	// ShaderMaker test
+    uv.x += iTime*speed;
+    float mask = horiwaves(uv,frequency,amplitude);
+    float result = horizontal(uv-mask,zoffset);
+    vec3 colorpass = result*color;
+    return colorpass;
+}
+
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+	vec2 uv = fragCoord.xy / iResolution.xy;
+    
+    float SW = ((sin(iGlobalTime) + 1.0)*0.5)-.50;
+    uv.x -= 2.0;
+    vec3 color1 = makewave(uv,15.0,0.20*sin(iGlobalTime),0.5,vec3(1.0,0.1,0.0),0.5);
+    vec3 color2 = makewave(uv,12.0,0.40*sin(iGlobalTime+1.2),0.55,vec3(0.1,1.0,0.0),0.5);
+    vec3 color3 = makewave(uv,20.0,0.30*sin(iGlobalTime+2.5),0.45,vec3(1.0,1.0,0.0),0.5);
+    vec3 color4 = makewave(uv,5.0,0.50*sin(iGlobalTime+2.0),0.550,vec3(1.0,0.0,1.0),0.5);
+    vec3 gradient = vec3(uv.y);
+    vec3 finalColor = (color1-vec3(0.1)) + (color2-vec3(0.1)) + (color3-vec3(0.1)) + (color4-vec3(0.1));
+
+	fragColor = vec4(finalColor,1.0);
+}
 
 /*
 //
@@ -708,6 +786,9 @@ FFResult ShaderMaker::InitGL(const FFGLViewportStruct *vp)
 	// Start the clock
 	StartCounter();
 
+	// Start the frame counter
+	m_frame = 0.0f;
+
 	// Load the shader
 	std::string shaderString = fragmentShaderCode;
 	bInitialized = LoadShader(shaderString);
@@ -850,11 +931,17 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 			*/
 
 		} // endif shader uses a texture
-	
+
 		// Calculate elapsed time
 		lastTime = elapsedTime;
 		elapsedTime = GetCounter()/1000.0; // In seconds - higher resolution than timeGetTime()
 		m_time = m_time + (float)(elapsedTime-lastTime)*m_UserSpeed*2.0f; // increment scaled by user input 0.0 - 2.0
+
+		// ShaderToy new uniforms
+		m_frame = m_frame + 1.0f;
+		m_timedelta = (float)(elapsedTime - lastTime); // seconds ?
+		m_framerate = 1.0f / m_timedelta;
+		m_samplerate = 44100.0f; // default
 
 		// Just pass elapsed time for individual channel times
 		m_channelTime[0] = m_time;
@@ -909,6 +996,24 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		if(m_timeLocation >= 0) 
 			m_extensions.glUniform1fARB(m_timeLocation, m_time);
 	
+		// ===========================================================
+		// ShaderToy new uniforms
+		// iTime - iGlobalTime
+
+		// iFrame - frame number
+		if (m_frameLocation >= 0)
+			m_extensions.glUniform1fARB(m_frameLocation, m_frame);
+
+		if (m_timedeltaLocation >= 0)
+			m_extensions.glUniform1fARB(m_timedeltaLocation, m_timedelta);
+
+		if (m_framerateLocation >= 0)
+			m_extensions.glUniform1fARB(m_framerateLocation, m_framerate);
+
+		if (m_samplerateLocation >= 0)
+			m_extensions.glUniform1fARB(m_samplerateLocation, m_samplerate);
+		// ===========================================================
+
 		//
 		// GLSL sandbox
 		//
@@ -1326,8 +1431,21 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 			// uniform sampler2D	iChannel1;				// sampler for input texture 1.
 			// uniform sampler2D	iChannel2;				// sampler for input texture 2.
 			// uniform sampler2D	iChannel3;				// sampler for input texture 3.
+			//
+			// 21.11.17 - new SharedToy uniforms
+			// uniform float iTime;			// same as IGlobalTime - current time (in seconds)
+			// uniform float iTimeDelta;	// _deltaTime
+			// uniform float iFrame;		// Frame number ?
+			// uniform float iFrameRate;	// 1.f / _deltaTime
+			// uniform float iSampleRate;	// Audio
+			//
 			static char *uniforms = { "uniform vec3 iResolution;\n"
 									  "uniform float iGlobalTime;\n"
+									  "uniform float iTime;\n"
+									  "uniform float iTimeDelta;\n"
+									  "uniform float iFrame;\n"
+									  "uniform float iFrameRate;\n"
+									  "uniform float iSampleRate;\n"
 									  "uniform vec4 iMouse;\n"
 									  "uniform vec4 iDate;\n"
 									  "uniform float iChannelTime[4];\n"
@@ -1394,10 +1512,25 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 				// m_surfacePositionLocation	= -1; // TODO
 				// m_vertexPositionLocation    = -1; // TODO
 
+				// ===========================================================
+				// ShaderToy new uniforms
+				m_frameLocation				= -1; // iFrame - frame number
+				m_timedeltaLocation			= -1; // iTimeDelta - time elapsed since last frame
+				m_framerateLocation			= -1; // iFrameRate - 1.f / _deltaTime
+				m_samplerateLocation		= -1; // iSampleRate - 44100.f default
+				// ===========================================================
+
 				// Extras
 				// Input colour is linked to the user controls Red, Green, Blue, Alpha
 				m_inputColourLocation        = -1;
 
+				// ===========================================================
+				// ShaderToy new uniforms
+				m_frameLocation				= -1; // iFrame - frame number
+				m_timedeltaLocation			= -1; // iTimeDelta - time elapsed since last frame
+				m_framerateLocation			= -1; // iFrameRate - 1.f / _deltaTime
+				m_samplerateLocation		= -1; // iSampleRate - 44100.f default
+				// ===========================================================
 
 				// lookup the "location" of each uniform
 
@@ -1500,8 +1633,31 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 					m_mouseLocationVec4 = m_shader.FindUniform("iMouse");
 
 				// iGlobalTime
-				if(m_timeLocation < 0)
+				if(m_timeLocation < 0) {
 					m_timeLocation = m_shader.FindUniform("iGlobalTime");
+					// iTime = iGlobalTime
+					if (m_timeLocation < 0)
+						m_timeLocation = m_shader.FindUniform("iTime");
+				}
+
+				// ===========================================================
+				// ShaderToy new uniforms
+				//
+				// iTime = iGlobalTime
+
+				// iFrame - frame number (integer saved as float)
+				if (m_frameLocation < 0)
+					m_frameLocation = m_shader.FindUniform("iFrame");
+
+				if (m_timedeltaLocation < 0)
+					m_timedeltaLocation = m_shader.FindUniform("iTimeDelta");
+
+				if (m_framerateLocation < 0)
+					m_framerateLocation = m_shader.FindUniform("iFrameRate");
+
+				if (m_samplerateLocation > 0)
+					m_samplerateLocation = m_shader.FindUniform("iSampleRate");
+				// ===========================================================
 
 				// iDate
 				if(m_dateLocation < 0)
@@ -1549,6 +1705,9 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 
 				// Start the clock again to start from zero
 				StartCounter();
+
+				// Start the frame counter
+				m_frame = 0.0f;
 
 				return true;
 

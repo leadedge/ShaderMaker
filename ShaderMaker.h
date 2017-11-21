@@ -150,6 +150,13 @@ protected:
 	float m_mouseRightX;
 	float m_mouseRightY;
 
+	// New ShaderToy uniforms 21-11-17
+	// iTime - m_time - the same as iGlobalTime
+	float m_frame; // iFrame - frame number
+	float m_timedelta; // iTimeDelta - time elapsed since last frame
+	float m_framerate;	// iFrameRate - 1.f / _deltaTime
+	float m_samplerate;
+	
 	int m_initResources;
 	FFGLExtensions m_extensions;
     FFGLShader m_shader;
@@ -170,6 +177,13 @@ protected:
 	GLint m_surfaceSizeLocation;
 	GLint m_surfacePositionLocation;
 	GLint m_vertexPositionLocation;
+
+	// New ShaderToy uniforms 21-11-17
+	// iTime - m_timeLocation - the same as iGlobalTime
+	GLint m_frameLocation; // iFrame - frame number
+	GLint m_timedeltaLocation; // iTimeDelta - time elapsed since last frame
+	GLint m_framerateLocation;	// iFrameRate - 1.f / _deltaTime
+	GLint m_samplerateLocation;	// iSampleRate - 44100.f default
 
 	// Extras
 	GLint m_inputColourLocation;

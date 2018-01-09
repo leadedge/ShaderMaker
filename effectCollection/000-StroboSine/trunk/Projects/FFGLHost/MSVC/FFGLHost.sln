@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FFGLHost", "FFGLHost.vcproj", "{69A3A2D2-1302-4D1F-AC87-B967C207B84D}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{69A3A2D2-1302-4D1F-AC87-B967C207B84D}.Debug.ActiveCfg = Debug|Win32
+		{69A3A2D2-1302-4D1F-AC87-B967C207B84D}.Debug.Build.0 = Debug|Win32
+		{69A3A2D2-1302-4D1F-AC87-B967C207B84D}.Release.ActiveCfg = Release|Win32
+		{69A3A2D2-1302-4D1F-AC87-B967C207B84D}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

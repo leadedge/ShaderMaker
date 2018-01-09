@@ -523,7 +523,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     fragColor = vec4(col,1.0);
 }
 */
-
+/*
 //
 // ShaderToy - test of iTime instead of iGlobalTime
 //
@@ -580,8 +580,9 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 
 	fragColor = vec4(finalColor,1.0);
 }
+*/
 
-/*
+
 //
 // GLSL Sandbox example 1
 //
@@ -665,7 +666,7 @@ void main() {
     vec3  c = m1 > m2 ? vec3(0.0, 0.05, 0.2) : vec3(0.2, 0.05, 0.0);
 	
     gl_FragColor = vec4(c*f, 1.0);
-}*/
+} 
 
 /*
 //

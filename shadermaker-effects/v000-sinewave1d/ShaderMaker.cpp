@@ -420,10 +420,10 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		// Calculate elapsed time
 		lastTime = elapsedTime;
 		elapsedTime = GetCounter()/1000.0; // In seconds - higher resolution than timeGetTime()
-		m_time = m_time + (float)(elapsedTime - lastTime)*m_UserSpeed*2.0f; // increment scaled by user input 0.0 - 2.0
-		m_userTime1 = m_userTime1 + (float)(elapsedTime-lastTime)*m_UserSpeed1*2.0f; // increment scaled by user input 0.0 - 2.0
-		m_userTime2 = m_userTime2 + (float)(elapsedTime-lastTime)*m_UserSpeed2*2.0f; // increment scaled by user input 0.0 - 2.0
-		m_userTime3 = m_userTime3 + (float)(elapsedTime-lastTime)*m_UserSpeed3*2.0f; // increment scaled by user input 0.0 - 2.0
+		m_time = m_time + (float)(elapsedTime - lastTime)*(m_UserSpeed*4.0f-2.0f); // increment scaled by user input -2.0 - 2.0 
+		m_userTime1 = m_userTime1 + (float)(elapsedTime-lastTime)*(m_UserSpeed1*4.0f - 2.0f); // increment scaled by user input -2.0 - 2.0
+		m_userTime2 = m_userTime2 + (float)(elapsedTime-lastTime)*(m_UserSpeed2*4.0f - 2.0f); // increment scaled by user input -2.0 - 2.0
+		m_userTime3 = m_userTime3 + (float)(elapsedTime-lastTime)*(m_UserSpeed3*4.0f - 2.0f); // increment scaled by user input -2.0 - 2.0
 
 		// ShaderToy new uniforms
 		m_frame = m_frame + 1.0f;

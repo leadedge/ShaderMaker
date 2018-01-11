@@ -3,3 +3,5 @@
 *.sdf
 *.exp
 *.map
+*.sln
+*.opensdf

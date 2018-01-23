@@ -21,25 +21,10 @@
 //		14.04.15	Corrected texture change test in ProcessOpenGL
 //					Recommend setting PluginInfo to FF_SOURCE for shaders that do not require a texture
 //					Version 1.004
-//		02.05.15	Note changes to project file for VS2012 :
-//					  Compiler :
-//						Optimization /O2 from /Od
-//						Enable intrinsic functions (NO)
-//					  Linker :
-//						Debugging - Generate Debug Info (YES)
-//					Version 1.005
-//		21.11.17	- New shadertoy uniforms
-//						iTime
-//						iDeltaTime
-//						iFrame
-//						iFrameRate
-//						iSampleRate
-//					Version 1.006
 //
-//						
 //		------------------------------------------------------------
 //
-//		Copyright (C) 2015-2017. Lynn Jarvis, Leading Edge. Pty. Ltd.
+//		Copyright (C) 2015. Lynn Jarvis, Leading Edge. Pty. Ltd.
 //		Ported to OSX by Amaury Hazan (amaury@billaboop.com)
 //
 //		This program is free software: you can redistribute it and/or modify
@@ -58,6 +43,8 @@
 //
 //
 #include "ShaderMaker.h"
+ 
+
 
 #if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__))
 int (*cross_secure_sprintf)(char *, size_t, const char *,...) = sprintf_s;
@@ -66,15 +53,53 @@ int (*cross_secure_sprintf)(char *, size_t, const char *,...) = sprintf_s;
 int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #endif
 
-#define FFPARAM_SPEED       (0)
-#define FFPARAM_MOUSEX      (1)
-#define FFPARAM_MOUSEY      (2)
-#define FFPARAM_MOUSELEFTX  (3)
-#define FFPARAM_MOUSELEFTY  (4)
-#define FFPARAM_RED         (5)
-#define FFPARAM_GREEN       (6)
-#define FFPARAM_BLUE        (7)
-#define FFPARAM_ALPHA       (8)
+#define FFPARAM_SPEED       (243240)
+#define FFPARAM_SPEED2       (11122)
+#define FFPARAM_SPEED3       (9992)
+#define FFPARAM_SPEED4       (9993)
+#define FFPARAM_MOUSEX      (7771)
+#define FFPARAM_MOUSEY      (7772)
+#define FFPARAM_MOUSELEFTX  (9996)
+#define FFPARAM_MOUSELEFTY  (7999)
+#define FFPARAM_PARAM2_X       (0)
+#define FFPARAM_PARAM2_Y       (1)
+#define FFPARAM_PARAM2_Z       (2)
+#define FFPARAM_PARAM2_W       (3)
+
+
+#define FFPARAM_PARAM3_X       (4)
+#define FFPARAM_PARAM3_Y       (5)
+#define FFPARAM_PARAM3_Z       (6)
+#define FFPARAM_PARAM3_W       (7)
+
+#define FFPARAM_PARAM4_X       (12)
+#define FFPARAM_PARAM4_Y       (13)
+#define FFPARAM_PARAM4_Z       (14)
+#define FFPARAM_PARAM4_W       (15)
+
+
+#define FFPARAM_PARAM5_X       (8)
+#define FFPARAM_PARAM5_Y       (9)
+#define FFPARAM_PARAM5_Z       (10)
+#define FFPARAM_PARAM5_W       (11)
+
+
+
+
+#define FFPARAM_PARAM3_CAMERA_X       (516)
+#define FFPARAM_PARAM3_CAMERA_Y       (517)
+#define FFPARAM_PARAM3_CAMERA_Z       (518)
+
+#define FFPARAM_PARAM3_CAMERA_TARGET_X       (519)
+#define FFPARAM_PARAM3_CAMERA_TARGET_Y       (520)
+#define FFPARAM_PARAM3_CAMERA_TARGET_Z       (521)
+
+
+#define FFPARAM_RED         (16)
+#define FFPARAM_GREEN       (17)
+#define FFPARAM_BLUE        (18)
+#define FFPARAM_ALPHA       (19)
+
 
 #define STRINGIFY(A) #A
 
@@ -83,19 +108,19 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 static CFFGLPluginInfo PluginInfo ( 
 	ShaderMaker::CreateInstance,		// Create method
-	"SM01",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
-	"Sun Circle",						// *** Plugin name - make it different for each plugin 
+	"SM02",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
+	"sOm-SunCircle 2",						// *** Plugin name - make it different for each plugin 
 	1,						   			// API major version number 													
 	006,								// API minor version number	
 	1,									// *** Plugin major version number
-	006,								// *** Plugin minor version number
-	// FF_EFFECT,							// Plugin type can always be an effect
-	FF_SOURCE,						// or change this to FF_SOURCE for shaders that do not use a texture
-	"Spack o Mat - Sun Circle", // *** Plugin description - you can expand on this
-	"by Lynn Jarvis (spout.zeal.co) OSX port by Amaury Hazan (billaboop.com)"			// *** About - use your own name and details
+	000,								// *** Plugin minor version number
+	FF_SOURCE,							// Plugin type can always be an effect
+	// FF_SOURCE,						// or change this to FF_SOURCE for shaders that do not use a texture
+	"sOm-SunCircleStylistic v2 ", // *** Plugin description - you can expand on this
+	"spack-O-mat 2017 "			// *** About - use your own name and details
 );
 
-
+ 
 // Common vertex shader code as per FreeFrame examples
 char *vertexShaderCode = STRINGIFY (
 void main()
@@ -134,601 +159,108 @@ void main()
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // ++++++ COPY/PASTE YOUR GLSL SANDBOX OR SHADERTOY SHADER CODE HERE +++++
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-char *fragmentShaderCode = STRINGIFY (
-// ==================== PASTE WITHIN THESE LINES =======================
+char *fragmentShaderCode = STRINGIFY(
+	 
 
+vec2 rotate(vec2 v, float a) {
 
-// Red screen test shader
-/*void main(void) {
-    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+	float s = sin(a);
 
-}*/
+	float c = cos(a);
 
-/*
-// Test using inputColour
-void main(void) {
-    gl_FragColor = vec4(inputColour.r, inputColour.g, inputColour.b, inputColour.a);
+	mat2 m = mat2(c, -s, s, c);
 
-}
-*/
-
-/*
-//
-// Shadertoy example 1
-//
-//
-// https://www.shadertoy.com/view/MdfSzn
-//
-// MetaTunnel
-//
-// Created by Anatole Duprat - XT95/2014 - http://www.aduprat.com/portfolio/?page=shaders
-// License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
-//
-// http://www.pouet.net/prod.php?which=52777
-// By Frequency - http://www.frequency.fr/
-// 1st place at Numerica Artparty in march 2009 in France
-//
-
-float time = iGlobalTime*.5;
-
-const float s=0.4; //Density threshold
-
-// The scene define by density
-float obj(vec3 p)
-{
-    float d = 1.0;
-    d *= distance(p, vec3(cos(time)+sin(time*0.2),0.3,2.0+cos(time*0.5)*0.5) );
-    d  = distance(p,vec3(-cos(time*0.7),0.3,2.0+sin(time*0.5)));
-    d *= distance(p,vec3(-sin(time*0.2)*0.5,sin(time),2.0));
-    d *=cos(p.y)*cos(p.x)-0.1-cos(p.z*7.+time*7.)*cos(p.x*3.)*cos(p.y*4.)*0.1;
-    return d;
+	return m * v;
 }
 
-void main()
-{
-    vec2 q = gl_FragCoord.xy/iResolution.xy;
-    vec2 v = -1.0+2.0*q;
-    v.x *= iResolution.x/iResolution.y*.5+.5;
-	
-    vec3 o = vec3(v.x,v.y,0.0);
-    vec3 d = normalize(vec3(v.x+cos(time)*.3,v.y,1.0))/64.0;
-	
-    vec3 color = vec3(0.0);
-    float t = 0.0;
-    bool hit = false;
-	
-    for(int i=0; i<100; i++) {
-        if(!hit) {
-            if(obj(o+d*t) < s) {
-                t-=5.0;
-                for(int j=0; j<5; j++)
-                    if(obj(o+d*t) > s)
-                        t+=1.0;
-                vec3 e=vec3(0.01,.0,.0);
-                vec3 n=vec3(0.0);
-                n.x=obj(o+d*t)-obj(vec3(o+d*t+e.xyy));
-                n.y=obj(o+d*t)-obj(vec3(o+d*t+e.yxy));
-                n.z=obj(o+d*t)-obj(vec3(o+d*t+e.yyx));
-                n = normalize(n);
-                color = vec3(1.) * max(dot(vec3(0.0,0.0,-0.5),n),0.0)+max(dot(vec3(0.0,- .5,0.5),n),0.0)*0.5;
-                hit=true;
-            }
-            t+=5.0;
-        }
-    }
+	// rings
+	float circ(vec2 p, float modulo, float thickness) {
 
-    gl_FragColor= vec4(color,1.)+vec4(0.1,0.2,0.5,1.0)*(t*0.025);
+		float length = length(p);
 
-}
-*/
-
-/*
-//
-// Shadertoy example 2 - needs a texture input..
-//
-// https://www.shadertoy.com/view/Xsl3zn
-//
-//
-// Warping Texture
-//
-// Created by inigo quilez - iq/2013
-// License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
-//
-                                      
-void main(void)
-{
-	vec2 uv = 0.5*gl_FragCoord.xy / iResolution.xy;
-
-	float d = length(uv);
-    vec2 st = uv*0.1 + 0.2*vec2(cos(0.071*iGlobalTime+d), sin(0.073*iGlobalTime-d));
-
-    vec3 col = texture2D( iChannel0, st ).xyz;
-    float w = col.x;
-    col *= 1.0 - texture2D( iChannel0, 0.4*uv + 0.1*col.xy  ).xyy;
-    col *= w*2.0;
-	
-    col *= 1.0 + 2.0*d;
-    gl_FragColor = vec4(col,1.0);
-
-}
-*/
-
-/*
-//
-// Shadertoy example 3
-//
-//
-// 'Menger Sponge' by iq (2010)
-//
-// https://www.shadertoy.com/view/4sX3Rn?
-//
-// Created by inigo quilez
-// License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
-//
-// http://www.iquilezles.org/apps/shadertoy/index2.html
-//
-// Three iterations of the famous fractal structure (pretty much inspired by untraceable/TBC).
-// See http://www.iquilezles.org/articles/menger/menger.htm for the full explanation of how this was done
-//
-
-                                      /*
-float maxcomp(in vec3 p ) { return max(p.x,max(p.y,p.z));}
-float sdBox( vec3 p, vec3 b )
-{
-  vec3  di = abs(p) - b;
-  float mc = maxcomp(di);
-  return min(mc,length(max(di,0.0)));
+	return mod(length , modulo)>thickness*.5 ? 1. : 0.;
 }
 
-mat3 ma = mat3( 0.60, 0.00,  0.80,
-                0.00, 1.00,  0.00,
-               -0.80, 0.00,  0.60 );
+float circ2(vec2 p, float modulo, float thickness) {
 
-vec4 map( in vec3 p )
-{
-    float d = sdBox(p,vec3(1.0));
-    vec4 res = vec4( d, 1.0, 0.0, 0.0 );
+	float angle = atan(p.x, p.y);
 
-    float ani = smoothstep( -0.2, 0.2, -cos(0.5*iGlobalTime) );
-	float off = 1.5*sin( 0.01*iGlobalTime );
-	
-    float s = 1.0;
-    for( int m=0; m<4; m++ )
-    {
-
-        p = mix( p, ma*(p+off), ani );
-	   
-        vec3 a = mod( p*s, 2.0 )-1.0;
-        s *= 3.0;
-        vec3 r = abs(1.0 - 3.0*abs(a));
-        float da = max(r.x,r.y);
-        float db = max(r.y,r.z);
-        float dc = max(r.z,r.x);
-        float c = (min(da,min(db,dc))-1.0)/s;
-
-        if( c>d )
-        {
-          d = c;
-          res = vec4( d, min(res.y,0.2*da*db*dc), (1.0+float(m))/4.0, 0.0 );
-        }
-    }
-
-    return res;
+	return mod(length(angle), modulo)>thickness*.5 ? 1. : 0.;
 }
 
-vec4 intersect( in vec3 ro, in vec3 rd )
-{
-    float t = 0.0;
-    vec4 res = vec4(-1.0);
-	vec4 h = vec4(1.0);
-    for( int i=0; i<64; i++ )
-    {
-		if( h.x<0.002 || t>10.0 ) break;
-        h = map(ro + rd*t);
-        res = vec4(t,h.yzw);
-        t += h.x;
-    }
-	if( t>10.0 ) res=vec4(-1.0);
-    return res;
-}
+// rings
+float circExtended(vec2 p, float modulo, float thickness) {
+	vec2 mouseNormalized = iParam2.zw ;
+	mouseNormalized *= PI *2.;
 
-float softshadow( in vec3 ro, in vec3 rd, float mint, float k )
-{
-    float res = 1.0;
-    float t = mint;
-	float h = 1.0;
-    for( int i=0; i<32; i++ )
-    {
-        h = map(ro + rd*t).x;
-        res = min( res, k*h/t );
-		t += clamp( h, 0.005, 0.1 );
-    }
-    return clamp(res,0.0,1.0);
-}
+	vec2   rotated = rotate(p, mouseNormalized.x*2.);
+	float angle = atan(rotated.y, rotated.x) + PI;
+	// cut segment out by percent and offset
+	// percent means coverage of circle segment
+	// offset means rotatation
 
-vec3 calcNormal(in vec3 pos)
-{
-    vec3  eps = vec3(.001,0.0,0.0);
-    vec3 nor;
-    nor.x = map(pos+eps.xyy).x - map(pos-eps.xyy).x;
-    nor.y = map(pos+eps.yxy).x - map(pos-eps.yxy).x;
-    nor.z = map(pos+eps.yyx).x - map(pos-eps.yyx).x;
-    return normalize(nor);
-}
 
-void main(void)
-{
-    vec2 p = -1.0 + 2.0 * gl_FragCoord.xy / iResolution.xy;
-    p.x *= 1.33;
 
-    // light
-    vec3 light = normalize(vec3(1.0,0.9,0.3));
-
-    float ctime = iGlobalTime;
-    // camera
-    vec3 ro = 1.1*vec3(2.5*sin(0.25*ctime),1.0+1.0*cos(ctime*.13),2.5*cos(0.25*ctime));
-    vec3 ww = normalize(vec3(0.0) - ro);
-    vec3 uu = normalize(cross( vec3(0.0,1.0,0.0), ww ));
-    vec3 vv = normalize(cross(ww,uu));
-    vec3 rd = normalize( p.x*uu + p.y*vv + 2.5*ww );
-
-    // background color
-    vec3 col = mix( vec3(0.3,0.2,0.1)*0.5, vec3(0.7, 0.9, 1.0), 0.5 + 0.5*rd.y );
-	
-    vec4 tmat = intersect(ro,rd);
-    if( tmat.x>0.0 )
-    {
-        vec3  pos = ro + tmat.x*rd;
-        vec3  nor = calcNormal(pos);
-		
-        float occ = tmat.y;
-		float sha = softshadow( pos, light, 0.01, 64.0 );
-
-		float dif = max(0.1 + 0.9*dot(nor,light),0.0);
-		float sky = 0.5 + 0.5*nor.y;
-        float bac = max(0.4 + 0.6*dot(nor,vec3(-light.x,light.y,-light.z)),0.0);
-
-        vec3 lin  = vec3(0.0);
-        lin += 1.00*dif*vec3(1.10,0.85,0.60)*sha;
-        lin += 0.50*sky*vec3(0.10,0.20,0.40)*occ;
-        lin += 0.10*bac*vec3(1.00,1.00,1.00)*(0.5+0.5*occ);
-        lin += 0.25*occ*vec3(0.15,0.17,0.20);	 
-
-        vec3 matcol = vec3(
-            0.5+0.5*cos(0.0+2.0*tmat.z),
-            0.5+0.5*cos(1.0+2.0*tmat.z),
-            0.5+0.5*cos(2.0+2.0*tmat.z) );
-        col = matcol * lin;
-    }
-
-    col = pow( col, vec3(0.4545) );
-
-    gl_FragColor = vec4(col,1.0);
-}
-*/
-
-/*
-//
-// Shadertoy example 4
-//
-// LJ - Example of revised specification using "mainImage" instead of "main"
-// A fix can be made to include a main function right here, but it is included
-// before compilation in "LoadShader" to be consistent with "ShaderLoader"
-//
-// https://www.shadertoy.com/view/ldl3W8#
-//
-// Voronoi - distances
-//
-// Created by inigo quilez - iq/2013
-// License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
-
-// I've not seen anybody out there computing correct cell interior distances for Voronoi
-// patterns yet. That's why they cannot shade the cell interior correctly, and why you've
-// never seen cell boundaries rendered correctly. 
-
-// However, here's how you do mathematically correct distances (note the equidistant and non
-// degenerated grey isolines inside the cells) and hence edges (in yellow):
-
-// http://www.iquilezles.org/www/articles/voronoilines/voronoilines.htm
-
-// LJ - must avoid hash charaters in the code when using stringify. They are OK in comments
-// #define ANIMATE
-bool bAnimate = true;
-
-vec2 hash2( vec2 p )
-{
-    // texture based white noise
-    // return texture2D( iChannel0, (p+0.5)/256.0, -100.0 ).xy;
-	
-    // procedural white noise	
-    return fract(sin(vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3))))*43758.5453);
-}
-
-vec3 voronoi( in vec2 x )
-{
-    vec2 n = floor(x);
-    vec2 f = fract(x);
-
-    //----------------------------------
-    // first pass: regular voronoi
-    //----------------------------------
-	// LJ - stringify does not like the comma here !
-	// Declare variables separately
-	// vec2 mg, mr;
-	vec2 mg;
-	vec2 mr;
-
-    float md = 8.0;
-
-    for( int j=-1; j<=1; j++ ) {
-        for( int i=-1; i<=1; i++ ) {
-            vec2 g = vec2(float(i),float(j));
-            vec2 o = hash2( n + g );
-			// LJ avoid the hash character here
-			// #ifdef ANIMATE
-			if(bAnimate)
-			    o = 0.5 + 0.5*sin( iGlobalTime + 6.2831*o );
-			// #endif
-            vec2 r = g + o - f;
-            float d = dot(r,r);
-
-            if( d<md ) {
-                md = d;
-                mr = r;
-                mg = g;
-            }
-        }
+	if (angle>mouseNormalized.y) {
+		return 0.;
 	}
 
-    //----------------------------------
-    // second pass: distance to borders
-    //----------------------------------
-    md = 8.0;
-    for( int j=-2; j<=2; j++ ) {
-        for( int i=-2; i<=2; i++ ) {
-            vec2 g = mg + vec2(float(i),float(j));
-            vec2 o = hash2( n + g );
-			// LJ avoid the hash character here
-			// #ifdef ANIMATE
-			if(bAnimate)
-				o = 0.5 + 0.5*sin( iGlobalTime + 6.2831*o );
-			// #endif
-            vec2 r = g + o - f;
 
-            if( dot(mr-r,mr-r)>0.00001 )
-                md = min( md, dot( 0.5*(mr+r), normalize(r-mr) ) );
-        }
+	float length = length(p);
+	return mod(length, modulo)>thickness*.5 ? 1. : 0.;
+}
+
+
+float circ2Extended(vec2 p, float modulo, float thickness) {
+
+	float length = length(p);
+
+	vec2 mouseNormalized = iParam3.zw;
+	mouseNormalized *= PI*2.;
+
+
+
+	if (length - mouseNormalized.x>mouseNormalized.y) {
+		return 0.;
 	}
 
-    return vec3( md, mr );
-}
 
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
-{
-    vec2 p = fragCoord.xy/iResolution.xx;
+	if (length - mouseNormalized.x<0.) {
+		return 0.;
+	}
 
-    vec3 c = voronoi( 8.0*p );
 
-    // isolines
-    vec3 col = c.x*(0.5 + 0.5*sin(64.0*c.x))*vec3(1.0);
-    
-    // borders	
-    col = mix( vec3(1.0,0.6,0.0), col, smoothstep( 0.04, 0.07, c.x ) );
-    
-    // feature points
-    float dd = length( c.yz );
-    col = mix( vec3(1.0,0.6,0.1), col, smoothstep( 0.0, 0.12, dd) );
-    col += vec3(1.0,0.6,0.1)*(1.0-smoothstep( 0.0, 0.04, dd));
 
-    fragColor = vec4(col,1.0);
-}
-*/
-/*
-//
-// ShaderToy - test of iTime instead of iGlobalTime
-//
-// Sine-Wave
-//
-// https://www.shadertoy.com/view/4lGXWD
-//
-float hash(float seed)
-{
-    return fract(sin(seed*1.0));
+
+	float angle = atan(p.y, p.x);
+	return mod(angle, modulo)>thickness*.5 ? 1. : 0.;
 }
 
 
-float horizontal(vec2 uv, float r)
-{
-    float result = abs(uv.y)-r;
-    float res2 = 1.0-result;
-    float res3 = result * -1.0;
-    res3 = 1.0 - res3;
-    result = res2 * res3;
-    result = smoothstep(.05/iResolution.y,0.0,1.0-result);
-    return result;
-}
+// pattern that repeats after just few rounds
+//  vec3 speeds=vec3(2.,3.,5.);
 
-float horiwaves(vec2 uv, float frequency, float Amplitude)
-{
-    float result = sin(uv.x*frequency);
-    return result*Amplitude*sin(uv.x);
-}
+// longer prime number pattern, repeats after some more frames ....  31*53*67=110081 frames
+// vec3 speeds=vec3(1.31,1.53,1.67);
 
-vec3 makewave(vec2 uv,float frequency, float amplitude, float zoffset, vec3 color, float speed)
-{
-	// ShaderMaker test
-    uv.x += iTime*speed;
-    float mask = horiwaves(uv,frequency,amplitude);
-    float result = horizontal(uv-mask,zoffset);
-    vec3 colorpass = result*color;
-    return colorpass;
-}
+ 
+float modulo = .1;
+float thickness = .5;
 
-
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
+void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {
 	vec2 uv = fragCoord.xy / iResolution.xy;
-    
-    float SW = ((sin(iGlobalTime) + 1.0)*0.5)-.50;
-    uv.x -= 2.0;
-    vec3 color1 = makewave(uv,15.0,0.20*sin(iGlobalTime),0.5,vec3(1.0,0.1,0.0),0.5);
-    vec3 color2 = makewave(uv,12.0,0.40*sin(iGlobalTime+1.2),0.55,vec3(0.1,1.0,0.0),0.5);
-    vec3 color3 = makewave(uv,20.0,0.30*sin(iGlobalTime+2.5),0.45,vec3(1.0,1.0,0.0),0.5);
-    vec3 color4 = makewave(uv,5.0,0.50*sin(iGlobalTime+2.0),0.550,vec3(1.0,0.0,1.0),0.5);
-    vec3 gradient = vec3(uv.y);
-    vec3 finalColor = (color1-vec3(0.1)) + (color2-vec3(0.1)) + (color3-vec3(0.1)) + (color4-vec3(0.1));
-
-	fragColor = vec4(finalColor,1.0);
-}
-*/
-
-
-//
-// GLSL Sandbox example 1
-//
-//
-//	Duelling Mandelbulbs
-//
-// http://glsl.herokuapp.com/e#1293.0
-// http://www.thealphablenders.com/
-// 2012 by Andrew Caudwell
-//
-
-// This has to be removed for stringify
-// #ifdef GL_ES
-// precision mediump float;
-// #endif
-
-uniform vec2  resolution;
-uniform vec2  mouse;
-uniform float time;
-
-struct Ray {
-   vec3 o;
-   vec3 d;
-};
-
-// dueling mandelbulbs
-// @acaudwell
-
-// http://www.fractalforums.com/mandelbulb-implementation/realtime-renderingoptimisations/
-
-float mandelbulb(in vec3 p, float power) {
-	
-    float dr = 1.0;
-    float r  = length(p);
-
-    vec3 c = p;
-	
-    for(int i=0; i<2; i++) {
-		    
-        float zo0 = asin(p.z / r);
-        float zi0 = atan(p.y, p.x);
-        float zr  = pow(r, power-1.0);
-        float zo  = (zo0) * power;
-        float zi  = (zi0) * power;
-        float czo = cos(zo);
-
-        dr = zr * dr * power + 1.0;
-        zr *= r;
-
-        p = zr * vec3(czo*cos(zi), czo*sin(zi), sin(zo));
-	        
-	p += c;
-	    
-        r = length(p);
-    }
-
-    return 0.5 * r * log(r) / r;	
+	uv -= 0.5;
+	vec2 mouseNormalized = iMouse.xy / iResolution.xy;
+	uv.x *= iResolution.x / iResolution.y;
+	 
+	vec3 col = vec3(circExtended(uv, iParam2.x, iParam2.y));
+	col += vec3(circ2Extended(uv,iParam3.x, iParam3.y));
+	fragColor = vec4(col, 1.);
 }
 
-void main() {
-
-    vec2 p = ((gl_FragCoord.xy / resolution.xy) * 2.0 - 1.0) * 3.5;
-	
-    float t = time;
-
-    Ray ray1;
-    ray1.o = vec3(0.0);
-    ray1.d = normalize( vec3((p - 1.5*vec2(sin(t-2.0), cos(t+1.0))) * vec2(resolution.x/resolution.y, 1.0), 1.0 ) );
-
-    Ray ray2;
-    ray2.o = vec3(0.0);
-    ray2.d = normalize( vec3((p - 1.5*vec2(cos(-t),sin(t))) * vec2(resolution.x/resolution.y, 1.0), 1.0 ) );
-		
-    ray1.d.xy = vec2( ray1.d.x * cos(t) - ray1.d.y * sin(t), ray1.d.x * sin(t) + ray1.d.y * cos(t)); 
-    ray2.d.xy = vec2( ray2.d.x * cos(t) - ray2.d.y * sin(t), ray2.d.x * sin(t) + ray2.d.y * cos(t)); 
-	
-    float m1 =  mandelbulb(ray1.o + ray1.d, abs(cos(t)*13.0));
-    float m2 =  mandelbulb(ray2.o + ray2.d, abs(sin(t)*13.0));
-	
-    float f = pow(max(m1,m2) , abs(m1-m2));
-    vec3  c = m1 > m2 ? vec3(0.0, 0.05, 0.2) : vec3(0.2, 0.05, 0.0);
-	
-    gl_FragColor = vec4(c*f, 1.0);
-} 
-
-/*
-//
-// GLSL Sandbox example 2
-//
-//
-//	Relief tunnel
-//
-// http://glsl.herokuapp.com/e#3259.0
-//
-
-// This has to be removed for stringify
-// #ifdef GL_ES
-// precision mediump float;
-// #endif
-
-//gt
-uniform float time;
-uniform vec2 mouse;
-uniform vec2 resolution;
-
-void main( void ) {
-	
-	vec2 p = -1.0 + 2.0 * gl_FragCoord.xy / resolution.xy;
-   	vec2 uv;
-
-	//shadertoy deform "relief tunnel"-gt
-   	float r = sqrt( dot(p,p) );
-   	float a = atan(p.y,p.x) + 0.9*sin(0.5*r-0.5*time);
-
-	float s = 0.5 + 0.5*cos(7.0*a);
-   	s = smoothstep(0.0,1.0,s);
-   	s = smoothstep(0.0,1.0,s);
-   	s = smoothstep(0.0,1.0,s);
-   	s = smoothstep(0.0,1.0,s);
-
-   	uv.x = time + 1.0/( r + .2*s);
-  	  //uv.y = 3.0*a/3.1416;
-	uv.y = 1.0*a/10.1416;
-
-    float w = (0.5 + 0.5*s)*r*r;
-   	// vec3 col = texture2D(tex0,uv).xyz;
-    float ao = 0.5 + 0.5*cos(42.0*a);//amp up the ao-g
-   	ao = smoothstep(0.0,0.4,ao)-smoothstep(0.4,0.7,ao);
-    	ao = 1.0-0.5*ao*r;
-
-	//faux shaded texture-gt
-	float px = gl_FragCoord.x/resolution.x;
-	float py = gl_FragCoord.y/resolution.y;
-	float x = mod(uv.x*resolution.x,resolution.x/3.5);
-	float y = mod(uv.y*resolution.y+(resolution.y/2.),resolution.y/3.5);
-	float v =  (x / y)-.7;
-
-	gl_FragColor = vec4(vec3(.1-v,.9-v,1.-v)*w*ao,1.0);
-
-}
-*/
-
-// ==================== END OF SHADER CODE PASTE =======================
-
-
-);
+	)
+;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -751,15 +283,40 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	SetMaxInputs(2); // TODO - 4 inputs
 
 	// Parameters
-	SetParamInfo(FFPARAM_SPEED,         "Speed",         FF_TYPE_STANDARD, 0.5f); m_UserSpeed = 0.5f;
-	SetParamInfo(FFPARAM_MOUSEX,        "X mouse",       FF_TYPE_STANDARD, 0.5f); m_UserMouseX = 0.5f;
-	SetParamInfo(FFPARAM_MOUSEY,        "Y mouse",       FF_TYPE_STANDARD, 0.5f); m_UserMouseY = 0.5f;
-	SetParamInfo(FFPARAM_MOUSELEFTX,    "X mouse left",  FF_TYPE_STANDARD, 0.5f); m_UserMouseLeftX = 0.5f;
-	SetParamInfo(FFPARAM_MOUSELEFTY,    "Y mouse left",  FF_TYPE_STANDARD, 0.5f); m_UserMouseLeftY = 0.5f;
-	SetParamInfo(FFPARAM_RED,           "Red",           FF_TYPE_STANDARD, 0.5f); m_UserRed = 0.5f;
-	SetParamInfo(FFPARAM_GREEN,         "Green",         FF_TYPE_STANDARD, 0.5f); m_UserGreen = 0.5f;
-	SetParamInfo(FFPARAM_BLUE,          "Blue",          FF_TYPE_STANDARD, 0.5f); m_UserBlue = 0.5f;
-	SetParamInfo(FFPARAM_ALPHA,         "Alpha",         FF_TYPE_STANDARD, 1.0f); m_UserAlpha = 1.0f;
+	//SetParamInfo(FFPARAM_SPEED,         "Speed",         FF_TYPE_STANDARD, 0.5f); m_UserSpeed = 0.0f;
+	//SetParamInfo(FFPARAM_SPEED2,         "Speed 2",         FF_TYPE_STANDARD, 0.0f); m_UserSpeed2 = 0.0f;
+	//SetParamInfo(FFPARAM_SPEED3,         "Speed 3",         FF_TYPE_STANDARD, 0.0f); m_UserSpeed3 = 0.0f;
+	//SetParamInfo(FFPARAM_SPEED4,         "Speed 4",         FF_TYPE_STANDARD, 0.0f); m_UserSpeed4 = 0.0f;
+
+	//SetParamInfo(FFPARAM_MOUSEX,        "iMOusex",       FF_TYPE_STANDARD, 0.0f); m_UserMouseX = 0.0f;
+	//SetParamInfo(FFPARAM_MOUSEY,        "iMousey",       FF_TYPE_STANDARD, 0.0f); m_UserMouseY = 0.0f;
+	//SetParamInfo(FFPARAM_MOUSELEFTX,    "Rot1 Offset",  FF_TYPE_STANDARD, 0.0f); m_UserMouseLeftX = 0.0f;
+	//SetParamInfo(FFPARAM_MOUSELEFTY,    "Rot1 Sway",  FF_TYPE_STANDARD, 0.1f); m_UserMouseLeftY = 0.5f;
+
+	/*
+	*/
+//SetParamInfo(FFPARAM_PARAM2_X,         "Rotation",         FF_TYPE_STANDARD, 0.0f); m_UserParam2z = 0.0f;	
+
+SetParamInfo(FFPARAM_PARAM2_X,         "Mod Horizontal",         FF_TYPE_STANDARD, 0.5f); m_UserParam2x = 0.0f;
+SetParamInfo(FFPARAM_PARAM2_Y, "% Horizontal", FF_TYPE_STANDARD, 0.2f); m_UserParam2x = 0.0f;
+SetParamInfo(FFPARAM_PARAM2_Z, "Size Horizontal", FF_TYPE_STANDARD, 0.2f); m_UserParam2x = 0.0f;
+SetParamInfo(FFPARAM_PARAM2_W, "Offset Horizontal", FF_TYPE_STANDARD, 0.2f); m_UserParam2x = 0.0f;
+
+SetParamInfo(FFPARAM_PARAM3_X,         "Mod Verti",         FF_TYPE_STANDARD, 0.5f); m_UserParam2z = 0.0f; 
+	SetParamInfo(FFPARAM_PARAM3_Y, "% Vertical", FF_TYPE_STANDARD, 0.2f); m_UserParam2x = 0.0f;
+	SetParamInfo(FFPARAM_PARAM3_Z, "Size Vertical", FF_TYPE_STANDARD, 0.2f); m_UserParam2x = 0.0f;
+	SetParamInfo(FFPARAM_PARAM3_W, "Offset Vertical", FF_TYPE_STANDARD, 0.2f); m_UserParam2x = 0.0f;
+	
+	/*SetParamInfo(FFPARAM_PARAM3_CAMERA_X,"Camera X",         FF_TYPE_STANDARD, 0.750f); m_Camera_x = .75f;
+	SetParamInfo(FFPARAM_PARAM3_CAMERA_Y,"Camera Y",         FF_TYPE_STANDARD, 0.50f); m_Camera_y= 0.5f;
+	SetParamInfo(FFPARAM_PARAM3_CAMERA_Z,"Camera Z",         FF_TYPE_STANDARD, 0.40f); m_Camera_z = .45f;
+
+
+	// 0.5 means the middle = because its multiplied *2 and -1 ;)
+	SetParamInfo(FFPARAM_PARAM3_CAMERA_TARGET_X,"Camera Target X",         FF_TYPE_STANDARD, 0.5f); m_CameraTarget_x= 0.50f;
+	SetParamInfo(FFPARAM_PARAM3_CAMERA_TARGET_Y,"Camera Target Y",         FF_TYPE_STANDARD, 0.50f); m_CameraTarget_y = 0.50f;
+	SetParamInfo(FFPARAM_PARAM3_CAMERA_TARGET_Z,"Camera Target Z",         FF_TYPE_STANDARD, 0.50f); m_CameraTarget_z = 0.50f;
+	*/
 
 	// Set defaults
 	SetDefaults();
@@ -786,9 +343,6 @@ FFResult ShaderMaker::InitGL(const FFGLViewportStruct *vp)
 
 	// Start the clock
 	StartCounter();
-
-	// Start the frame counter
-	m_frame = 0.0f;
 
 	// Load the shader
 	std::string shaderString = fragmentShaderCode;
@@ -932,23 +486,23 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 			*/
 
 		} // endif shader uses a texture
-
+	
 		// Calculate elapsed time
 		lastTime = elapsedTime;
 		elapsedTime = GetCounter()/1000.0; // In seconds - higher resolution than timeGetTime()
 		m_time = m_time + (float)(elapsedTime-lastTime)*m_UserSpeed*2.0f; // increment scaled by user input 0.0 - 2.0
 
-		// ShaderToy new uniforms
-		m_frame = m_frame + 1.0f;
-		m_timedelta = (float)(elapsedTime - lastTime); // seconds ?
-		m_framerate = 1.0f / m_timedelta;
-		m_samplerate = 44100.0f; // default
+		m_time2 = m_time2 + (float)(elapsedTime-lastTime)*m_UserSpeed2*2.0f; // increment scaled by user input 0.0 - 2.0
+
+		m_time3 = m_time3 + (float)(elapsedTime-lastTime)*m_UserSpeed3*2.0f; // increment scaled by user input 0.0 - 2.0
+
+		m_time4= m_time4 + (float)(elapsedTime-lastTime)*m_UserSpeed4*2.0f; // increment scaled by user input 0.0 - 2.0
 
 		// Just pass elapsed time for individual channel times
 		m_channelTime[0] = m_time;
-		m_channelTime[1] = m_time;
-		m_channelTime[2] = m_time;
-		m_channelTime[3] = m_time;
+		m_channelTime[1] = m_time2;
+		m_channelTime[2] = m_time3;
+		m_channelTime[3] = m_time4;
 
 		// Calculate date vars
 		time(&datime);
@@ -997,24 +551,10 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		if(m_timeLocation >= 0) 
 			m_extensions.glUniform1fARB(m_timeLocation, m_time);
 	
-		// ===========================================================
-		// ShaderToy new uniforms
-		// iTime - iGlobalTime
-
-		// iFrame - frame number
-		if (m_frameLocation >= 0)
-			m_extensions.glUniform1fARB(m_frameLocation, m_frame);
-
-		if (m_timedeltaLocation >= 0)
-			m_extensions.glUniform1fARB(m_timedeltaLocation, m_timedelta);
-
-		if (m_framerateLocation >= 0)
-			m_extensions.glUniform1fARB(m_framerateLocation, m_framerate);
-
-		if (m_samplerateLocation >= 0)
-			m_extensions.glUniform1fARB(m_samplerateLocation, m_samplerate);
-		// ===========================================================
-
+		m_extensions.glUniform4fARB(m_iParam2Location, m_UserParam2x,m_UserParam2y,m_UserParam2z,m_UserParam2w); 
+		m_extensions.glUniform4fARB(m_iParam3Location, m_UserParam3x,m_UserParam3y,m_UserParam3z,m_UserParam3w); 
+		m_extensions.glUniform4fARB(m_iParam4Location, m_UserParam4x,m_UserParam4y,m_UserParam4z,m_UserParam4w); 
+		m_extensions.glUniform4fARB(m_iParam5Location, m_UserParam5x,m_UserParam5y,m_UserParam5z,m_UserParam5w); 
 		//
 		// GLSL sandbox
 		//
@@ -1027,6 +567,12 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 			m_mouseX = m_UserMouseX;
 			m_mouseY = m_UserMouseY;
 			m_extensions.glUniform2fARB(m_mouseLocation, m_mouseX, m_mouseY); 
+		}
+		if(m_iCameraLocation >= 0) { // Vec3- normalized 
+			m_extensions.glUniform3fARB(m_iCameraLocation, m_Camera_x*2.0f-1.0f,m_Camera_y*2.0f-1.0f,m_Camera_z*2.0f-1.0f); 
+		}
+		if(m_iCameraTargetLocation >= 0) { // Vec3- normalized 
+			m_extensions.glUniform3fARB(m_iCameraTargetLocation, m_CameraTarget_x*2.0f-1.0f,m_CameraTarget_y*2.0f-1.0f,m_CameraTarget_z*2.0f-1.0f); 
 		}
 
 		// surfaceSize - Mouse left drag position - in pixel coordinates
@@ -1176,11 +722,86 @@ char * ShaderMaker::GetParameterDisplay(DWORD dwIndex) {
 
 	memset(m_DisplayValue, 0, 15);
 	switch (dwIndex) {
-
+		
+	case FFPARAM_PARAM3_CAMERA_X:
+		cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_Camera_x));
+			return m_DisplayValue;
+		
+	case FFPARAM_PARAM3_CAMERA_Y:
+		cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_Camera_y));
+			return m_DisplayValue;
+		
+	case FFPARAM_PARAM3_CAMERA_Z:
+		cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_Camera_z));
+			return m_DisplayValue;
+		
+	case FFPARAM_PARAM3_CAMERA_TARGET_X:
+		cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_CameraTarget_x));
+			return m_DisplayValue;
+		
+	case FFPARAM_PARAM3_CAMERA_TARGET_Y:
+		cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_CameraTarget_y));
+			return m_DisplayValue;
+		
+	case FFPARAM_PARAM3_CAMERA_TARGET_Z:
+		cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_CameraTarget_z));
+			return m_DisplayValue;
+	
 		case FFPARAM_SPEED:
 			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserSpeed*100.0));
 			return m_DisplayValue;
 	
+		case FFPARAM_SPEED2:
+			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserSpeed2*100.0));
+			return m_DisplayValue;
+	
+		case FFPARAM_SPEED3:
+			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserSpeed3*100.0));
+			return m_DisplayValue;
+	
+		case FFPARAM_SPEED4:
+			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserSpeed4*100.0));
+			return m_DisplayValue;
+	
+		case FFPARAM_PARAM2_X:
+			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserParam2x));
+			return m_DisplayValue;
+		case FFPARAM_PARAM2_Y:
+			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserParam2y));
+			return m_DisplayValue;
+		case FFPARAM_PARAM2_Z:
+			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserParam2z));
+			return m_DisplayValue;
+		case FFPARAM_PARAM2_W:
+			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserParam2w));
+			return m_DisplayValue;
+			
+		case FFPARAM_PARAM3_X:
+			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserParam3x));
+			return m_DisplayValue;
+		case FFPARAM_PARAM3_Y:
+			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserParam3y));
+			return m_DisplayValue;
+		case FFPARAM_PARAM3_Z:
+			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserParam3z));
+			return m_DisplayValue;
+		case FFPARAM_PARAM3_W:
+			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserParam3w));
+			return m_DisplayValue;
+			
+		case FFPARAM_PARAM4_X:
+			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserParam4x));
+			return m_DisplayValue;
+		case FFPARAM_PARAM4_Y:
+			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserParam4y));
+			return m_DisplayValue;
+		case FFPARAM_PARAM4_Z:
+			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserParam4z));
+			return m_DisplayValue;
+		case FFPARAM_PARAM4_W:
+			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserParam4w));
+			return m_DisplayValue;
+
 		case FFPARAM_MOUSEX:
 			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserMouseX*m_vpWidth));
 			return m_DisplayValue;
@@ -1260,9 +881,36 @@ FFResult ShaderMaker::GetInputStatus(DWORD dwIndex)
 float ShaderMaker::GetFloatParameter(unsigned int index)
 {
 	switch (index) {
-
+		
+	case FFPARAM_PARAM3_CAMERA_X:
+		return  m_Camera_x;
+		
+	case FFPARAM_PARAM3_CAMERA_Y:
+		return  m_Camera_y;
+		
+	case FFPARAM_PARAM3_CAMERA_Z:
+		return  m_Camera_z;
+			
+	case FFPARAM_PARAM3_CAMERA_TARGET_X:
+		return  m_CameraTarget_x;
+		
+	case FFPARAM_PARAM3_CAMERA_TARGET_Y:
+		return  m_CameraTarget_y;
+		
+	case FFPARAM_PARAM3_CAMERA_TARGET_Z:
+		return  m_CameraTarget_z;
+	
 		case FFPARAM_SPEED:
 			return  m_UserSpeed;
+	
+		case FFPARAM_SPEED2:
+			return  m_UserSpeed2;
+	
+		case FFPARAM_SPEED3:
+			return  m_UserSpeed3;
+	
+		case FFPARAM_SPEED4:
+			return  m_UserSpeed4;
 	
 		case FFPARAM_MOUSEX:
 			return  m_UserMouseX;
@@ -1288,6 +936,35 @@ float ShaderMaker::GetFloatParameter(unsigned int index)
 		case FFPARAM_ALPHA:
 			return m_UserAlpha;
 
+		case FFPARAM_PARAM2_X:
+			return m_UserParam2x;
+case FFPARAM_PARAM2_Y:
+			return m_UserParam2y;
+case FFPARAM_PARAM2_Z:
+			return m_UserParam2z;
+case FFPARAM_PARAM2_W:
+			return m_UserParam2w;
+
+
+		case FFPARAM_PARAM3_X:
+			return m_UserParam3x;
+case FFPARAM_PARAM3_Y:
+			return m_UserParam3y;
+case FFPARAM_PARAM3_Z:
+			return m_UserParam3z;
+case FFPARAM_PARAM3_W:
+			return m_UserParam3w;
+
+
+		case FFPARAM_PARAM4_X:
+			return m_UserParam4x;
+case FFPARAM_PARAM4_Y:
+			return m_UserParam4y;
+case FFPARAM_PARAM4_Z:
+			return m_UserParam4z;
+case FFPARAM_PARAM4_W:
+			return m_UserParam4w;
+
 		default:
 			return FF_FAIL;
 	}
@@ -1296,10 +973,105 @@ float ShaderMaker::GetFloatParameter(unsigned int index)
 FFResult ShaderMaker::SetFloatParameter(unsigned int index, float value)
 {
 		switch (index) {
+			
+		case FFPARAM_PARAM3_CAMERA_X:
+			m_Camera_x = value;
+				break;
 
+		case FFPARAM_PARAM3_CAMERA_Y:
+			m_Camera_y = value;
+				break;
+
+		case FFPARAM_PARAM3_CAMERA_Z:
+			m_Camera_z = value;
+				break;
+
+			
+		case FFPARAM_PARAM3_CAMERA_TARGET_X:
+			m_CameraTarget_x = value;
+				break;
+
+		case FFPARAM_PARAM3_CAMERA_TARGET_Y:
+			m_CameraTarget_y = value;
+				break;
+
+		case FFPARAM_PARAM3_CAMERA_TARGET_Z:
+			m_CameraTarget_z = value;
+				break;
+
+			
 			case FFPARAM_SPEED:
 				m_UserSpeed = value;
 				break;
+				
+			case FFPARAM_SPEED2:
+				m_UserSpeed2 = value;
+				break;
+
+			case FFPARAM_SPEED3:
+				m_UserSpeed3 = value;
+				break;
+
+			case FFPARAM_SPEED4:
+				m_UserSpeed4 = value;
+				break;
+			
+			case FFPARAM_PARAM2_X:
+				m_UserParam2x = value;
+				break;
+			case FFPARAM_PARAM2_Y:
+				m_UserParam2y = value;
+				break;
+			case FFPARAM_PARAM2_Z:
+				m_UserParam2z = value;
+				break;
+			case FFPARAM_PARAM2_W:
+				m_UserParam2w = value;
+				break;
+
+			
+			case FFPARAM_PARAM3_X:
+				m_UserParam3x = value;
+				break;
+			case FFPARAM_PARAM3_Y:
+				m_UserParam3y = value;
+				break;
+			case FFPARAM_PARAM3_Z:
+				m_UserParam3z = value;
+				break;
+			case FFPARAM_PARAM3_W:
+				m_UserParam3w = value;
+				break;
+				
+			
+			case FFPARAM_PARAM4_X:
+				m_UserParam4x = value;
+				break;
+			case FFPARAM_PARAM4_Y:
+				m_UserParam4y = value;
+				break;
+			case FFPARAM_PARAM4_Z:
+				m_UserParam4z = value;
+				break;
+			case FFPARAM_PARAM4_W:
+				m_UserParam4w = value;
+				break;
+
+
+			
+			case FFPARAM_PARAM5_X:
+				m_UserParam5x = value;
+				break;
+			case FFPARAM_PARAM5_Y:
+				m_UserParam5y = value;
+				break;
+			case FFPARAM_PARAM5_Z:
+				m_UserParam5z = value;
+				break;
+			case FFPARAM_PARAM5_W:
+				m_UserParam5w = value;
+				break;
+
 
 			case FFPARAM_MOUSEX:
 				m_UserMouseX = value;
@@ -1359,8 +1131,11 @@ void ShaderMaker::SetDefaults() {
 	m_UserMouseY           = 0.5;
 	m_UserMouseLeftX       = 0.5;
 	m_UserMouseLeftY       = 0.5;
-
+	
 	m_time                 = 0.0;
+	m_time2                 = 0.0;
+	m_time3                 = 0.0;
+	m_time4                 = 0.0;
 	m_dateYear             = 0.0;
 	m_dateMonth            = 0.0;
 	m_dateDay              = 0.0;
@@ -1387,8 +1162,11 @@ void ShaderMaker::SetDefaults() {
 	m_channelResolution[3][0] = 0.0;
 	m_channelResolution[3][1] = 0.0;
 	m_channelResolution[4][2] = 1.0;
-
+	
 	m_UserSpeed               = 0.5;
+	m_UserSpeed2               = 0.5;
+	m_UserSpeed3               = 0.5;
+	m_UserSpeed4               = 0.5;
 	m_UserMouseX              = 0.5;
 	m_UserMouseY              = 0.5;
 	m_UserMouseLeftX          = 0.5;
@@ -1432,21 +1210,8 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 			// uniform sampler2D	iChannel1;				// sampler for input texture 1.
 			// uniform sampler2D	iChannel2;				// sampler for input texture 2.
 			// uniform sampler2D	iChannel3;				// sampler for input texture 3.
-			//
-			// 21.11.17 - new SharedToy uniforms
-			// uniform float iTime;			// same as IGlobalTime - current time (in seconds)
-			// uniform float iTimeDelta;	// _deltaTime
-			// uniform float iFrame;		// Frame number ?
-			// uniform float iFrameRate;	// 1.f / _deltaTime
-			// uniform float iSampleRate;	// Audio
-			//
 			static char *uniforms = { "uniform vec3 iResolution;\n"
 									  "uniform float iGlobalTime;\n"
-									  "uniform float iTime;\n"
-									  "uniform float iTimeDelta;\n"
-									  "uniform float iFrame;\n"
-									  "uniform float iFrameRate;\n"
-									  "uniform float iSampleRate;\n"
 									  "uniform vec4 iMouse;\n"
 									  "uniform vec4 iDate;\n"
 									  "uniform float iChannelTime[4];\n"
@@ -1454,7 +1219,17 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 									  "uniform sampler2D iChannel0;\n"
 									  "uniform sampler2D iChannel1;\n"
 									  "uniform sampler2D iChannel2;\n"
-									  "uniform sampler2D iChannel3;\n" };
+									  "uniform sampler2D iChannel3;\n"
+									  // ck hackss
+									  "#define PI 3.14159265359 \n"
+									  "uniform vec4 iParam2;\n"
+									  "uniform vec4 iParam3;\n"
+									  "uniform vec4 iParam4;\n"
+									  "uniform vec4 iParam5;\n"
+									  "uniform vec3 iCamera;\n"
+									  "uniform vec3 iCameraTarget;\n"
+			
+			};
 			
 			stoyUniforms = uniforms;
 			stoyUniforms += extraUniforms;
@@ -1481,6 +1256,8 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 		m_shader.SetExtensions(&m_extensions);
 		if (!m_shader.Compile(vertexShaderCode, shaderString.c_str())) {
 			// SelectSpoutPanel("Shader compile error");
+		 
+			
 			return false;
 		}
 		else {
@@ -1513,25 +1290,10 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 				// m_surfacePositionLocation	= -1; // TODO
 				// m_vertexPositionLocation    = -1; // TODO
 
-				// ===========================================================
-				// ShaderToy new uniforms
-				m_frameLocation				= -1; // iFrame - frame number
-				m_timedeltaLocation			= -1; // iTimeDelta - time elapsed since last frame
-				m_framerateLocation			= -1; // iFrameRate - 1.f / _deltaTime
-				m_samplerateLocation		= -1; // iSampleRate - 44100.f default
-				// ===========================================================
-
 				// Extras
 				// Input colour is linked to the user controls Red, Green, Blue, Alpha
 				m_inputColourLocation        = -1;
 
-				// ===========================================================
-				// ShaderToy new uniforms
-				m_frameLocation				= -1; // iFrame - frame number
-				m_timedeltaLocation			= -1; // iTimeDelta - time elapsed since last frame
-				m_framerateLocation			= -1; // iFrameRate - 1.f / _deltaTime
-				m_samplerateLocation		= -1; // iSampleRate - 44100.f default
-				// ===========================================================
 
 				// lookup the "location" of each uniform
 
@@ -1556,9 +1318,15 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 				// Preferred names tex0 and tex1 which are commonly used
 				if(m_inputTextureLocation < 0)
 					m_inputTextureLocation = m_shader.FindUniform("tex0");
-
+				
 				if(m_inputTextureLocation1 < 0)
 					m_inputTextureLocation1 = m_shader.FindUniform("tex1");
+
+				if(m_iCameraLocation< 0)
+					m_iCameraLocation					= m_shader.FindUniform("iCamera");
+
+				if(m_iCameraTargetLocation< 0)
+					m_iCameraTargetLocation					= m_shader.FindUniform("iCameraTarget");
 
 				// TODO tex2 and tex3 ?
 
@@ -1571,10 +1339,23 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 				// From several sources
 				if(m_inputTextureLocation < 0)
 					m_inputTextureLocation = m_shader.FindUniform("bbuff");
-
+				
 				// Time
 				if(m_timeLocation < 0)
 					m_timeLocation = m_shader.FindUniform("time");
+				
+				// Param 2
+				if(m_iParam2Location< 0)
+					m_iParam2Location = m_shader.FindUniform("iParam2");
+				// Param 3
+				if(m_iParam3Location< 0)
+					m_iParam3Location = m_shader.FindUniform("iParam3");
+				// Param 4
+				if(m_iParam4Location< 0)
+					m_iParam4Location = m_shader.FindUniform("iParam4");
+
+				if(m_iParam5Location< 0)
+					m_iParam5Location = m_shader.FindUniform("iParam5");
 
 				// Mouse move
 				if(m_mouseLocation < 0)
@@ -1634,31 +1415,9 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 					m_mouseLocationVec4 = m_shader.FindUniform("iMouse");
 
 				// iGlobalTime
-				if(m_timeLocation < 0) {
+				if(m_timeLocation < 0)
 					m_timeLocation = m_shader.FindUniform("iGlobalTime");
-					// iTime = iGlobalTime
-					if (m_timeLocation < 0)
-						m_timeLocation = m_shader.FindUniform("iTime");
-				}
-
-				// ===========================================================
-				// ShaderToy new uniforms
-				//
-				// iTime = iGlobalTime
-
-				// iFrame - frame number (integer saved as float)
-				if (m_frameLocation < 0)
-					m_frameLocation = m_shader.FindUniform("iFrame");
-
-				if (m_timedeltaLocation < 0)
-					m_timedeltaLocation = m_shader.FindUniform("iTimeDelta");
-
-				if (m_framerateLocation < 0)
-					m_framerateLocation = m_shader.FindUniform("iFrameRate");
-
-				if (m_samplerateLocation > 0)
-					m_samplerateLocation = m_shader.FindUniform("iSampleRate");
-				// ===========================================================
+				 
 
 				// iDate
 				if(m_dateLocation < 0)
@@ -1706,9 +1465,6 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 
 				// Start the clock again to start from zero
 				StartCounter();
-
-				// Start the frame counter
-				m_frame = 0.0f;
 
 				return true;
 

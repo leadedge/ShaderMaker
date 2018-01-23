@@ -135,6 +135,20 @@ int FFGLShader::Compile(const char *vtxProgram, const char *fragProgram)
         sizeof(log)-1,
         &returnedLength,
         log);
+	  
+		  int msgboxID = MessageBox(
+        NULL,
+       log,
+        "Compile Error",
+        MB_ICONWARNING | MB_OK
+    );
+
+		   int msgboxID2 = MessageBox(
+        NULL,
+		fragProgram,	   
+        "Fragment Code",
+        MB_ICONWARNING | MB_OK
+    );
 
       log[returnedLength] = 0;
       int a;

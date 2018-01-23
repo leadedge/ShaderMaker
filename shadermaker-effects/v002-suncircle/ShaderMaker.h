@@ -85,6 +85,31 @@ protected:
 	// FFGL user parameters
 	char  m_DisplayValue[16];
 	float m_UserSpeed;
+	float m_UserSpeed2;
+	float m_UserSpeed3;
+	float m_UserSpeed4;
+
+	
+	float m_UserParam2x;
+	float m_UserParam2y;
+	float m_UserParam2z;
+	float m_UserParam2w;
+	
+	float m_UserParam3x;
+	float m_UserParam3y;
+	float m_UserParam3z;
+	float m_UserParam3w;
+	
+	float m_UserParam4x;
+	float m_UserParam4y;
+	float m_UserParam4z;
+	float m_UserParam4w;
+	
+	float m_UserParam5x;
+	float m_UserParam5y;
+	float m_UserParam5z;
+	float m_UserParam5w;
+	
 	float m_UserMouseX;
 	float m_UserMouseY;
 	float m_UserMouseLeftX;
@@ -127,6 +152,12 @@ protected:
 	// Time
 	float m_time;
 
+	float m_time2;
+
+	float m_time3;
+
+	float m_time4;
+
 	// Date (year, month, day, time in seconds)
 	float m_dateYear;
 	float m_dateMonth;
@@ -140,6 +171,15 @@ protected:
 	// Channel resolution in pixels - 4 channels with width, height, depth each
 	float m_channelResolution[4][3];
 
+	
+	float m_Camera_x;
+	float m_Camera_y;
+	float m_Camera_z;
+	
+	float m_CameraTarget_x;
+	float m_CameraTarget_y;
+	float m_CameraTarget_z;
+
 	// Mouse
 	float m_mouseX;
 	float m_mouseY;
@@ -150,13 +190,6 @@ protected:
 	float m_mouseRightX;
 	float m_mouseRightY;
 
-	// New ShaderToy uniforms 21-11-17
-	// iTime - m_time - the same as iGlobalTime
-	float m_frame; // iFrame - frame number
-	float m_timedelta; // iTimeDelta - time elapsed since last frame
-	float m_framerate;	// iFrameRate - 1.f / _deltaTime
-	float m_samplerate;
-	
 	int m_initResources;
 	FFGLExtensions m_extensions;
     FFGLShader m_shader;
@@ -165,6 +198,14 @@ protected:
 	GLint m_inputTextureLocation1;
 	GLint m_inputTextureLocation2;
 	GLint m_inputTextureLocation3;
+	
+	GLint m_iParam2Location; 
+	GLint m_iParam3Location; 
+	GLint m_iParam4Location; 
+	GLint m_iParam5Location; 
+	GLint m_iCameraLocation;
+	GLint m_iCameraTargetLocation;
+	
 	
 	GLint m_timeLocation;
 	GLint m_dateLocation;
@@ -177,13 +218,6 @@ protected:
 	GLint m_surfaceSizeLocation;
 	GLint m_surfacePositionLocation;
 	GLint m_vertexPositionLocation;
-
-	// New ShaderToy uniforms 21-11-17
-	// iTime - m_timeLocation - the same as iGlobalTime
-	GLint m_frameLocation; // iFrame - frame number
-	GLint m_timedeltaLocation; // iTimeDelta - time elapsed since last frame
-	GLint m_framerateLocation;	// iFrameRate - 1.f / _deltaTime
-	GLint m_samplerateLocation;	// iSampleRate - 44100.f default
 
 	// Extras
 	GLint m_inputColourLocation;

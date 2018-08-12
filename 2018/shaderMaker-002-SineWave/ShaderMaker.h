@@ -51,6 +51,14 @@ typedef int64_t LARGE_INTEGER;
 #define GL_READ_FRAMEBUFFER_EXT		0x8CA8
 #define GL_TEXTURE_WRAP_R			0x8072
 
+struct Vector {
+	float x;
+	float y;
+	float z;
+	float w;
+
+};
+
 class ShaderMaker : public CFreeFrameGLPlugin
 {
 
@@ -93,6 +101,14 @@ protected:
 	float m_UserGreen;
 	float m_UserBlue;
 	float m_UserAlpha;
+	Vector m_vector1;
+	Vector m_vector2;
+	Vector m_vector3;
+	Vector m_vector4;
+
+	Vector m_speeds;
+
+	Vector m_times;
 
 	// Flags
 	bool bInitialized;
@@ -188,6 +204,12 @@ protected:
 	// Extras
 	GLint m_inputColourLocation;
 
+	GLint m_inputVector1Location;
+	GLint m_inputVector2Location;
+	GLint m_inputVector3Location;
+	GLint m_inputVector4Location;
+	GLint m_inputTimesLocation;
+	
 	void SetDefaults();
 	void StartCounter();
 	double GetCounter();

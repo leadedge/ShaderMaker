@@ -137,6 +137,7 @@ int FFGLShader::Compile(const char *vtxProgram, const char *fragProgram)
         log);
 
       log[returnedLength] = 0;
+	  MessageBox(NULL, log, 0, 0);
       int a;
       a=0;
     }

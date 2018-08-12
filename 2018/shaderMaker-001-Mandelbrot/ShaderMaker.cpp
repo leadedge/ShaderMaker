@@ -69,36 +69,38 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #define FFPARAM_SPEED       (0)
 #define FFPARAM_MOUSEX      (1)
 #define FFPARAM_MOUSEY      (2)
-#define FFPARAM_MOUSELEFTX  (3)
-#define FFPARAM_MOUSELEFTY  (4)
-#define FFPARAM_RED         (5)
-#define FFPARAM_GREEN       (6)
-#define FFPARAM_BLUE        (7)
-#define FFPARAM_ALPHA       (8)
+#define FFPARAM_MOUSELEFTX  (103)
+#define FFPARAM_MOUSELEFTY  (104)
+#define FFPARAM_RED         (3)
+#define FFPARAM_GREEN       (4)
+#define FFPARAM_BLUE        (5)
+#define FFPARAM_ALPHA       (108)
 
-#define FFPARAM_VECTOR1_X       (9)
-#define FFPARAM_VECTOR1_Y       (10)
-#define FFPARAM_VECTOR1_Z       (11)
-#define FFPARAM_VECTOR1_W       (12)
-#define FFPARAM_VECTOR2_X       (13)
-#define FFPARAM_VECTOR2_Y       (14)
-#define FFPARAM_VECTOR2_Z       (15)
-#define FFPARAM_VECTOR2_W       (16)
+#define FFPARAM_VECTOR1_X       (109)
+#define FFPARAM_VECTOR1_Y       (6)
+#define FFPARAM_VECTOR1_Z       (7)
+#define FFPARAM_VECTOR1_W       (8)
 
-#define FFPARAM_VECTOR3_X       (17)
-#define FFPARAM_VECTOR3_Y       (18)
-#define FFPARAM_VECTOR3_Z       (19)
-#define FFPARAM_VECTOR3_W       (20)
+#define FFPARAM_VECTOR2_X       (1013)
+#define FFPARAM_VECTOR2_Y       (9)
+#define FFPARAM_VECTOR2_Z       (10)
+#define FFPARAM_VECTOR2_W       (11)
 
-#define FFPARAM_VECTOR4_X       (21)
-#define FFPARAM_VECTOR4_Y       (22)
-#define FFPARAM_VECTOR4_Z       (23)
-#define FFPARAM_VECTOR4_W       (24)
+#define FFPARAM_VECTOR3_X       (1017)
 
-#define FFPARAM_SPEEDS_X      (25)
-#define FFPARAM_SPEEDS_Y      (26)
-#define FFPARAM_SPEEDS_Z      (27)
-#define FFPARAM_SPEEDS_W      (28)
+#define FFPARAM_VECTOR3_Y       (12)
+#define FFPARAM_VECTOR3_Z       (13)
+#define FFPARAM_VECTOR3_W       (14)
+
+#define FFPARAM_VECTOR4_X       (1021)
+#define FFPARAM_VECTOR4_Y       (15)
+#define FFPARAM_VECTOR4_Z       (16)
+#define FFPARAM_VECTOR4_W       (17)
+
+#define FFPARAM_SPEEDS_X      (18)
+#define FFPARAM_SPEEDS_Y      (19)
+#define FFPARAM_SPEEDS_Z      (20)
+#define FFPARAM_SPEEDS_W      (21)
 
 #define STRINGIFY(A) #A
 
@@ -188,7 +190,6 @@ vec2 piiate(vec2 x) {
 	// helper method used to create properties that are loopable
 	return vec2(triangulate(x.x), triangulate(x.y));
 }
-
 vec2 rotate(vec2 v, float a) {
 	float s = sin(a);
 	float c = cos(a);
@@ -200,8 +201,8 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {
 	float n = 0.;
 	float scale = inputColour.x;
-	vec2 center = rotate((iMouse.xy / iResolution.xy)*2.0 - 1.0,inputColour.z*PI);
-	vec2 c = center + scale*((fragCoord / iResolution.xy)*2.0 - 1.0);
+	vec2 center = (iMouse.xy / iResolution.xy)*2.0 - 1.0;
+	vec2 c = center + rotate(scale*((fragCoord / iResolution.xy)*2.0 - 1.0), inputColour.z*2.0*PI);
 	vec2 z = c*n;
 	int i;
 	vec4 inputs[4];
@@ -265,45 +266,45 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 
 	// Parameters
 	SetParamInfo(FFPARAM_SPEED,         "Speed",         FF_TYPE_STANDARD, 0.5f); m_UserSpeed = 0.5f;
-	SetParamInfo(FFPARAM_MOUSEX,        "X mouse",       FF_TYPE_STANDARD, 0.5f); m_UserMouseX = 0.5f;
-	SetParamInfo(FFPARAM_MOUSEY,        "Y mouse",       FF_TYPE_STANDARD, 0.5f); m_UserMouseY = 0.5f;
-	SetParamInfo(FFPARAM_MOUSELEFTX,    "X mouse left",  FF_TYPE_STANDARD, 0.5f); m_UserMouseLeftX = 0.5f;
-	SetParamInfo(FFPARAM_MOUSELEFTY,    "Y mouse left",  FF_TYPE_STANDARD, 0.5f); m_UserMouseLeftY = 0.5f;
-	SetParamInfo(FFPARAM_RED,           "Red",           FF_TYPE_STANDARD, 0.5f); m_UserRed = 0.5f;
-	SetParamInfo(FFPARAM_GREEN,         "Green",         FF_TYPE_STANDARD, 0.5f); m_UserGreen = 0.5f;
-	SetParamInfo(FFPARAM_BLUE,          "Blue",          FF_TYPE_STANDARD, 0.5f); m_UserBlue = 0.5f;
-	SetParamInfo(FFPARAM_ALPHA,         "Alpha",         FF_TYPE_STANDARD, 1.0f); m_UserAlpha = 1.0f;
+ 	SetParamInfo(FFPARAM_MOUSEX,        "Center X",       FF_TYPE_STANDARD, 0.5f); m_UserMouseX = 0.5f;
+	 SetParamInfo(FFPARAM_MOUSEY,        "Center Y",       FF_TYPE_STANDARD, 0.5f); m_UserMouseY = 0.5f;
+	//SetParamInfo(FFPARAM_MOUSELEFTX,    "X mouse left",  FF_TYPE_STANDARD, 0.5f); m_UserMouseLeftX = 0.5f;
+	//SetParamInfo(FFPARAM_MOUSELEFTY,    "Y mouse left",  FF_TYPE_STANDARD, 0.5f); m_UserMouseLeftY = 0.5f;
+	SetParamInfo(FFPARAM_RED,           "Zoom",           FF_TYPE_STANDARD, 0.5f); m_UserRed = 0.5f;
+	SetParamInfo(FFPARAM_GREEN,         "Start of Alternation",         FF_TYPE_STANDARD, 0.5f); m_UserGreen = 0.5f;
+	SetParamInfo(FFPARAM_BLUE,          "Rotation",          FF_TYPE_STANDARD, 0.5f); m_UserBlue = 0.5f;
+//	SetParamInfo(FFPARAM_ALPHA,         "Alpha",         FF_TYPE_STANDARD, 1.0f); m_UserAlpha = 1.0f;
 
 
 
-	SetParamInfo(FFPARAM_VECTOR1_X, "Vector1X", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR1_Y, "Vector1Y", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR1_Z, "Vector1Z", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR1_W, "Vector1W", FF_TYPE_STANDARD, 0.0f);
+	//SetParamInfo(FFPARAM_VECTOR1_X, "Vector1X", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR1_Y, "Seed 1 Radius", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR1_Z, "Seed 1 Real", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR1_W, "Seed 1 Imag", FF_TYPE_STANDARD, 0.0f);
 
 
-	SetParamInfo(FFPARAM_VECTOR2_X, "Vector2X", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR2_Y, "Vector2Y", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR2_Z, "Vector2Z", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR2_W, "Vector2W", FF_TYPE_STANDARD, 0.0f);
+	//SetParamInfo(FFPARAM_VECTOR2_X, "Vector2X", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR2_Y, "Seed 2 Radius", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR2_Z, "Seed 2 Real", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR2_W, "Seed 2 Imag", FF_TYPE_STANDARD, 0.0f);
 
 
-	SetParamInfo(FFPARAM_VECTOR3_X, "Vector3X", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR3_Y, "Vector3Y", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR3_Z, "Vector3Z", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR3_W, "Vector3W", FF_TYPE_STANDARD, 0.0f);
+	//SetParamInfo(FFPARAM_VECTOR3_X, "Vector3X", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR3_Y, "Seed 3 Radius", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR3_Z, "Seed 3 Real", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR3_W, "Seed 3 Imag", FF_TYPE_STANDARD, 0.0f);
 
 
-	SetParamInfo(FFPARAM_VECTOR4_X, "Vector4X", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR4_Y, "Vector4Y", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR4_Z, "Vector4Z", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR4_W, "Vector4W", FF_TYPE_STANDARD, 0.0f);
+	//SetParamInfo(FFPARAM_VECTOR4_X, "Seed 4 ", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR4_Y, "Seed 4 Radius", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR4_Z, "Seed 4 Real", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR4_W, "Seed 4 Imag", FF_TYPE_STANDARD, 0.0f);
 
 
-	SetParamInfo(FFPARAM_SPEEDS_X, "Speed1", FF_TYPE_STANDARD, 1.0f);
-	SetParamInfo(FFPARAM_SPEEDS_Y, "Speed2", FF_TYPE_STANDARD, 1.0f);
-	SetParamInfo(FFPARAM_SPEEDS_Z, "Speed3", FF_TYPE_STANDARD, 1.0f);
-	SetParamInfo(FFPARAM_SPEEDS_W, "Speed4", FF_TYPE_STANDARD, 1.0f);
+	SetParamInfo(FFPARAM_SPEEDS_X, "Seed 1 Speed", FF_TYPE_STANDARD, 1.0f);
+	SetParamInfo(FFPARAM_SPEEDS_Y, "Seed 2 Speed", FF_TYPE_STANDARD, 1.0f);
+	SetParamInfo(FFPARAM_SPEEDS_Z, "Seed 3 Speed", FF_TYPE_STANDARD, 1.0f);
+	SetParamInfo(FFPARAM_SPEEDS_W, "Seed 4 Speed", FF_TYPE_STANDARD, 1.0f);
 
 	// Set defaults
 	SetDefaults();

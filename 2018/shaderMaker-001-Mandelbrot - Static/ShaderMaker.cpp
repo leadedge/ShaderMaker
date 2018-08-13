@@ -66,41 +66,41 @@ int (*cross_secure_sprintf)(char *, size_t, const char *,...) = sprintf_s;
 int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #endif
 
-#define FFPARAM_SPEED       (0)
-#define FFPARAM_MOUSEX      (1)
-#define FFPARAM_MOUSEY      (2)
+#define FFPARAM_SPEED       (100)
+#define FFPARAM_MOUSEX      (0)
+#define FFPARAM_MOUSEY      (1)
 #define FFPARAM_MOUSELEFTX  (103)
 #define FFPARAM_MOUSELEFTY  (104)
-#define FFPARAM_RED         (3)
-#define FFPARAM_GREEN       (4)
-#define FFPARAM_BLUE        (5)
-#define FFPARAM_ALPHA       (6)
+#define FFPARAM_RED         (2)
+#define FFPARAM_GREEN       (3)
+#define FFPARAM_BLUE        (4)
+#define FFPARAM_ALPHA       (108)
 
 #define FFPARAM_VECTOR1_X       (109)
-#define FFPARAM_SPEEDS_X      (7)
-#define FFPARAM_VECTOR1_Y       (8)
-#define FFPARAM_VECTOR1_Z       (9)
-#define FFPARAM_VECTOR1_W       (10)
+#define FFPARAM_VECTOR1_Y       (106)
+#define FFPARAM_VECTOR1_Z       (5)
+#define FFPARAM_VECTOR1_W       (6)
 
 #define FFPARAM_VECTOR2_X       (1013)
-#define FFPARAM_SPEEDS_Y      (11)
-#define FFPARAM_VECTOR2_Y       (12)
-#define FFPARAM_VECTOR2_Z       (13)
-#define FFPARAM_VECTOR2_W       (14)
+#define FFPARAM_VECTOR2_Y       (1009)
+#define FFPARAM_VECTOR2_Z       (7)
+#define FFPARAM_VECTOR2_W       (8)
 
 #define FFPARAM_VECTOR3_X       (1017)
-#define FFPARAM_SPEEDS_Z      (15)
-#define FFPARAM_VECTOR3_Y       (16)
-#define FFPARAM_VECTOR3_Z       (17)
-#define FFPARAM_VECTOR3_W       (18)
+
+#define FFPARAM_VECTOR3_Y       (1012)
+#define FFPARAM_VECTOR3_Z       (9)
+#define FFPARAM_VECTOR3_W       (10)
 
 #define FFPARAM_VECTOR4_X       (1021)
-#define FFPARAM_SPEEDS_W      (19)
-#define FFPARAM_VECTOR4_Y       (20)
-#define FFPARAM_VECTOR4_Z       (21)
-#define FFPARAM_VECTOR4_W       (22)
+#define FFPARAM_VECTOR4_Y       (1015)
+#define FFPARAM_VECTOR4_Z       (11)
+#define FFPARAM_VECTOR4_W       (12)
 
- 
+#define FFPARAM_SPEEDS_X      (10118)
+#define FFPARAM_SPEEDS_Y      (10119)
+#define FFPARAM_SPEEDS_Z      (10120)
+#define FFPARAM_SPEEDS_W      (11021)
 
 #define STRINGIFY(A) #A
 
@@ -109,15 +109,15 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 static CFFGLPluginInfo PluginInfo ( 
 	ShaderMaker::CreateInstance,		// Create method
-	"SM01",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
-	"SoM Mandelbrot",						// *** Plugin name - make it different for each plugin 
+	"SM02",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
+	"SoM Mandelbrot ",						// *** Plugin name - make it different for each plugin 
 	1,						   			// API major version number 													
 	006,								// API minor version number	
 	2,									// *** Plugin major version number
 	000,								// *** Plugin minor version number
 	// FF_EFFECT,							// Plugin type can always be an effect
 	FF_SOURCE,						// or change this to FF_SOURCE for shaders that do not use a texture
-	"SoM Mandelbrot", // *** Plugin description - you can expand on this
+	"SoM Mandelbrot Static", // *** Plugin description - you can expand on this
 	"c.Kleinhuis 2018"			// *** About - use your own name and details
 );
 
@@ -220,9 +220,9 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 	seeds[1] = vec2(sin(iGlobalTime + inputTimes[1] ), cos(iGlobalTime + inputTimes[1]  ))*inputVector2.y + triangulateNormalize(inputVector2.zw);
 	seeds[2] = vec2(sin(iGlobalTime + inputTimes[2]  ), cos(iGlobalTime + inputTimes[2] ))*inputVector3.y + triangulateNormalize(inputVector3.zw);
 	seeds[3] = vec2(sin(iGlobalTime + inputTimes[3] ), cos(iGlobalTime + inputTimes[3]))*inputVector4.y + triangulateNormalize(inputVector4.zw);
-	int depthNormalized = int(inputColour.y*128 * inputColour.w);
+	int depthNormalized = int(inputColour.y*128.0);
 
-	for (i = 0; i<round(128*inputColour.w); i++)
+	for (i = 0; i<128; i++)
 	{ 
 		 
 		z = vec2(z.x*z.x - z.y*z.y, 2.*z.x*z.y) + c;
@@ -235,7 +235,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 		n++;
 	}
 
-	fragColor = vec4(i / round(128 * inputColour.w), i / round(128 * inputColour.w), i / round(128 * inputColour.w), 1.0);
+	fragColor = vec4(i / 128, i / 128, i / 128, 1.0);
 }
 
 
@@ -265,46 +265,46 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	SetMaxInputs(2); // TODO - 4 inputs
 
 	// Parameters
-	SetParamInfo(FFPARAM_SPEED,         "Speed",         FF_TYPE_STANDARD, 0.5f); m_UserSpeed = 0.5f;
+	// SetParamInfo(FFPARAM_SPEED,         "Speed",         FF_TYPE_STANDARD, 0.5f); m_UserSpeed = 0.50f;
  	SetParamInfo(FFPARAM_MOUSEX,        "Center X",       FF_TYPE_STANDARD, 0.5f); m_UserMouseX = 0.5f;
 	 SetParamInfo(FFPARAM_MOUSEY,        "Center Y",       FF_TYPE_STANDARD, 0.5f); m_UserMouseY = 0.5f;
 	//SetParamInfo(FFPARAM_MOUSELEFTX,    "X mouse left",  FF_TYPE_STANDARD, 0.5f); m_UserMouseLeftX = 0.5f;
 	//SetParamInfo(FFPARAM_MOUSELEFTY,    "Y mouse left",  FF_TYPE_STANDARD, 0.5f); m_UserMouseLeftY = 0.5f;
-	SetParamInfo(FFPARAM_RED,           "Zoom",           FF_TYPE_STANDARD,1.0f); m_UserRed = 0.5f;
+	SetParamInfo(FFPARAM_RED,           "Zoom",           FF_TYPE_STANDARD, 0.5f); m_UserRed = 0.5f;
 	SetParamInfo(FFPARAM_GREEN,         "Start of Alternation",         FF_TYPE_STANDARD, 0.5f); m_UserGreen = 0.5f;
-	SetParamInfo(FFPARAM_BLUE,          "Rotation",          FF_TYPE_STANDARD, 0.0f); m_UserBlue = 0.5f;
- 	SetParamInfo(FFPARAM_ALPHA,         "MaxIter",         FF_TYPE_STANDARD, 1.0f); m_UserAlpha = 1.0f;
+	SetParamInfo(FFPARAM_BLUE,          "Rotation",          FF_TYPE_STANDARD, 0.5f); m_UserBlue = 0.0f;
+//	SetParamInfo(FFPARAM_ALPHA,         "Alpha",         FF_TYPE_STANDARD, 1.0f); m_UserAlpha = 1.0f;
 
 
 
 	//SetParamInfo(FFPARAM_VECTOR1_X, "Vector1X", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR1_Y, "       Radius", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR1_Z, "       Real", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR1_W, "       Imag", FF_TYPE_STANDARD, 0.5f);
+	//SetParamInfo(FFPARAM_VECTOR1_Y, "Seed 1 Radius", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR1_Z, "Seed 1 Real", FF_TYPE_STANDARD, 0.50f);
+	SetParamInfo(FFPARAM_VECTOR1_W, "Seed 1 Imag", FF_TYPE_STANDARD, 0.50f);
 
 
 	//SetParamInfo(FFPARAM_VECTOR2_X, "Vector2X", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR2_Y, "       Radius", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR2_Z, "       Real", FF_TYPE_STANDARD, 0.50f);
-	SetParamInfo(FFPARAM_VECTOR2_W, "       Imag", FF_TYPE_STANDARD, 0.50f);
+	//SetParamInfo(FFPARAM_VECTOR2_Y, "Seed 2 Radius", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR2_Z, "Seed 2 Real", FF_TYPE_STANDARD, 0.50f);
+	SetParamInfo(FFPARAM_VECTOR2_W, "Seed 2 Imag", FF_TYPE_STANDARD, 0.50f);
 
 
 	//SetParamInfo(FFPARAM_VECTOR3_X, "Vector3X", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR3_Y, "       Radius", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR3_Z, "       Real", FF_TYPE_STANDARD, 0.50f);
-	SetParamInfo(FFPARAM_VECTOR3_W, "       Imag", FF_TYPE_STANDARD, 0.50f);
+	//SetParamInfo(FFPARAM_VECTOR3_Y, "Seed 3 Radius", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR3_Z, "Seed 3 Real", FF_TYPE_STANDARD, 0.50f);
+	SetParamInfo(FFPARAM_VECTOR3_W, "Seed 3 Imag", FF_TYPE_STANDARD, 0.50f);
 
 
 	//SetParamInfo(FFPARAM_VECTOR4_X, "Seed 4 ", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR4_Y, "       Radius", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR4_Z, "       Real", FF_TYPE_STANDARD, 0.50f);
-	SetParamInfo(FFPARAM_VECTOR4_W, "       Imag", FF_TYPE_STANDARD, 0.50f);
+	//SetParamInfo(FFPARAM_VECTOR4_Y, "Seed 4 Radius", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR4_Z, "Seed 4 Real", FF_TYPE_STANDARD, 0.50f);
+	SetParamInfo(FFPARAM_VECTOR4_W, "Seed 4 Imag", FF_TYPE_STANDARD, 0.50f);
 
 
-	SetParamInfo(FFPARAM_SPEEDS_X, "Seed 1 Speed", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_SPEEDS_Y, "Seed 2 Speed", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_SPEEDS_Z, "Seed 3 Speed", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_SPEEDS_W, "Seed 4 Speed", FF_TYPE_STANDARD, 0.0f);
+	//SetParamInfo(FFPARAM_SPEEDS_X, "Seed 1 Speed", FF_TYPE_STANDARD, 1.0f);
+	//SetParamInfo(FFPARAM_SPEEDS_Y, "Seed 2 Speed", FF_TYPE_STANDARD, 1.0f);
+	//SetParamInfo(FFPARAM_SPEEDS_Z, "Seed 3 Speed", FF_TYPE_STANDARD, 1.0f);
+	//SetParamInfo(FFPARAM_SPEEDS_W, "Seed 4 Speed", FF_TYPE_STANDARD, 1.0f);
 
 	// Set defaults
 	SetDefaults();
@@ -680,6 +680,7 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 				glBindTexture(GL_TEXTURE_2D, Texture2.Handle);
 		}
 
+
 		if(m_inputTextureLocation3 >= 0 && Texture3.Handle > 0) {
 			m_extensions.glActiveTexture(GL_TEXTURE3);
 			if(m_glTexture3 > 0)
@@ -689,6 +690,8 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		}
 		*/
 
+		glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		// Do the draw for the shader to work
 		glEnable(GL_TEXTURE_2D);
 		glBegin(GL_QUADS);

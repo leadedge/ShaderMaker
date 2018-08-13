@@ -76,29 +76,29 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #define FFPARAM_BLUE        (107)
 #define FFPARAM_ALPHA       (108)
 
-#define FFPARAM_VECTOR1_X       (1)
-#define FFPARAM_VECTOR1_Y       (2)
-#define FFPARAM_VECTOR1_Z       (3)
+#define FFPARAM_VECTOR1_X       (1000)
+#define FFPARAM_VECTOR1_Y       (1)
+#define FFPARAM_VECTOR1_Z       (2)
 #define FFPARAM_VECTOR1_W       (1012)
-#define FFPARAM_VECTOR2_X       (4)
-#define FFPARAM_VECTOR2_Y       (5)
-#define FFPARAM_VECTOR2_Z       (6)
+#define FFPARAM_VECTOR2_X       (4000)
+#define FFPARAM_VECTOR2_Y       (3)
+#define FFPARAM_VECTOR2_Z       (4)
 #define FFPARAM_VECTOR2_W       (1016)
 
-#define FFPARAM_VECTOR3_X       (7)
-#define FFPARAM_VECTOR3_Y       (8)
-#define FFPARAM_VECTOR3_Z       (9)
+#define FFPARAM_VECTOR3_X       (7000)
+#define FFPARAM_VECTOR3_Y       (5)
+#define FFPARAM_VECTOR3_Z       (6)
 #define FFPARAM_VECTOR3_W       (1020)
 
-#define FFPARAM_VECTOR4_X       (10)
-#define FFPARAM_VECTOR4_Y       (11)
-#define FFPARAM_VECTOR4_Z       (12)
+#define FFPARAM_VECTOR4_X       (10000)
+#define FFPARAM_VECTOR4_Y       (7)
+#define FFPARAM_VECTOR4_Z       (8)
 #define FFPARAM_VECTOR4_W       (1024)
 
-#define FFPARAM_SPEEDS_X      (13)
-#define FFPARAM_SPEEDS_Y      (14)
-#define FFPARAM_SPEEDS_Z      (15)
-#define FFPARAM_SPEEDS_W      (16)
+#define FFPARAM_SPEEDS_X      (9)
+#define FFPARAM_SPEEDS_Y      (10)
+#define FFPARAM_SPEEDS_Z      (11)
+#define FFPARAM_SPEEDS_W      (12)
 
 #define STRINGIFY(A) #A
 
@@ -107,15 +107,15 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 static CFFGLPluginInfo PluginInfo ( 
 	ShaderMaker::CreateInstance,		// Create method
-	"SM02",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
-	"SoM SineWave",						// *** Plugin name - make it different for each plugin 
+	"SM03",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
+	"SoM SineWave 1D",						// *** Plugin name - make it different for each plugin 
 	1,						   			// API major version number 													
 	006,								// API minor version number	
 	2,									// *** Plugin major version number
 	000,								// *** Plugin minor version number
 	// FF_EFFECT,							// Plugin type can always be an effect
 	FF_SOURCE,						// or change this to FF_SOURCE for shaders that do not use a texture
-	"SoM SineWave 1d", // *** Plugin description - you can expand on this
+	"SoM SineWave 1D", // *** Plugin description - you can expand on this
 	"c.Kleinhuis 2018"			// *** About - use your own name and details
 );
 
@@ -177,10 +177,10 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 	uv = uv*2.0 - 1.0;
 	vec4 color = vec4(1, 1, 1, 1);
 
-	float val =  sin( iGlobalTime + inputTimes.x  * inputVector1.x*10.0 + uv.x * inputVector1.y*100.0*PI)*inputVector1.z;
-	      val += sin( iGlobalTime + inputTimes.y  * inputVector2.x*10.0 + uv.x * inputVector2.y*100.0*PI)*inputVector2.z;
-	      val += sin( iGlobalTime + inputTimes.z  * inputVector3.x *10.0 + uv.x * inputVector3.y*100.0*PI)*inputVector3.z;
-	      val += sin( iGlobalTime + inputTimes.w  * inputVector4.x*10.0 + uv.x  *inputVector4.y*100.0*PI)*inputVector4.z;
+	float val =  sin( iGlobalTime + inputTimes.x *10.0 + uv.x * inputVector1.y*100.0*PI)*inputVector1.z;
+	      val += sin( iGlobalTime + inputTimes.y  *10.0 + uv.x * inputVector2.y*100.0*PI)*inputVector2.z;
+	      val += sin( iGlobalTime + inputTimes.z  *10.0 + uv.x * inputVector3.y*100.0*PI)*inputVector3.z;
+	      val += sin( iGlobalTime + inputTimes.w  *10.0 + uv.x  *inputVector4.y*100.0*PI)*inputVector4.z;
 	    
 	fragColor = color*(val>uv.y ? 1. : 0.);
 }
@@ -223,33 +223,33 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 
 
 
-	SetParamInfo(FFPARAM_VECTOR1_X, "Frequency 1", FF_TYPE_STANDARD, 0.0f);
+//	SetParamInfo(FFPARAM_VECTOR1_X, "Frequency 1", FF_TYPE_STANDARD, 0.0f);
 	SetParamInfo(FFPARAM_VECTOR1_Y, "Wavelength 1", FF_TYPE_STANDARD, 0.0f);
 	SetParamInfo(FFPARAM_VECTOR1_Z, "Amplitude 1", FF_TYPE_STANDARD, 0.0f);
 //	SetParamInfo(FFPARAM_VECTOR1_W, "Vector1W", FF_TYPE_STANDARD, 0.0f);
 
 	
-	SetParamInfo(FFPARAM_VECTOR2_X, "Frequency 2", FF_TYPE_STANDARD, 0.0f);
+//	SetParamInfo(FFPARAM_VECTOR2_X, "Frequency 2", FF_TYPE_STANDARD, 0.0f);
 	SetParamInfo(FFPARAM_VECTOR2_Y, "Wavelength 2", FF_TYPE_STANDARD, 0.0f);
 	SetParamInfo(FFPARAM_VECTOR2_Z, "Amplitude 2", FF_TYPE_STANDARD, 0.0f);
 //	SetParamInfo(FFPARAM_VECTOR2_W, "Vector2W", FF_TYPE_STANDARD, 0.0f);
 
-	SetParamInfo(FFPARAM_VECTOR3_X, "Frequency 3", FF_TYPE_STANDARD, 0.0f);
+//	SetParamInfo(FFPARAM_VECTOR3_X, "Frequency 3", FF_TYPE_STANDARD, 0.0f);
 	SetParamInfo(FFPARAM_VECTOR3_Y, "Wavelength 3", FF_TYPE_STANDARD, 0.0f);
 	SetParamInfo(FFPARAM_VECTOR3_Z, "Amplitude 3", FF_TYPE_STANDARD, 0.0f);
 //	SetParamInfo(FFPARAM_VECTOR3_W, "Vector3W", FF_TYPE_STANDARD, 0.0f);
 
 
-	SetParamInfo(FFPARAM_VECTOR4_X, "Frequency 4", FF_TYPE_STANDARD, 0.0f);
+//	SetParamInfo(FFPARAM_VECTOR4_X, "Frequency 4", FF_TYPE_STANDARD, 0.0f);
 	SetParamInfo(FFPARAM_VECTOR4_Y, "Wavelength 4", FF_TYPE_STANDARD, 0.0f);
 	SetParamInfo(FFPARAM_VECTOR4_Z, "Amplitude 4", FF_TYPE_STANDARD, 0.0f);
 //	SetParamInfo(FFPARAM_VECTOR4_W, "Vector4W", FF_TYPE_STANDARD, 0.0f);
 
 
-	SetParamInfo(FFPARAM_SPEEDS_X, "Speed 1", FF_TYPE_STANDARD, 1.0f);
-	SetParamInfo(FFPARAM_SPEEDS_Y, "Speed 2", FF_TYPE_STANDARD, 1.0f);
-	SetParamInfo(FFPARAM_SPEEDS_Z, "Speed 3", FF_TYPE_STANDARD, 1.0f);
-	SetParamInfo(FFPARAM_SPEEDS_W, "Speed 4", FF_TYPE_STANDARD, 1.0f);
+	SetParamInfo(FFPARAM_SPEEDS_X, "Frequency 1", FF_TYPE_STANDARD, 1.0f);
+	SetParamInfo(FFPARAM_SPEEDS_Y, "Frequency 2", FF_TYPE_STANDARD, 1.0f);
+	SetParamInfo(FFPARAM_SPEEDS_Z, "Frequency 3", FF_TYPE_STANDARD, 1.0f);
+	SetParamInfo(FFPARAM_SPEEDS_W, "Frequency 4", FF_TYPE_STANDARD, 1.0f);
 
 	// Set defaults
 	SetDefaults();

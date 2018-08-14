@@ -77,25 +77,25 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #define FFPARAM_ALPHA       (6)
 
 #define FFPARAM_VECTOR1_X       (109)
-#define FFPARAM_SPEEDS_X      (7)
+#define FFPARAM_SPEEDS_X        (7)
 #define FFPARAM_VECTOR1_Y       (8)
 #define FFPARAM_VECTOR1_Z       (9)
 #define FFPARAM_VECTOR1_W       (10)
 
 #define FFPARAM_VECTOR2_X       (1013)
-#define FFPARAM_SPEEDS_Y      (11)
+#define FFPARAM_SPEEDS_Y        (11)
 #define FFPARAM_VECTOR2_Y       (12)
 #define FFPARAM_VECTOR2_Z       (13)
 #define FFPARAM_VECTOR2_W       (14)
 
 #define FFPARAM_VECTOR3_X       (1017)
-#define FFPARAM_SPEEDS_Z      (15)
+#define FFPARAM_SPEEDS_Z        (15)
 #define FFPARAM_VECTOR3_Y       (16)
 #define FFPARAM_VECTOR3_Z       (17)
 #define FFPARAM_VECTOR3_W       (18)
 
 #define FFPARAM_VECTOR4_X       (1021)
-#define FFPARAM_SPEEDS_W      (19)
+#define FFPARAM_SPEEDS_W        (19)
 #define FFPARAM_VECTOR4_Y       (20)
 #define FFPARAM_VECTOR4_Z       (21)
 #define FFPARAM_VECTOR4_W       (22)
@@ -251,14 +251,14 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 {
 
-	/*
+	#ifdef DEBUG
 	// Debug console window so printf works
 	FILE* pCout; // should really be freed on exit 
 	AllocConsole();
 	freopen_s(&pCout, "CONOUT$", "w", stdout); 
 	printf("Shader Maker Vers 1.004\n");
 	printf("GLSL version [%s]\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-	*/
+#endif
 
 	// Input properties allow for no texture or for four textures
 	SetMinInputs(0);
@@ -278,33 +278,33 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 
 
 	//SetParamInfo(FFPARAM_VECTOR1_X, "Vector1X", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR1_Y, "       Radius", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR1_Z, "       Real", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR1_W, "       Imag", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_SPEEDS_X, "Seed 1 Speed", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR1_Y, "Seed 1 Radius", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR1_Z, "Seed 1 Real", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR1_W, "Seed 1 Imag", FF_TYPE_STANDARD, 0.5f);
 
 
 	//SetParamInfo(FFPARAM_VECTOR2_X, "Vector2X", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR2_Y, "       Radius", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR2_Z, "       Real", FF_TYPE_STANDARD, 0.50f);
-	SetParamInfo(FFPARAM_VECTOR2_W, "       Imag", FF_TYPE_STANDARD, 0.50f);
+	SetParamInfo(FFPARAM_SPEEDS_Y, "Seed 2 Speed", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR2_Y, "Seed 2 Radius", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR2_Z, "Seed 2 Real", FF_TYPE_STANDARD, 0.50f);
+	SetParamInfo(FFPARAM_VECTOR2_W, "Seed 2 Imag", FF_TYPE_STANDARD, 0.50f);
 
 
 	//SetParamInfo(FFPARAM_VECTOR3_X, "Vector3X", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR3_Y, "       Radius", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR3_Z, "       Real", FF_TYPE_STANDARD, 0.50f);
-	SetParamInfo(FFPARAM_VECTOR3_W, "       Imag", FF_TYPE_STANDARD, 0.50f);
+	SetParamInfo(FFPARAM_SPEEDS_Z, "Seed 3 Speed", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR3_Y, "Seed 3 Radius", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR3_Z, "Seed 3 Real", FF_TYPE_STANDARD, 0.50f);
+	SetParamInfo(FFPARAM_VECTOR3_W, "Seed 3 Imag", FF_TYPE_STANDARD, 0.50f);
 
 
 	//SetParamInfo(FFPARAM_VECTOR4_X, "Seed 4 ", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR4_Y, "       Radius", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR4_Z, "       Real", FF_TYPE_STANDARD, 0.50f);
-	SetParamInfo(FFPARAM_VECTOR4_W, "       Imag", FF_TYPE_STANDARD, 0.50f);
-
-
-	SetParamInfo(FFPARAM_SPEEDS_X, "Seed 1 Speed", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_SPEEDS_Y, "Seed 2 Speed", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_SPEEDS_Z, "Seed 3 Speed", FF_TYPE_STANDARD, 0.0f);
 	SetParamInfo(FFPARAM_SPEEDS_W, "Seed 4 Speed", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR4_Y, "Seed 4 Radius", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR4_Z, "Seed 4 Real", FF_TYPE_STANDARD, 0.50f);
+	SetParamInfo(FFPARAM_VECTOR4_W, "Seed 4 Imag", FF_TYPE_STANDARD, 0.50f);
+
+
 
 	// Set defaults
 	SetDefaults();
@@ -741,9 +741,10 @@ char * ShaderMaker::GetParameterDisplay(DWORD dwIndex) {
 	memset(m_DisplayValue, 0, 15);
 	switch (dwIndex) {
 
-		case FFPARAM_SPEED:
-			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserSpeed*100.0));
-			return m_DisplayValue;
+	case FFPARAM_SPEED:
+		cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserSpeed*100.0));
+		return m_DisplayValue;
+	 
 	
 		case FFPARAM_MOUSEX:
 			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserMouseX*m_vpWidth));
@@ -823,6 +824,7 @@ FFResult ShaderMaker::GetInputStatus(DWORD dwIndex)
 
 float ShaderMaker::GetFloatParameter(unsigned int index)
 {
+	// printf("GetFloatParameter %d   \n", index);
 	switch (index) {
 
 		case FFPARAM_SPEED:
@@ -852,28 +854,28 @@ float ShaderMaker::GetFloatParameter(unsigned int index)
 		case FFPARAM_ALPHA:
 			return m_UserAlpha;
 
-		case FFPARAM_VECTOR1_X:
+		case FFPARAM_VECTOR1_X: 
 			return m_vector1.x;
 
-		case FFPARAM_VECTOR1_Y:
+		case FFPARAM_VECTOR1_Y: 
 			return m_vector1.y;
 
-		case FFPARAM_VECTOR1_Z:
+		case FFPARAM_VECTOR1_Z: 
 			return m_vector1.z;
 
 		case FFPARAM_VECTOR1_W:
 			return m_vector1.w;
 
-		case FFPARAM_VECTOR2_X:
+		case FFPARAM_VECTOR2_X: 
 			return m_vector2.x;
 
-		case FFPARAM_VECTOR2_Y:
+		case FFPARAM_VECTOR2_Y: 
 			return m_vector2.y;
 
-		case FFPARAM_VECTOR2_Z:
+		case FFPARAM_VECTOR2_Z:	 
 			return m_vector2.z;
 
-		case FFPARAM_VECTOR2_W:
+		case FFPARAM_VECTOR2_W:	 
 			return m_vector2.w;
 
 
@@ -919,6 +921,7 @@ float ShaderMaker::GetFloatParameter(unsigned int index)
 
 FFResult ShaderMaker::SetFloatParameter(unsigned int index, float value)
 {
+	 
 		switch (index) {
 
 			case FFPARAM_SPEED:
@@ -958,18 +961,22 @@ FFResult ShaderMaker::SetFloatParameter(unsigned int index, float value)
 				break;
 
 			case FFPARAM_VECTOR1_X:
+				// printf("SetFloatParameter %d %f FFPARAM_VECTOR1_X\n", index, value);
 				m_vector1.x = value;
 				break;
 
 			case FFPARAM_VECTOR1_Y:
+				// printf("SetFloatParameter %d %f FFPARAM_VECTOR1_Y\n", index, value);
 				m_vector1.y = value;
 				break;
 
 			case FFPARAM_VECTOR1_Z:
+				// printf("SetFloatParameter %d %f FFPARAM_VECTOR1_Z\n", index, value);
 				m_vector1.z = value;
 				break;
 
 			case FFPARAM_VECTOR1_W:
+				// printf("SetFloatParameter %d %f \n", index, value);
 				m_vector1.w = value;
 				break;
 

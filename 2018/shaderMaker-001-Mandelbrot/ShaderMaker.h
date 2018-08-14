@@ -103,6 +103,10 @@ protected:
 	float m_UserAlpha;
 	Vector m_vector1;
 	Vector m_vector2;
+	float vector2_X;
+	float vector2_Y;
+	float vector2_Z;
+	float vector2_W;
 	Vector m_vector3;
 	Vector m_vector4;
 

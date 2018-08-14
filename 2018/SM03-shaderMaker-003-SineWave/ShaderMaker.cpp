@@ -179,10 +179,11 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 	uv = uv*2.0 - 1.0;
 	vec4 color = vec4(1, 1, 1, 1);
 
-	float val =  sin( iGlobalTime + inputVector1.x  + uv.x * inputVector1.y*100.0*PI)*inputVector1.z;
-	      val += sin( iGlobalTime + inputVector2.x  + uv.x * inputVector2.y*100.0*PI)*inputVector2.z;
-	      val += sin( iGlobalTime + inputVector3.x  + uv.x * inputVector3.y*100.0*PI)*inputVector3.z;
-	      val += sin( iGlobalTime + inputVector4.x  + uv.x  *inputVector4.y*100.0*PI)*inputVector4.z;
+	// warning here inputVector1 is the current time after increments, not the input value of parameter
+	float val =  sin( iGlobalTime + inputVector1.x * 10.0 + uv.x * inputVector1.y*100.0*PI)*inputVector1.z;
+	      val += sin( iGlobalTime + inputVector2.x * 10.0 + uv.x * inputVector2.y*100.0*PI)*inputVector2.z;
+	      val += sin( iGlobalTime + inputVector3.x * 10.0 + uv.x * inputVector3.y*100.0*PI)*inputVector3.z;
+	      val += sin( iGlobalTime + inputVector4.x * 10.0 + uv.x  *inputVector4.y*100.0*PI)*inputVector4.z;
 	    
 	fragColor = color*(val>uv.y ? 1. : 0.);
 }

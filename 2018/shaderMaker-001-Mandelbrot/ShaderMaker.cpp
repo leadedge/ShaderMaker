@@ -216,10 +216,10 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 	vec2 seeds[4];
 	vec2 count[4]; 
 
-	seeds[0] = vec2(sin(iGlobalTime+ inputTimes[0] ), cos(iGlobalTime + inputTimes[0] ))*inputVector1.y+ triangulateNormalize(inputVector1.zw);
-	seeds[1] = vec2(sin(iGlobalTime + inputTimes[1] ), cos(iGlobalTime + inputTimes[1]  ))*inputVector2.y + triangulateNormalize(inputVector2.zw);
-	seeds[2] = vec2(sin(iGlobalTime + inputTimes[2]  ), cos(iGlobalTime + inputTimes[2] ))*inputVector3.y + triangulateNormalize(inputVector3.zw);
-	seeds[3] = vec2(sin(iGlobalTime + inputTimes[3] ), cos(iGlobalTime + inputTimes[3]))*inputVector4.y + triangulateNormalize(inputVector4.zw);
+	seeds[0] = vec2(sin(iGlobalTime+ inputTimes[0]*10.0 ), cos(iGlobalTime + inputTimes[0] * 10.0))*inputVector1.y+ triangulateNormalize(inputVector1.zw);
+	seeds[1] = vec2(sin(iGlobalTime + inputTimes[1] * 10.0), cos(iGlobalTime + inputTimes[1] * 10.0))*inputVector2.y + triangulateNormalize(inputVector2.zw);
+	seeds[2] = vec2(sin(iGlobalTime + inputTimes[2] * 10.0), cos(iGlobalTime + inputTimes[2] * 10.0))*inputVector3.y + triangulateNormalize(inputVector3.zw);
+	seeds[3] = vec2(sin(iGlobalTime + inputTimes[3] * 10.0), cos(iGlobalTime + inputTimes[3] * 10.0))*inputVector4.y + triangulateNormalize(inputVector4.zw);
 	int depthNormalized = int(inputColour.y*128 * inputColour.w);
 
 	for (i = 0; i<round(128*inputColour.w); i++)

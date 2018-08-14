@@ -200,13 +200,14 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 {
 	 
+	/*
 	// Debug console window so printf works
 	FILE* pCout; // should really be freed on exit 
 	AllocConsole();
 	freopen_s(&pCout, "CONOUT$", "w", stdout); 
 	printf("Shader Maker Vers 1.004\n");
 	printf("GLSL version [%s]\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-	 
+	 */
 
 	// Input properties allow for no texture or for four textures
 	SetMinInputs(0);
@@ -599,7 +600,7 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 			m_extensions.glUniform4fARB(m_inputVector4Location, m_times.w, m_vector4.y, m_vector4.z, m_vector4.w);
 
 		if (m_inputTimesLocation >= 0) {
-			printf("Times [%f,%f,%f,%f]\n", m_times.x, m_times.y, m_times.z, m_times.w);
+			//printf("Times [%f,%f,%f,%f]\n", m_times.x, m_times.y, m_times.z, m_times.w);
 			m_extensions.glUniform4fARB(m_inputTimesLocation, m_times.x, m_times.y, m_times.z, m_times.w);
 		}
 

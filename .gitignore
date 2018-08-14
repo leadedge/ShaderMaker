@@ -2,7 +2,7 @@
 *.idb
 *.sdf
 *.exp
-*.map
-*.sln
+*.map 
+*.obj 
 *.opensdf
 *.filters

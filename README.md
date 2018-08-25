@@ -16,7 +16,8 @@ This shall be a physical space with musical resting and dancing opportunities - 
 The concept shall barry itself, selling drinks, food (broccoli) and merchandise should produce the income needed to supply the above
 mentioned spaces around the world spreading knowledge and letting most of the money create either other spaces or sense full contributions to the development of the world - where not only art and free minded spaces carry on but following mostly the golden rule to participate in any outcomings ... 
  
- FOTO HERE
+ 
+ ![one of i-love-chaos logos print your own more than endless possibilities](release/media/i-love-chaos-white.png "One of I-Love-Chaos")
 
 
 # Repository 
@@ -51,6 +52,7 @@ the [https://www.wikiwand.com/en/Three-body_problem_(disambiguation)](three body
  		
  		e.g. when the speeds are 1 and twice and triple the speed of the first
  		the result would be 1*2*3= 6 cycles needed to repeat the whole process
+ 		so it takes 6 times longer
  		
  		and here comes the tip, using prime numbers here for creating non visible loops
  		

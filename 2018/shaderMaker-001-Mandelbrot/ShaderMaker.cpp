@@ -117,7 +117,7 @@ static CFFGLPluginInfo PluginInfo (
 	000,								// *** Plugin minor version number
 	// FF_EFFECT,							// Plugin type can always be an effect
 	FF_SOURCE,						// or change this to FF_SOURCE for shaders that do not use a texture
-	"SoM Mandelbrot", // *** Plugin description - you can expand on this
+	"SoM Mandelbrot",     // *** Plugin description - you can expand on this
 	"c.Kleinhuis 2018"			// *** About - use your own name and details
 );
 
@@ -196,7 +196,8 @@ vec2 rotate(vec2 v, float a) {
 	mat2 m = mat2(c, -s, s, c);
 	return m * v;
 }
-
+const vec3 innerColor = vec3(1.0, 0.0, 0.0);
+const vec3 outerColor = vec3(1.0, 1.0, 1.0);
 void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {
 	float n = 0.;
@@ -219,7 +220,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 	seeds[0] = vec2(sin(iGlobalTime+ inputTimes[0]*10.0 ), cos(iGlobalTime + inputTimes[0] * 10.0))*inputVector1.y+ triangulateNormalize(inputVector1.zw);
 	seeds[1] = vec2(sin(iGlobalTime + inputTimes[1] * 10.0), cos(iGlobalTime + inputTimes[1] * 10.0))*inputVector2.y + triangulateNormalize(inputVector2.zw);
 	seeds[2] = vec2(sin(iGlobalTime + inputTimes[2] * 10.0), cos(iGlobalTime + inputTimes[2] * 10.0))*inputVector3.y + triangulateNormalize(inputVector3.zw);
-	seeds[3] = vec2(sin(iGlobalTime + inputTimes[3] * 10.0), cos(iGlobalTime + inputTimes[3] * 10.0))*inputVector4.y + triangulateNormalize(inputVector4.zw);
+	// seeds[3] = vec2(sin(iGlobalTime + inputTimes[3] * 10.0), cos(iGlobalTime + inputTimes[3] * 10.0))*inputVector4.y + triangulateNormalize(inputVector4.zw);
 	int depthNormalized = int(inputColour.y*128 * inputColour.w);
 
 	for (i = 0; i<round(128*inputColour.w); i++)
@@ -227,15 +228,15 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 		 
 		z = vec2(z.x*z.x - z.y*z.y, 2.*z.x*z.y) + c;
 		if (i > depthNormalized) {
-			z += seeds[i % 4];
+			z += seeds[i % 3];
 		}
 
 		if (dot(z, z)>1e4) break;
 
 		n++;
 	}
-
-	fragColor = vec4(i / round(128 * inputColour.w), i / round(128 * inputColour.w), i / round(128 * inputColour.w), 1.0);
+	fragColor = vec4(mix(outerColor, innerColor, i / round(128 * inputColour.w)), 1.0);
+	// fragColor =  vec4(1.0-i / round(128 * inputColour.w), 1.0 - i / round(128 * inputColour.w), 1.0 - i / round(128 * inputColour.w), 1.0);
 }
 
 
@@ -297,6 +298,9 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	SetParamInfo(FFPARAM_VECTOR3_Z, "Seed 3 Real", FF_TYPE_STANDARD, 0.50f);
 	SetParamInfo(FFPARAM_VECTOR3_W, "Seed 3 Imag", FF_TYPE_STANDARD, 0.50f);
 
+/*
+
+if you like add as many seeds/radii but 3 are the number of alternating seeds in this effect, not 2 nor 4 it shall be three
 
 	//SetParamInfo(FFPARAM_VECTOR4_X, "Seed 4 ", FF_TYPE_STANDARD, 0.0f);
 	SetParamInfo(FFPARAM_SPEEDS_W, "Seed 4 Speed", FF_TYPE_STANDARD, 0.0f);
@@ -304,6 +308,7 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	SetParamInfo(FFPARAM_VECTOR4_Z, "Seed 4 Real", FF_TYPE_STANDARD, 0.50f);
 	SetParamInfo(FFPARAM_VECTOR4_W, "Seed 4 Imag", FF_TYPE_STANDARD, 0.50f);
 
+	*/
 
 
 	// Set defaults

@@ -19,6 +19,19 @@ mentioned spaces around the world spreading knowledge and letting most of the mo
  FOTO HERE
 
 
+# Repository 
+
+this repository is a collection of adjusted [https://github.com/leadedge/ShaderMaker][ShaderMaker] templates with a very high redundancy,
+the build process is - as of now - only manual 64Bit build in [https://visualstudio.microsoft.com/](VisualStudio) and copying of .dll files to resolume plugin directory.
+
+## Quickstart (only dll copy)
+
+the precompiled 64 bit windows .dll files can be found in the release folder of this repository, just copy them to your resolume plugin folder to check them out
+
+in the release folder is a .resolume file with an example deck containing examples for most of the .dlls
+
+
+
 ## Concepts
 
 since this is a public repository and - as described above - only serves the demonstration of chaos theory let me include the ideas that will help to understand why the particular resolume plugins are designed the way they are
@@ -57,13 +70,22 @@ the [https://www.wikiwand.com/en/Three-body_problem_(disambiguation)](three body
 
 
 
-# Repository 
+### Simple / Complex
 
-this repository is a collection of adjusted [https://github.com/leadedge/ShaderMaker][ShaderMaker] templates with a very high redundancy,
-the build process is - as of now - only manual 64Bit build in [https://visualstudio.microsoft.com/](VisualStudio) and copying of .dll files to resolume plugin directory.
+when a effect is available in SIMPLE or COMPLEX mode, basically means the complex has more parameters :) but beside of that, the complexity
+usually introduces the same 2 parameters for a selected bunch of effect parameters, which are:
 
-## Quickstart (only dll copy)
+- radius
+- speed
 
-the precompiled 64 bit windows .dll files can be found in the release folder of this repository, just copy them to your resolume plugin folder to check them out
+which gives a - usually a 2 or 3 dimensional - parameter a radius which it rotates around with defined speed, see remarks about time for more information
 
-in the release folder is a .resolume file with an example deck containing examples for most of the .dlls
+### Time 
+
+
+[http://shadertoy.com](Shadertoy.com) which defined the main syntax for the shader parameters introduces a 'time' concept, this time conecpt
+is so utterly important for working with the provided effects by this repository that i need to loose a word about it
+
+- the time can usually NOT be reseted or rolled back, its a continuos value that increases up to defined limit ( 32/64 bit) by the speeds  
+
+- there may be more than 1 time variable : some effects introduce own time variables with their own, either by extended mode or by definition (example: sinus) 

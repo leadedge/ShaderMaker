@@ -200,7 +200,7 @@ vec2 rotate(vec2 v, float a) {
 void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {
 	float n = 0.;
-	float scale = inputColour.x;
+	float scale = inputColour.x*2.0;
 	vec2 center = (iMouse.xy / iResolution.xy)*2.0 - 1.0;
 	vec2 c = center + rotate(scale*((fragCoord / iResolution.xy)*2.0 - 1.0), inputColour.z*2.0*PI);
 	vec2 z = c*n;

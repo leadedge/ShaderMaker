@@ -272,7 +272,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 
 		n++;
 	}
-	fragColor = vec4(mix(inputColor1, inputColor2, n / iterationsCalc), 1.0);
+	fragColor = vec4(mix(inputColor1.xyz, inputColor2.xyz, n / iterationsCalc), 1.0);
 
 	if (showKnobs) {
 		// mark the seeds
@@ -292,7 +292,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 
 
 );
-#define DEBUG
+#define DEBUG_
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //  Constructor and destructor
@@ -355,19 +355,7 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	SetParamInfo(FFPARAM_COLOR2_RED, "Color 2 Red", FF_TYPE_RED, 1.0f);
 	SetParamInfo(FFPARAM_COLOR2_GREEN, "Color 2 Green", FF_TYPE_GREEN, 0.0f);
 	SetParamInfo(FFPARAM_COLOR2_BLUE, "Color 2 Blue", FF_TYPE_BLUE, 0.0f); 
-
-/*
-
-if you like add as many seeds/radii but 3 are the number of alternating seeds in this effect, not 2 nor 4 it shall be three
-
-	//SetParamInfo(FFPARAM_VECTOR4_X, "Seed 4 ", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_SPEEDS_W, "Seed 4 Speed", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR4_Y, "Seed 4 Radius", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR4_Z, "Seed 4 Real", FF_TYPE_STANDARD, 0.50f);
-	SetParamInfo(FFPARAM_VECTOR4_W, "Seed 4 Imag", FF_TYPE_STANDARD, 0.50f);
-
-	*/
-
+	  
 
 	// Set defaults
 	SetDefaults();
@@ -709,10 +697,10 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		if (m_inputVector4Location >= 0)
 			m_extensions.glUniform4fARB(m_inputVector4Location, 10.0f*(1.0f / exp(m_UserRed*10.0f)), m_UserBlue*PI_2, m_UserMouseX*SCALE_SEED + SHIFT_SEED, m_UserMouseY*SCALE_SEED + SHIFT_SEED);
 		if (m_inputColor1Location >= 0)
-			m_extensions.glUniform3fARB(m_inputColor1Location, m_color1.x, m_color1.y, m_color1.z);
+			m_extensions.glUniform4fARB(m_inputColor1Location, m_color1.x, m_color1.y, m_color1.z,0.0f);
 
 		if (m_inputColor2Location >= 0)
-			m_extensions.glUniform3fARB(m_inputColor2Location, m_color2.x, m_color2.y, m_color2.z);
+			m_extensions.glUniform4fARB(m_inputColor2Location, m_color2.x, m_color2.y, m_color2.z,0.0f);
 
 		if (m_inputTimesLocation >= 0)
 			m_extensions.glUniform4fARB(m_inputTimesLocation, m_times.x, m_times.y, m_times.z, m_times.w);
@@ -1273,7 +1261,7 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 		// Extra uniforms specific to ShaderMaker for buth GLSL Sandbox and ShaderToy
 		// For GLSL Sandbox, the extra "inputColour" uniform has to be typed into the shader
 		//		uniform vec4 inputColour
-		static char *extraUniforms = { "uniform vec4 inputTimes;\nuniform vec3 inputColor1; \nuniform vec3 inputColor2; \nuniform vec4 inputColour;\nuniform vec4 inputVector1; \nuniform vec4 inputVector2; \nuniform vec4 inputVector3; \nuniform vec4 inputVector4; \n" };
+		static char *extraUniforms = { "uniform vec4 inputTimes;\n uniform vec4 inputColor1; \n uniform vec4 inputColor2; \n uniform vec4 inputColour;\nuniform vec4 inputVector1; \nuniform vec4 inputVector2; \nuniform vec4 inputVector3; \nuniform vec4 inputVector4; \n" };
 		
 		// Is it a GLSL Sandbox file?
 		// look for "uniform float time;". If it does not exist it is a ShaderToy file
@@ -1372,7 +1360,18 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 				m_inputTextureLocation2		 = -1;
 				m_inputTextureLocation3		 = -1;
 				m_screenLocation			 = -1;
-				m_surfaceSizeLocation		 = -1;
+				m_surfaceSizeLocation = -1;
+				m_inputVector1Location = -1;
+				m_inputVector2Location = -1;
+				m_inputVector3Location = -1;
+				m_inputVector4Location = -1;
+
+				m_inputVector4Location = -1;
+
+				m_inputShowKnobsLocation   = -1;
+
+				m_inputColor1Location = -1;
+				m_inputColor2Location = -1;
 				// m_surfacePositionLocation	= -1; // TODO
 				// m_vertexPositionLocation    = -1; // TODO
 

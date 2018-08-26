@@ -51,6 +51,16 @@ typedef int64_t LARGE_INTEGER;
 #define GL_READ_FRAMEBUFFER_EXT		0x8CA8
 #define GL_TEXTURE_WRAP_R			0x8072
 
+
+#define SCALE_SEED			16.0f
+#define SHIFT_SEED			-8.0f
+#define TRANSFORM_SCALE			10.0f
+
+#define PI 		    3.1415926535897932384626433832795f
+#define PI_2			2.0f*PI
+
+ 
+
 struct Vector {
 	float x;
 	float y;
@@ -71,7 +81,9 @@ public:
 	// FreeFrameGL plugin methods
 	///////////////////////////////////////////////////
     FFResult SetFloatParameter(unsigned int index, float value);
-    float GetFloatParameter(unsigned int index);
+	FFResult SetBooleanParameter(unsigned int index, bool value);
+	float GetFloatParameter(unsigned int index);
+	bool GetBooleanParameter(unsigned int index);
 	FFResult ProcessOpenGL(ProcessOpenGLStruct* pGL);
 	FFResult InitGL(const FFGLViewportStruct *vp);
 	FFResult DeInitGL();
@@ -109,7 +121,11 @@ protected:
 	float vector2_W;
 	Vector m_vector3;
 	Vector m_vector4;
+	float m_julia;
+    float m_showKnobs;
 
+	Vector m_color1;
+	Vector m_color2;
 	Vector m_speeds;
 
 	Vector m_times;
@@ -212,8 +228,15 @@ protected:
 	GLint m_inputVector2Location;
 	GLint m_inputVector3Location;
 	GLint m_inputVector4Location;
+	GLint m_inputColor1Location;
+	GLint m_inputColor2Location;
+	GLint m_inputVector5Location;
 	GLint m_inputTimesLocation;
-	
+
+	GLint m_inputJuliaLocation;
+
+	GLint m_inputShowKnobsLocation;
+
 	void SetDefaults();
 	void StartCounter();
 	double GetCounter();

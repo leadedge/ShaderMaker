@@ -1206,7 +1206,11 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 				m_inputTextureLocation2		 = -1;
 				m_inputTextureLocation3		 = -1;
 				m_screenLocation			 = -1;
-				m_surfaceSizeLocation		 = -1;
+				m_surfaceSizeLocation = -1;
+				m_inputVector1Location = -1;
+				m_inputVector2Location = -1;
+				m_inputVector3Location = -1;
+				m_inputVector4Location = -1;
 				// m_surfacePositionLocation	= -1; // TODO
 				// m_vertexPositionLocation    = -1; // TODO
 

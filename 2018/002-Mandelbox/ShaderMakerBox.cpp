@@ -66,54 +66,41 @@ int (*cross_secure_sprintf)(char *, size_t, const char *,...) = sprintf_s;
 int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #endif
 
-#define FFPARAM_SPEED       (100)
-#define FFPARAM_MOUSEX      (0)
-#define FFPARAM_MOUSEY      (1)
+#define FFPARAM_SPEED       (0)
+#define FFPARAM_MOUSEX      (1)
+#define FFPARAM_MOUSEY      (2)
 #define FFPARAM_MOUSELEFTX  (103)
 #define FFPARAM_MOUSELEFTY  (104)
-#define FFPARAM_RED         (2)
-#define FFPARAM_GREEN       (3)
-#define FFPARAM_BLUE        (4)
-#define FFPARAM_ALPHA       (5)
+#define FFPARAM_RED         (3)
+#define FFPARAM_GREEN       (4)
+#define FFPARAM_BLUE        (5)
+#define FFPARAM_ALPHA       (6)
 
 #define FFPARAM_VECTOR1_X       (109)
-#define FFPARAM_SPEEDS_X        (107)
-#define FFPARAM_VECTOR1_Y       (108)
-#define FFPARAM_VECTOR1_Z       (6)
-#define FFPARAM_VECTOR1_W       (7)
+#define FFPARAM_SPEEDS_X        (7)
+#define FFPARAM_VECTOR1_Y       (8)
+#define FFPARAM_VECTOR1_Z       (9)
+#define FFPARAM_VECTOR1_W       (10)
 
 #define FFPARAM_VECTOR2_X       (1013)
-#define FFPARAM_SPEEDS_Y        (1011)
-#define FFPARAM_VECTOR2_Y       (1012)
-#define FFPARAM_VECTOR2_Z       (8)
-#define FFPARAM_VECTOR2_W       (9)
+#define FFPARAM_SPEEDS_Y        (11)
+#define FFPARAM_VECTOR2_Y       (12)
+#define FFPARAM_VECTOR2_Z       (13)
+#define FFPARAM_VECTOR2_W       (14)
 
 #define FFPARAM_VECTOR3_X       (1017)
-#define FFPARAM_SPEEDS_Z        (1015)
-#define FFPARAM_VECTOR3_Y       (1016)
-#define FFPARAM_VECTOR3_Z       (10)
-#define FFPARAM_VECTOR3_W       (11)
+#define FFPARAM_SPEEDS_Z        (15)
+#define FFPARAM_VECTOR3_Y       (16)
+#define FFPARAM_VECTOR3_Z       (17)
+#define FFPARAM_VECTOR3_W       (18)
 
+#define FFPARAM_VECTOR4_X       (1021)
+#define FFPARAM_SPEEDS_W        (19)
+#define FFPARAM_VECTOR4_Y       (20)
+#define FFPARAM_VECTOR4_Z       (21)
+#define FFPARAM_VECTOR4_W       (22)
 
-#define FFPARAM_SPEEDS_W        (2015) 
  
-
-#define FFPARAM_COLOR1_RED       (12)  
-#define FFPARAM_COLOR1_GREEN       (13)  
-#define FFPARAM_COLOR1_BLUE       (14)  
-#define FFPARAM_COLOR1_ALPHA       (1115)  
-
-#define FFPARAM_COLOR2_RED       (15)  
-#define FFPARAM_COLOR2_GREEN       (16)  
-#define FFPARAM_COLOR2_BLUE       (17)  
-#define FFPARAM_COLOR2_ALPHA       (1110)   
-
-
-
-#define FFPARAM_VECTOR4_X       (18)
-#define FFPARAM_VECTOR4_Y       (19)
-#define FFPARAM_VECTOR4_Z       (20)
-#define FFPARAM_VECTOR4_W       (21)
 
 #define STRINGIFY(A) #A
 
@@ -217,99 +204,70 @@ vec3 hsv2rgb(vec3 c)
 	return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
 
-const vec3 innerColor = vec3(1.0, 0.0, 0.0);
-const vec3 outerColor = vec3(1.0, 1.0, 1.0);
-const float maxIterations = 128;
-const bool showKnobs=false ;
-const bool julia = false;
-const float mandelboxScale= -1.5;
-
 float fold(float value) {
 
-	if (value > 1.0) {
+	if (value < -1.0) {
 		return 2.0 - value;
 	}
-	else if (value<-1.0) {
+	else if (value>1.0) {
 		return -2.0 - value;
 
 	}
 
 	return value;
 }
-
-
-
+const vec3 innerColor = vec3(1.0, 0.0, 0.0);
+const vec3 outerColor = vec3(1.0, 1.0, 1.0);
+const float maxIterations = 128;
 void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {
-	float n = 0.0;
-	// important: exponential interpolation is done in c area
-	// float scale = 10.0*(1.0 / exp(inputColour.x*10.0));
-
-	vec2 seeds[3]; 
-
-	seeds[0] = inputVector1.zw;
-	seeds[1] = inputVector2.zw;
-	seeds[2] = inputVector3.zw;
-	
-		float scale = inputVector4.x;
-	// float scale = inputColour.x*10.0;
-	// vec2 center = (iMouse.xy / iResolution.xy)*4.0 - 2.0;
-	vec2 center = inputVector4.zw;
-	vec2 pixel = center + rotate(scale*((fragCoord / iResolution.xy)*2.0 - 1.0), inputVector4.y);
+	float n = 0.;
+	float scale = inputColour.x*10.0;
+	vec2 center = (iMouse.xy / iResolution.xy)*2.0 - 1.0;
+	vec2 pixel = center + rotate(scale*((fragCoord / iResolution.xy)*2.0 - 1.0), inputColour.z*2.0*PI);
 	vec2 c = pixel;
-	vec2 z = seeds[0];
+	vec2 z = c*n;
 	int i;
-	if (julia) {
-		z = pixel;
-		c = c*n;
-	}
-	else {
-		c = pixel;
-		z = c*n;
-	}
+	vec4 inputs[4];
 
+	inputs[0] = inputVector1;
+	inputs[1] = inputVector2;
+	inputs[2] = inputVector3;
+	inputs[3] = inputVector4;
+
+
+	vec2 seeds[3];
+
+	seeds[0] = vec2(sin(iGlobalTime + inputTimes[0] * 10.0), cos(iGlobalTime + inputTimes[0] * 10.0))*inputVector1.y + (inputVector1.zw);
+	seeds[1] = vec2(sin(iGlobalTime + inputTimes[1] * 10.0), cos(iGlobalTime + inputTimes[1] * 10.0))*inputVector2.y + (inputVector2.zw);
+	seeds[2] = vec2(sin(iGlobalTime + inputTimes[2] * 10.0), cos(iGlobalTime + inputTimes[2] * 10.0))*inputVector3.y + (inputVector3.zw);
 	// seeds[3] = vec2(sin(iGlobalTime + inputTimes[3] * 10.0), cos(iGlobalTime + inputTimes[3] * 10.0))*inputVector4.y + triangulateNormalize(inputVector4.zw);
-	int depthNormalized = int(inputColour.y * maxIterations * inputColour.w);
+	int depthNormalized = int(inputColour.y * 128 * inputColour.w);
 
-	int iterationsCalc = int(maxIterations*inputColour.w);
-	for (i = 0; i <iterationsCalc; i++)
-	{ 
-		z = vec2(fold(z.x),fold(z.y));
-		if (length(z) < 0.5) {
-			z *= 4.0;
+	for (i = 0; i < round(maxIterations*inputColour.w); i++)
+	{
+		vec2 tempz = vec2(fold(z.x, mandelbox_Scale), fold(z.y, mandelbox_Scale));
+		if (length(tempz) < 0.5) {
+			tempz *= 4.0;
 		}
-		else if (length(z) < 1.0) {
-			z = z / pow(length(z), 2.0);
+		else if (length(tempz) < 1.0) {
+		z = z / pow(length(tempz), 2.0)
 		}
-
-
-		// z = vec2(z.x*z.x - z.y*z.y, 2.*z.x*z.y) + c;
-
-		if (i > depthNormalized) {
-			z += seeds[i % 3];
-		}
-		z = (inputVector5.x*8.0-4.0) * z + c;
-
-
+		//z = vec2(z.x*z.x - z.y*z.y, 2.*z.x*z.y) + c;
 		if (i > depthNormalized) {
 			z += seeds[i % 3];
 		}
 
 		// most simple coloring/breaking condition using small bailout of 4
-		if (length(z) >16.0) {
-			break;
-		}
-
+		if (length(z) > 16.0) break;
 		n++;
 	}
-	fragColor = vec4(mix(inputColor1.xyz, inputColor2.xyz, n / iterationsCalc), 1.0);
+	fragColor = vec4(mix(outerColor, innerColor, n / round(maxIterations * inputColour.w)), 1.0);
 
-	if (showKnobs) {
-		// mark the seeds
-		for (float k = 0; k < 3.0; k++) {
-			if (length(pixel - seeds[int(k)]) < 0.05) {
-				fragColor = vec4(0.5 + k / 3.0, 0.5, 0.5 + k / 3.0, 1.0);
-			}
+	// mark the seeds
+	for (float k = 0; k < 3.0; k++) {
+		if (length(pixel - seeds[int(k)]) < 0.05) {
+			fragColor = vec4(0.5+k/3.0, 0.5 , 0.5 + k / 3.0, 1.0);
 		}
 	}
 
@@ -322,7 +280,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 
 
 );
-#define DEBUG
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //  Constructor and destructor
@@ -344,52 +302,49 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	SetMaxInputs(2); // TODO - 4 inputs
 
 	// Parameters
-	// SetParamInfo(FFPARAM_SPEED,         "Speed",         FF_TYPE_STANDARD, 0.5f); 
- 	SetParamInfo(FFPARAM_MOUSEX,        "Center X",       FF_TYPE_STANDARD, 0.5f);  
-	 SetParamInfo(FFPARAM_MOUSEY,        "Center Y",       FF_TYPE_STANDARD, 0.5f); 
-	//SetParamInfo(FFPARAM_MOUSELEFTX,    "X mouse left",  FF_TYPE_STANDARD, 0.5f); 
-	//SetParamInfo(FFPARAM_MOUSELEFTY,    "Y mouse left",  FF_TYPE_STANDARD, 0.5f);  
-	SetParamInfo(FFPARAM_RED,           "Zoom",           FF_TYPE_STANDARD,0.33f);  
-	SetParamInfo(FFPARAM_GREEN,         "Start of Alternation",         FF_TYPE_STANDARD, 0.0f);  
-	SetParamInfo(FFPARAM_BLUE,          "Rotation",          FF_TYPE_STANDARD, 0.0f);  
- 	SetParamInfo(FFPARAM_ALPHA,         "MaxIter",         FF_TYPE_STANDARD, 0.1f);  
+	SetParamInfo(FFPARAM_SPEED,         "Speed",         FF_TYPE_STANDARD, 0.5f); m_UserSpeed = 0.5f;
+ 	SetParamInfo(FFPARAM_MOUSEX,        "Center X",       FF_TYPE_STANDARD, 0.5f); m_UserMouseX = 0.5f;
+	 SetParamInfo(FFPARAM_MOUSEY,        "Center Y",       FF_TYPE_STANDARD, 0.5f); m_UserMouseY = 0.5f;
+	//SetParamInfo(FFPARAM_MOUSELEFTX,    "X mouse left",  FF_TYPE_STANDARD, 0.5f); m_UserMouseLeftX = 0.5f;
+	//SetParamInfo(FFPARAM_MOUSELEFTY,    "Y mouse left",  FF_TYPE_STANDARD, 0.5f); m_UserMouseLeftY = 0.5f;
+	SetParamInfo(FFPARAM_RED,           "Zoom",           FF_TYPE_STANDARD,1.0f); m_UserRed = 0.5f;
+	SetParamInfo(FFPARAM_GREEN,         "Start of Alternation",         FF_TYPE_STANDARD, 0.5f); m_UserGreen = 0.5f;
+	SetParamInfo(FFPARAM_BLUE,          "Rotation",          FF_TYPE_STANDARD, 0.0f); m_UserBlue = 0.5f;
+ 	SetParamInfo(FFPARAM_ALPHA,         "MaxIter",         FF_TYPE_STANDARD, 1.0f); m_UserAlpha = 1.0f;
 
 
 
 	//SetParamInfo(FFPARAM_VECTOR1_X, "Vector1X", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_SPEEDS_X, "Seed 1 Speed", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_VECTOR1_Y, "Seed 1 Radius", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_SPEEDS_X, "Seed 1 Speed", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR1_Y, "Seed 1 Radius", FF_TYPE_STANDARD, 0.0f);
 	SetParamInfo(FFPARAM_VECTOR1_Z, "Seed 1 Real", FF_TYPE_STANDARD, 0.5f);
 	SetParamInfo(FFPARAM_VECTOR1_W, "Seed 1 Imag", FF_TYPE_STANDARD, 0.5f);
 
 
 	//SetParamInfo(FFPARAM_VECTOR2_X, "Vector2X", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_SPEEDS_Y, "Seed 2 Speed", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_VECTOR2_Y, "Seed 2 Radius", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_SPEEDS_Y, "Seed 2 Speed", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR2_Y, "Seed 2 Radius", FF_TYPE_STANDARD, 0.0f);
 	SetParamInfo(FFPARAM_VECTOR2_Z, "Seed 2 Real", FF_TYPE_STANDARD, 0.50f);
 	SetParamInfo(FFPARAM_VECTOR2_W, "Seed 2 Imag", FF_TYPE_STANDARD, 0.50f);
 
 
 	//SetParamInfo(FFPARAM_VECTOR3_X, "Vector3X", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_SPEEDS_Z, "Seed 3 Speed", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_VECTOR3_Y, "Seed 3 Radius", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_SPEEDS_Z, "Seed 3 Speed", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR3_Y, "Seed 3 Radius", FF_TYPE_STANDARD, 0.0f);
 	SetParamInfo(FFPARAM_VECTOR3_Z, "Seed 3 Real", FF_TYPE_STANDARD, 0.50f);
 	SetParamInfo(FFPARAM_VECTOR3_W, "Seed 3 Imag", FF_TYPE_STANDARD, 0.50f);
 
+/*
 
-	SetParamInfo(FFPARAM_COLOR1_RED, "Color 1 Red", FF_TYPE_RED, 1.0f);
-	SetParamInfo(FFPARAM_COLOR1_GREEN, "Color 1 Green", FF_TYPE_GREEN, 1.0f);
-	SetParamInfo(FFPARAM_COLOR1_BLUE, "Color 1 Blue", FF_TYPE_BLUE, 1.0f);
-	// SetParamInfo(FFPARAM_COLOR1_ALPHA, "Color 1 Alpha", FF_TYPE_RED, 0.50f);
+if you like add as many seeds/radii but 3 are the number of alternating seeds in this effect, not 2 nor 4 it shall be three
 
-	SetParamInfo(FFPARAM_COLOR2_RED, "Color 2 Red", FF_TYPE_RED, 1.0f);
-	SetParamInfo(FFPARAM_COLOR2_GREEN, "Color 2 Green", FF_TYPE_GREEN, 0.0f);
-	SetParamInfo(FFPARAM_COLOR2_BLUE, "Color 2 Blue", FF_TYPE_BLUE, 0.0f);
+	//SetParamInfo(FFPARAM_VECTOR4_X, "Seed 4 ", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_SPEEDS_W, "Seed 4 Speed", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR4_Y, "Seed 4 Radius", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR4_Z, "Seed 4 Real", FF_TYPE_STANDARD, 0.50f);
+	SetParamInfo(FFPARAM_VECTOR4_W, "Seed 4 Imag", FF_TYPE_STANDARD, 0.50f);
 
-	SetParamInfo(FFPARAM_VECTOR4_X, "Mandelbox Scale -4..+4", FF_TYPE_STANDARD, 0.15f);
-//	SetParamInfo(FFPARAM_VECTOR4_Y, "Seed 4 Real", FF_TYPE_STANDARD, 0.00f);
-//	SetParamInfo(FFPARAM_VECTOR4_Z, "Seed 4 Real", FF_TYPE_STANDARD, 0.00f);
-//	SetParamInfo(FFPARAM_VECTOR4_W, "Seed 4 Real", FF_TYPE_STANDARD, 0.00f);
+	*/
 
 
 	// Set defaults
@@ -724,31 +679,16 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 			m_extensions.glUniform4fARB(m_inputColourLocation, m_UserRed, m_UserGreen, m_UserBlue, m_UserAlpha);
 
 		if (m_inputVector1Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector1Location, m_vector1.x, m_vector1.y, m_vector1.z*SCALE_SEED+ SHIFT_SEED, m_vector1.w*SCALE_SEED + SHIFT_SEED);
+			m_extensions.glUniform4fARB(m_inputVector1Location, m_vector1.x, m_vector1.y, m_vector1.z, m_vector1.w);
 		if (m_inputVector2Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector2Location, m_vector2.x, m_vector2.y, m_vector2.z*SCALE_SEED + SHIFT_SEED, m_vector2.w*SCALE_SEED + SHIFT_SEED);
+			m_extensions.glUniform4fARB(m_inputVector2Location, m_vector2.x, m_vector2.y, m_vector2.z, m_vector2.w);
 		if (m_inputVector3Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector3Location, m_vector3.x, m_vector3.y, m_vector3.z*SCALE_SEED + SHIFT_SEED, m_vector3.w*SCALE_SEED + SHIFT_SEED);
+			m_extensions.glUniform4fARB(m_inputVector3Location, m_vector3.x, m_vector3.y, m_vector3.z, m_vector3.w);
 		if (m_inputVector4Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector4Location, 10.0f*(1.0f / exp(m_UserRed*10.0f)), m_UserBlue*PI_2, m_UserMouseX*SCALE_SEED + SHIFT_SEED, m_UserMouseY*SCALE_SEED + SHIFT_SEED);
-		
-		if (m_inputVector5Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector5Location, m_vector4.x, m_vector4.y, m_vector4.z, m_vector4.w );
-		if (m_inputColor1Location >= 0)
-			m_extensions.glUniform4fARB(m_inputColor1Location, m_color1.x, m_color1.y, m_color1.z,0.0f);
+			m_extensions.glUniform4fARB(m_inputVector4Location, m_vector4.x, m_vector4.y, m_vector4.z, m_vector4.w);
 
-		if (m_inputColor2Location >= 0)
-			m_extensions.glUniform4fARB(m_inputColor2Location, m_color2.x, m_color2.y, m_color2.z,0.0f);
-
-		if (m_inputTimesLocation >= 0)
+		if (m_inputTimesLocation  >= 0)
 			m_extensions.glUniform4fARB(m_inputTimesLocation, m_times.x, m_times.y, m_times.z, m_times.w);
-
-
-		if (m_inputJuliaLocation >= 0)
-			m_extensions.glUniform1iARB(m_inputJuliaLocation, m_julia > 0.5f  );
-
-		if (m_inputShowKnobsLocation >= 0)
-			m_extensions.glUniform1iARB(m_inputShowKnobsLocation, m_showKnobs >0.5f  );
 
 
 		// Bind a texture if the shader needs one
@@ -1015,31 +955,14 @@ float ShaderMaker::GetFloatParameter(unsigned int index)
 			return m_speeds.z;
 		case FFPARAM_SPEEDS_W:
 			return m_speeds.w;
-
-		case FFPARAM_COLOR1_RED:
-			return m_color1.x;
-		case FFPARAM_COLOR1_GREEN:
-			return m_color1.y;
-		case FFPARAM_COLOR1_BLUE:
-			return m_color1.z;
-
-		case FFPARAM_COLOR2_RED:
-			return m_color2.x;
-		case FFPARAM_COLOR2_GREEN:
-			return m_color2.y;
-		case FFPARAM_COLOR2_BLUE:
-			return m_color2.z;
-
-
-
 		default:
 			return FF_FAIL;
 	}
 }
- 
-FFResult ShaderMaker::SetFloatParameter(unsigned int index, float value)
-	{
 
+FFResult ShaderMaker::SetFloatParameter(unsigned int index, float value)
+{
+	 
 		switch (index) {
 
 			case FFPARAM_SPEED:
@@ -1165,28 +1088,7 @@ FFResult ShaderMaker::SetFloatParameter(unsigned int index, float value)
 
 			case FFPARAM_SPEEDS_W:
 				m_speeds.w = value;
-				break;
-
-			case FFPARAM_COLOR1_RED:
-				// printf("Color 1 red %f\n", value);
-				  m_color1.x=value;
-				  break;
-			case FFPARAM_COLOR1_GREEN:
-				 m_color1.y = value;
-				 break;
-			case FFPARAM_COLOR1_BLUE:
-				 m_color1.z = value;
-				 break;
-
-			case FFPARAM_COLOR2_RED:
-				 m_color2.x = value;
-				 break;
-			case FFPARAM_COLOR2_GREEN:
-				 m_color2.y = value;
-				 break;
-			case FFPARAM_COLOR2_BLUE:
-				 m_color2.z = value;
-				 break;
+				break; 
 
 			default:
 				return FF_FAIL;
@@ -1299,7 +1201,7 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 		// Extra uniforms specific to ShaderMaker for buth GLSL Sandbox and ShaderToy
 		// For GLSL Sandbox, the extra "inputColour" uniform has to be typed into the shader
 		//		uniform vec4 inputColour
-		static char *extraUniforms = { "uniform vec4 inputTimes;\n uniform vec4 inputColor1; \n uniform vec4 inputColor2; \n uniform vec4 inputColour;\nuniform vec4 inputVector1; \nuniform vec4 inputVector2; \nuniform vec4 inputVector3; \nuniform vec4 inputVector4;\nuniform vec4 inputVector5; \n" };
+		static char *extraUniforms = { "uniform vec4 inputColour;\nuniform vec4 inputVector1; \nuniform vec4 inputVector2; \nuniform vec4 inputVector3; \nuniform vec4 inputVector4; \n" };
 		
 		// Is it a GLSL Sandbox file?
 		// look for "uniform float time;". If it does not exist it is a ShaderToy file
@@ -1337,6 +1239,7 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 									  "uniform float iSampleRate;\n"
 									  "uniform vec4 iMouse;\n"
 				"const float PI = 3.1415926535897932384626433832795; "
+				"uniform vec4 inputTimes; "
 									  "uniform vec4 iDate;\n"
 									  "uniform float iChannelTime[4];\n"
 									  "uniform vec3 iChannelResolution[4];\n"
@@ -1398,17 +1301,7 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 				m_inputTextureLocation2		 = -1;
 				m_inputTextureLocation3		 = -1;
 				m_screenLocation			 = -1;
-				m_surfaceSizeLocation = -1;
-				m_inputVector1Location = -1;
-				m_inputVector2Location = -1;
-				m_inputVector3Location = -1;
-				m_inputVector4Location = -1; 
-				m_inputVector5Location = -1;
-
-				m_inputShowKnobsLocation   = -1;
-
-				m_inputColor1Location = -1;
-				m_inputColor2Location = -1;
+				m_surfaceSizeLocation		 = -1;
 				// m_surfacePositionLocation	= -1; // TODO
 				// m_vertexPositionLocation    = -1; // TODO
 
@@ -1430,7 +1323,6 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 				m_inputVector2Location = -1;
 				m_inputVector3Location = -1;
 				m_inputVector4Location = -1;
-				m_inputVector5Location = -1;
 
 				// ===========================================================
 				// ShaderToy new uniforms
@@ -1611,24 +1503,10 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 
 				if (m_inputVector4Location  < 0)
 					m_inputVector4Location = m_shader.FindUniform("inputVector4");
-				if (m_inputVector5Location  < 0)
-					m_inputVector5Location = m_shader.FindUniform("inputVector5");
-
-				if (m_inputColor1Location  < 0)
-					m_inputColor1Location = m_shader.FindUniform("inputColor1");
-
-				if (m_inputColor2Location  < 0)
-					m_inputColor2Location = m_shader.FindUniform("inputColor2");
 
 
 				if (m_inputTimesLocation  < 0)
 					m_inputTimesLocation = m_shader.FindUniform("inputTimes");
-
-				if (m_inputJuliaLocation  < 0)
-					m_inputJuliaLocation = m_shader.FindUniform("julia");
-
-				if (m_inputShowKnobsLocation  < 0)
-					m_inputShowKnobsLocation = m_shader.FindUniform("showKnobs");
 
 
 				m_shader.UnbindShader();

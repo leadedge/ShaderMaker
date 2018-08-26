@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D028357D-EE31-446F-B99A-EA6F21D636B5}</ProjectGuid>
     <RootNamespace>ShaderMaker</RootNamespace>
-    <ProjectName>somShadertoy-CircleSunStylisticExt</ProjectName>
+    <ProjectName>SoM-003-CircleSun</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -117,9 +117,7 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <GenerateMapFile>true</GenerateMapFile>
     </Link>
-    <PostBuildEvent>
-      <Command>"$(ProjectDir)..\ffglhost\FFGLHost.exe $(OutDir)$(TargetName)$(TargetExt)"</Command>
-    </PostBuildEvent>
+    <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

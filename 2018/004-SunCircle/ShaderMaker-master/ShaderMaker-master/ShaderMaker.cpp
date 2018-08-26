@@ -108,16 +108,16 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 static CFFGLPluginInfo PluginInfo ( 
 	ShaderMaker::CreateInstance,		// Create method
-	"S075",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
-	"sOm-SunCircleExt",						// *** Plugin name - make it different for each plugin 
+	"SM04",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
+	"sOm-CircleSun",						// *** Plugin name - make it different for each plugin 
 	1,						   			// API major version number 													
 	006,								// API minor version number	
-	1,									// *** Plugin major version number
-	003,								// *** Plugin minor version number
+	2,									// *** Plugin major version number
+	000,								// *** Plugin minor version number
 	FF_EFFECT,							// Plugin type can always be an effect
 	// FF_SOURCE,						// or change this to FF_SOURCE for shaders that do not use a texture
 	"sOm-SunCircleStylistic v2 - more params", // *** Plugin description - you can expand on this
-	"spack-O-mat 2015 "			// *** About - use your own name and details
+	"c.Kleinhuis 2018 "			// *** About - use your own name and details
 );
 
  
@@ -226,7 +226,8 @@ center=rotate2d(center,rot);
  
 float wheel(float rot,vec2 center,float radius,float width, float height,float dist)
 {
-	float val=circleSegmentModulus(rot,center,radius,width,height,dist);
+	// use exponential interpolation for radius and height
+	float val=circleSegmentModulus(rot,center,4.0-4.0*(1.0/exp(radius)),  width, 4.0-4.0*(1.0 / exp(height)),dist);
 	return val;//+circle(center,radius-width/2,width/2);
 }
 
@@ -246,7 +247,7 @@ uv=rotate2d(uv+iParam2.yz*aspect,iParam2.x*PI);
 vec2 uv1=rotate2d(uv,iParam3.w*PI);
 vec2 uv2=rotate2d(uv,iParam5.w*PI);
 
-float step=2*PI/ floor((iParam2.w+1.0)*6.0);
+float step=2*PI/ floor((iParam2.w+1.0)*64.0);
 float height1=iParam3.z*2.0+2.0;
 float height2=iParam5.z*2.0+2.0;
 
@@ -263,21 +264,20 @@ color.w=1.0;
 	)
 ;
 
-
+#define DEBUG
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //  Constructor and destructor
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 {
-
-	/*
+#ifdef DEBUG
 	// Debug console window so printf works
 	FILE* pCout; // should really be freed on exit 
 	AllocConsole();
 	freopen_s(&pCout, "CONOUT$", "w", stdout); 
 	printf("Shader Maker Vers 1.004\n");
 	printf("GLSL version [%s]\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-	*/
+#endif
 
 	// Input properties allow for no texture or for four textures
 	SetMinInputs(0);
@@ -569,10 +569,10 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		if(m_timeLocation >= 0) 
 			m_extensions.glUniform1fARB(m_timeLocation, m_time);
 	
-		m_extensions.glUniform4fARB(m_iParam2Location, m_UserParam2x*2.0-1.0,m_UserParam2y*2.0-1.0,m_UserParam2z*2.0-1.0,m_UserParam2w*2.0-1.0); 
-		m_extensions.glUniform4fARB(m_iParam3Location, m_UserParam3x*2.0-1.0,m_UserParam3y*2.0-1.0,m_UserParam3z*2.0-1.0,m_UserParam3w*2.0-1.0); 
+		m_extensions.glUniform4fARB(m_iParam2Location, m_UserParam2x*2.0f-1.0f,m_UserParam2y*2.0f-1.0f,m_UserParam2z*2.0f-1.0f,m_UserParam2w*2.0f-1.0f); 
+		m_extensions.glUniform4fARB(m_iParam3Location, m_UserParam3x*2.0f-1.0f,m_UserParam3y*2.0f-1.0f,m_UserParam3z*2.0f-1.0f,m_UserParam3w*2.0f-1.0f); 
 		m_extensions.glUniform4fARB(m_iParam4Location, m_UserParam4x,m_UserParam4y,m_UserParam4z,m_UserParam4w); 
-		m_extensions.glUniform4fARB(m_iParam5Location, m_UserParam5x*2.0-1.0,m_UserParam5y*2.0-1.0,m_UserParam5z*2.0-1.0,m_UserParam5w*2.0-1.0); 
+		m_extensions.glUniform4fARB(m_iParam5Location, m_UserParam5x*2.0f-1.0f,m_UserParam5y*2.0f-1.0f,m_UserParam5z*2.0f-1.0f,m_UserParam5w*2.0f-1.0f); 
 		//
 		// GLSL sandbox
 		//
@@ -1302,9 +1302,12 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 				m_inputTextureLocation		 = -1;
 				m_inputTextureLocation1		 = -1;
 				m_inputTextureLocation2		 = -1;
-				m_inputTextureLocation3		 = -1;
+				m_iParam2Location = -1;
+				m_iParam3Location = -1;
+				m_iParam4Location = -1;
+				m_iParam5Location = -1;
 				m_screenLocation			 = -1;
-				m_surfaceSizeLocation		 = -1;
+				m_surfaceSizeLocation		 = -1; 
 				// m_surfacePositionLocation	= -1; // TODO
 				// m_vertexPositionLocation    = -1; // TODO
 

@@ -1,4 +1,5 @@
 #include "FFGLShader.h"
+#include "stdio.h"
 
 FFGLShader::FFGLShader()
 {
@@ -137,7 +138,8 @@ int FFGLShader::Compile(const char *vtxProgram, const char *fragProgram)
         log);
 
       log[returnedLength] = 0;
-	  MessageBox(NULL, log, 0, 0);
+	  // MessageBox(NULL, log, 0, 0);
+	   printf(log);
       int a;
       a=0;
     }

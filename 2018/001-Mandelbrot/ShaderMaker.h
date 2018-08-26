@@ -56,7 +56,7 @@ typedef int64_t LARGE_INTEGER;
 #define SHIFT_SEED			-2.0f
 #define TRANSFORM_SCALE			10.0f
 
-#define PI 		    3.1415926535897932384626433832795
+#define PI 		    3.1415926535897932384626433832795f
 #define PI_2			2.0f*PI
 
  

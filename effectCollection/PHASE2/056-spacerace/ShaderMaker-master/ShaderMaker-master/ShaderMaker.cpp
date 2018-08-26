@@ -751,9 +751,9 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 
 	// Parameters
 	SetParamInfo(FFPARAM_SPEED,         "Speed",         FF_TYPE_STANDARD, 0.5f); m_UserSpeed = 0.0f;
-	SetParamInfo(FFPARAM_SPEED2,         "Speed 2",         FF_TYPE_STANDARD, 0.0f); m_UserSpeed2 = 0.0f;
-	SetParamInfo(FFPARAM_SPEED3,         "Speed 3",         FF_TYPE_STANDARD, 0.0f); m_UserSpeed3 = 0.0f;
-	SetParamInfo(FFPARAM_SPEED4,         "Speed 4",         FF_TYPE_STANDARD, 0.0f); m_UserSpeed4 = 0.0f;
+	SetParamInfo(FFPARAM_SPEED2,         "Speed 2",         FF_TYPE_STANDARD, 0.5f); m_UserSpeed2 = 0.0f;
+	SetParamInfo(FFPARAM_SPEED3,         "Speed 3",         FF_TYPE_STANDARD, 0.5f); m_UserSpeed3 = 0.0f;
+	SetParamInfo(FFPARAM_SPEED4,         "Speed 4",         FF_TYPE_STANDARD, 0.5f); m_UserSpeed4 = 0.0f;
 
 	SetParamInfo(FFPARAM_MOUSEX,        "CamrotX",       FF_TYPE_STANDARD, 0.0f); m_UserMouseX = 0.0f;
 	SetParamInfo(FFPARAM_MOUSEY,        "CamrotY",       FF_TYPE_STANDARD, 0.0f); m_UserMouseY = 0.0f;

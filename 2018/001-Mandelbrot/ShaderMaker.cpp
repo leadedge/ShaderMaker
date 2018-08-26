@@ -67,40 +67,40 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #endif
 
 #define FFPARAM_SPEED       (0)
-#define FFPARAM_MOUSEX      (101)
-#define FFPARAM_MOUSEY      (102)
+#define FFPARAM_MOUSEX      (1)
+#define FFPARAM_MOUSEY      (2)
 #define FFPARAM_MOUSELEFTX  (103)
 #define FFPARAM_MOUSELEFTY  (104)
-#define FFPARAM_RED         (105)
-#define FFPARAM_GREEN       (106)
-#define FFPARAM_BLUE        (107)
-#define FFPARAM_ALPHA       (108)
+#define FFPARAM_RED         (3)
+#define FFPARAM_GREEN       (4)
+#define FFPARAM_BLUE        (5)
+#define FFPARAM_ALPHA       (6)
 
-#define FFPARAM_VECTOR1_X       (1000)
-#define FFPARAM_SPEEDS_X      (1)
-#define FFPARAM_VECTOR1_Y       (2)
-#define FFPARAM_VECTOR1_Z       (3)
-#define FFPARAM_VECTOR1_W       (1012)
+#define FFPARAM_VECTOR1_X       (109)
+#define FFPARAM_SPEEDS_X        (7)
+#define FFPARAM_VECTOR1_Y       (8)
+#define FFPARAM_VECTOR1_Z       (9)
+#define FFPARAM_VECTOR1_W       (10)
 
+#define FFPARAM_VECTOR2_X       (1013)
+#define FFPARAM_SPEEDS_Y        (11)
+#define FFPARAM_VECTOR2_Y       (12)
+#define FFPARAM_VECTOR2_Z       (13)
+#define FFPARAM_VECTOR2_W       (14)
 
-#define FFPARAM_VECTOR2_X       (4000)
-#define FFPARAM_SPEEDS_Y      (4)
-#define FFPARAM_VECTOR2_Y       (5)
-#define FFPARAM_VECTOR2_Z       (6)
-#define FFPARAM_VECTOR2_W       (1016)
+#define FFPARAM_VECTOR3_X       (1017)
+#define FFPARAM_SPEEDS_Z        (15)
+#define FFPARAM_VECTOR3_Y       (16)
+#define FFPARAM_VECTOR3_Z       (17)
+#define FFPARAM_VECTOR3_W       (18)
 
-#define FFPARAM_VECTOR3_X       (7000)
-#define FFPARAM_SPEEDS_Z      (7)
-#define FFPARAM_VECTOR3_Y       (8)
-#define FFPARAM_VECTOR3_Z       (9)
-#define FFPARAM_VECTOR3_W       (1020)
+#define FFPARAM_VECTOR4_X       (1021)
+#define FFPARAM_SPEEDS_W        (19)
+#define FFPARAM_VECTOR4_Y       (20)
+#define FFPARAM_VECTOR4_Z       (21)
+#define FFPARAM_VECTOR4_W       (22)
 
-#define FFPARAM_VECTOR4_X       (10000)
-#define FFPARAM_SPEEDS_W      (10)
-#define FFPARAM_VECTOR4_Y       (11)
-#define FFPARAM_VECTOR4_Z       (12)
-#define FFPARAM_VECTOR4_W       (1024)
-
+ 
 
 #define STRINGIFY(A) #A
 
@@ -109,15 +109,15 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 static CFFGLPluginInfo PluginInfo ( 
 	ShaderMaker::CreateInstance,		// Create method
-	"SM03",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
-	"SoM SineWave 1D",						// *** Plugin name - make it different for each plugin 
+	"SM01",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
+	"SoM Mandelbrot",						// *** Plugin name - make it different for each plugin 
 	1,						   			// API major version number 													
 	006,								// API minor version number	
 	2,									// *** Plugin major version number
 	000,								// *** Plugin minor version number
 	// FF_EFFECT,							// Plugin type can always be an effect
 	FF_SOURCE,						// or change this to FF_SOURCE for shaders that do not use a texture
-	"SoM SineWave 1D", // *** Plugin description - you can expand on this
+	"SoM Mandelbrot",     // *** Plugin description - you can expand on this
 	"c.Kleinhuis 2018"			// *** About - use your own name and details
 );
 
@@ -164,29 +164,106 @@ char *fragmentShaderCode = STRINGIFY (
 // ==================== PASTE WITHIN THESE LINES =======================
 
 
+float triangulate(float x) {
+	// creates a triangular function that maps 0..1 to 0..1..0 
+	// helper method used to create properties that are loopable
+	return 1.0-abs((mod(x, 1.0) - 0.5)) * 2.0;
+}
+vec2 triangulate(vec2 x) {
+	// creates a triangular function that maps 0..1 to 0..1..0 
+	// helper method used to create properties that are loopable
+	return 1.0 - abs((mod(x, 1.0) - 0.5)) * 2.0;;
+}
+vec2 expandNormalizedToNegative1(vec2 x) {
+	// creates a triangular function that maps 0..1 to 0..1..0 
+	// helper method used to create properties that are loopable
+	return x *2.0 - 1.0;
+}
 
+vec2 triangulateNormalize(vec2 x) {
+	// creates a triangular function that maps 0..1 to 0..1..0 
+	// helper method used to create properties that are loopable
+	return expandNormalizedToNegative1(x);
+}
+vec2 piiate(vec2 x) {
+	// creates a triangular function that maps 0..1 to 0..1..0 
+	// helper method used to create properties that are loopable
+	return vec2(triangulate(x.x), triangulate(x.y));
+}
+vec2 rotate(vec2 v, float a) {
+	float s = sin(a);
+	float c = cos(a);
+	mat2 m = mat2(c, -s, s, c);
+	return m * v;
+}
 
-vec3 wavelengths = vec3(100., 200., 300.);
-vec3 frequencies = vec3(1., -2., 3.);
-vec3 amplitudes = vec3(1., .5, .25);
+vec3 hsv2rgb(vec3 c)
+{
+	vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+	vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+	return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+}
+
+const vec3 innerColor = vec3(1.0, 0.0, 0.0);
+const vec3 outerColor = vec3(1.0, 1.0, 1.0);
+const float maxIterations = 128;
+
+const mandelbox_Scale = 2.0;
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {
-	// frequency, wavelength,amplitude, 
-	vec2 uv = fragCoord.xy / iResolution.xy; 
-	vec2 mouse = iMouse.xy / iResolution.xy;
+	float n = 0.;
+	float scale = inputColour.x*10.0;
+	vec2 center = (iMouse.xy / iResolution.xy)*2.0 - 1.0;
+	vec2 pixel = center + rotate(scale*((fragCoord / iResolution.xy)*2.0 - 1.0), inputColour.z*2.0*PI);
+	vec2 c = pixel;
+	vec2 z = c*n;
+	int i;
+	vec4 inputs[4];
 
-	uv = uv*2.0 - 1.0;
-	vec4 color = vec4(1, 1, 1, 1);
+	inputs[0] = inputVector1;
+	inputs[1] = inputVector2;
+	inputs[2] = inputVector3;
+	inputs[3] = inputVector4;
 
-	// warning here inputVector1 is the current time after increments, not the input value of parameter
-	float val =  sin( iGlobalTime + inputVector1.x * 10.0 + uv.x * inputVector1.y*100.0*PI)*inputVector1.z;
-	      val += sin( iGlobalTime + inputVector2.x * 10.0 + uv.x * inputVector2.y*100.0*PI)*inputVector2.z;
-	      val += sin( iGlobalTime + inputVector3.x * 10.0 + uv.x * inputVector3.y*100.0*PI)*inputVector3.z;
-	      val += sin( iGlobalTime + inputVector4.x * 10.0 + uv.x  *inputVector4.y*100.0*PI)*inputVector4.z;
-	    
-	fragColor = color*(val>uv.y ? 1. : 0.);
+
+	vec2 seeds[3];
+
+	seeds[0] = vec2(sin(iGlobalTime + inputTimes[0] * 10.0), cos(iGlobalTime + inputTimes[0] * 10.0))*inputVector1.y + (inputVector1.zw);
+	seeds[1] = vec2(sin(iGlobalTime + inputTimes[1] * 10.0), cos(iGlobalTime + inputTimes[1] * 10.0))*inputVector2.y + (inputVector2.zw);
+	seeds[2] = vec2(sin(iGlobalTime + inputTimes[2] * 10.0), cos(iGlobalTime + inputTimes[2] * 10.0))*inputVector3.y + (inputVector3.zw);
+	// seeds[3] = vec2(sin(iGlobalTime + inputTimes[3] * 10.0), cos(iGlobalTime + inputTimes[3] * 10.0))*inputVector4.y + triangulateNormalize(inputVector4.zw);
+	int depthNormalized = int(inputColour.y * 128 * inputColour.w);
+
+
+	for (i = 0; i < round(maxIterations*inputColour.w); i++)
+	{
+
+
+	
+
+		z = vec2(z.x*z.x - z.y*z.y, 2.*z.x*z.y) + c;
+		if (i > depthNormalized) {
+			z += seeds[i % 3];
+		}
+
+		// most simple coloring/breaking condition using small bailout of 4
+		if (length(z) > 4.0) break;
+		n++;
+	}
+	fragColor = vec4(mix(outerColor, innerColor, n / round(maxIterations * inputColour.w)), 1.0);
+
+	// mark the seeds
+	for (float k = 0; k < 3.0; k++) {
+		if (length(pixel - seeds[int(k)]) < 0.05) {
+			fragColor = vec4(0.5+k/3.0, 0.5 , 0.5 + k / 3.0, 1.0);
+		}
+	}
+
+
+	// fragColor =  vec4(1.0-i / round(128 * inputColour.w), 1.0 - i / round(128 * inputColour.w), 1.0 - i / round(128 * inputColour.w), 1.0);
 }
+
 
 // ==================== END OF SHADER CODE PASTE =======================
 
@@ -199,15 +276,15 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 {
-	 
-	/*
+
+	#ifdef DEBUG
 	// Debug console window so printf works
 	FILE* pCout; // should really be freed on exit 
 	AllocConsole();
 	freopen_s(&pCout, "CONOUT$", "w", stdout); 
 	printf("Shader Maker Vers 1.004\n");
 	printf("GLSL version [%s]\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-	 */
+#endif
 
 	// Input properties allow for no texture or for four textures
 	SetMinInputs(0);
@@ -215,43 +292,48 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 
 	// Parameters
 	SetParamInfo(FFPARAM_SPEED,         "Speed",         FF_TYPE_STANDARD, 0.5f); m_UserSpeed = 0.5f;
-//	SetParamInfo(FFPARAM_MOUSEX,        "X mouse",       FF_TYPE_STANDARD, 0.5f); m_UserMouseX = 0.5f;
-//	SetParamInfo(FFPARAM_MOUSEY,        "Y mouse",       FF_TYPE_STANDARD, 0.5f); m_UserMouseY = 0.5f;
-//	SetParamInfo(FFPARAM_MOUSELEFTX,    "X mouse left",  FF_TYPE_STANDARD, 0.5f); m_UserMouseLeftX = 0.5f;
-//	SetParamInfo(FFPARAM_MOUSELEFTY,    "Y mouse left",  FF_TYPE_STANDARD, 0.5f); m_UserMouseLeftY = 0.5f;
-//	SetParamInfo(FFPARAM_RED,           "Red",           FF_TYPE_STANDARD, 0.5f); m_UserRed = 0.5f;
-//	SetParamInfo(FFPARAM_GREEN,         "Green",         FF_TYPE_STANDARD, 0.5f); m_UserGreen = 0.5f;
-//	SetParamInfo(FFPARAM_BLUE,          "Blue",          FF_TYPE_STANDARD, 0.5f); m_UserBlue = 0.5f;
-//	SetParamInfo(FFPARAM_ALPHA,         "Alpha",         FF_TYPE_STANDARD, 1.0f); m_UserAlpha = 1.0f;
+ 	SetParamInfo(FFPARAM_MOUSEX,        "Center X",       FF_TYPE_STANDARD, 0.5f); m_UserMouseX = 0.5f;
+	 SetParamInfo(FFPARAM_MOUSEY,        "Center Y",       FF_TYPE_STANDARD, 0.5f); m_UserMouseY = 0.5f;
+	//SetParamInfo(FFPARAM_MOUSELEFTX,    "X mouse left",  FF_TYPE_STANDARD, 0.5f); m_UserMouseLeftX = 0.5f;
+	//SetParamInfo(FFPARAM_MOUSELEFTY,    "Y mouse left",  FF_TYPE_STANDARD, 0.5f); m_UserMouseLeftY = 0.5f;
+	SetParamInfo(FFPARAM_RED,           "Zoom",           FF_TYPE_STANDARD,1.0f); m_UserRed = 0.5f;
+	SetParamInfo(FFPARAM_GREEN,         "Start of Alternation",         FF_TYPE_STANDARD, 0.5f); m_UserGreen = 0.5f;
+	SetParamInfo(FFPARAM_BLUE,          "Rotation",          FF_TYPE_STANDARD, 0.0f); m_UserBlue = 0.5f;
+ 	SetParamInfo(FFPARAM_ALPHA,         "MaxIter",         FF_TYPE_STANDARD, 1.0f); m_UserAlpha = 1.0f;
 
 
 
-//	SetParamInfo(FFPARAM_VECTOR1_X, "Frequency 1", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_SPEEDS_X, "Frequency 1", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR1_Y, "Wavelength 1", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR1_Z, "Amplitude 1", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_VECTOR1_W, "Vector1W", FF_TYPE_STANDARD, 0.0f);
-
-	
-//	SetParamInfo(FFPARAM_VECTOR2_X, "Frequency 2", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_SPEEDS_Y, "Frequency 2", FF_TYPE_STANDARD,0.0f);
-	SetParamInfo(FFPARAM_VECTOR2_Y, "Wavelength 2", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR2_Z, "Amplitude 2", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_VECTOR2_W, "Vector2W", FF_TYPE_STANDARD, 0.0f);
-
-//	SetParamInfo(FFPARAM_VECTOR3_X, "Frequency 3", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_SPEEDS_Z, "Frequency 3", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR3_Y, "Wavelength 3", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR3_Z, "Amplitude 3", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_VECTOR3_W, "Vector3W", FF_TYPE_STANDARD, 0.0f);
+	//SetParamInfo(FFPARAM_VECTOR1_X, "Vector1X", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_SPEEDS_X, "Seed 1 Speed", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR1_Y, "Seed 1 Radius", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR1_Z, "Seed 1 Real", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR1_W, "Seed 1 Imag", FF_TYPE_STANDARD, 0.5f);
 
 
-//	SetParamInfo(FFPARAM_VECTOR4_X, "Frequency 4", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_SPEEDS_W, "Frequency 4", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR4_Y, "Wavelength 4", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR4_Z, "Amplitude 4", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_VECTOR4_W, "Vector4W", FF_TYPE_STANDARD, 0.0f);
+	//SetParamInfo(FFPARAM_VECTOR2_X, "Vector2X", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_SPEEDS_Y, "Seed 2 Speed", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR2_Y, "Seed 2 Radius", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR2_Z, "Seed 2 Real", FF_TYPE_STANDARD, 0.50f);
+	SetParamInfo(FFPARAM_VECTOR2_W, "Seed 2 Imag", FF_TYPE_STANDARD, 0.50f);
 
+
+	//SetParamInfo(FFPARAM_VECTOR3_X, "Vector3X", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_SPEEDS_Z, "Seed 3 Speed", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR3_Y, "Seed 3 Radius", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR3_Z, "Seed 3 Real", FF_TYPE_STANDARD, 0.50f);
+	SetParamInfo(FFPARAM_VECTOR3_W, "Seed 3 Imag", FF_TYPE_STANDARD, 0.50f);
+
+/*
+
+if you like add as many seeds/radii but 3 are the number of alternating seeds in this effect, not 2 nor 4 it shall be three
+
+	//SetParamInfo(FFPARAM_VECTOR4_X, "Seed 4 ", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_SPEEDS_W, "Seed 4 Speed", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR4_Y, "Seed 4 Radius", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR4_Z, "Seed 4 Real", FF_TYPE_STANDARD, 0.50f);
+	SetParamInfo(FFPARAM_VECTOR4_W, "Seed 4 Imag", FF_TYPE_STANDARD, 0.50f);
+
+	*/
 
 
 	// Set defaults
@@ -437,8 +519,6 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		m_times.z = m_times.z + (float)(elapsedTime - lastTime)*m_speeds.z*2.0f; // increment scaled by user input 0.0 - 2.0
 		m_times.w = m_times.w + (float)(elapsedTime - lastTime)*m_speeds.w*2.0f; // increment scaled by user input 0.0 - 2.0
 
-		// printf("Times [%f,%f,%f,%f]\n", m_times.x, m_times.y, m_times.z, m_times.w);
-		// printf("Speeds [%f,%f,%f,%f]\n", m_speeds.x, m_speeds.y,m_speeds.z, m_speeds.w);
 
 		// ShaderToy new uniforms
 		m_frame = m_frame + 1.0f;
@@ -587,22 +667,18 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		if (m_inputColourLocation >= 0)
 			m_extensions.glUniform4fARB(m_inputColourLocation, m_UserRed, m_UserGreen, m_UserBlue, m_UserAlpha);
 
-		if (m_inputVector1Location >= 0) {
-			//m_extensions.glUniform4fARB(m_inputVector1Location, m_vector1.x, m_vector1.y, m_vector1.z, m_vector1.w);
-			m_extensions.glUniform4fARB(m_inputVector1Location, m_times.x, m_vector1.y, m_vector1.z, m_vector1.w);
-		}
-
+		if (m_inputVector1Location >= 0)
+			m_extensions.glUniform4fARB(m_inputVector1Location, m_vector1.x, m_vector1.y, m_vector1.z, m_vector1.w);
 		if (m_inputVector2Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector2Location, m_times.y, m_vector2.y, m_vector2.z, m_vector2.w);
+			m_extensions.glUniform4fARB(m_inputVector2Location, m_vector2.x, m_vector2.y, m_vector2.z, m_vector2.w);
 		if (m_inputVector3Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector3Location, m_times.z, m_vector3.y, m_vector3.z, m_vector3.w);
+			m_extensions.glUniform4fARB(m_inputVector3Location, m_vector3.x, m_vector3.y, m_vector3.z, m_vector3.w);
 		if (m_inputVector4Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector4Location, m_times.w, m_vector4.y, m_vector4.z, m_vector4.w);
+			m_extensions.glUniform4fARB(m_inputVector4Location, m_vector4.x, m_vector4.y, m_vector4.z, m_vector4.w);
 
-		if (m_inputTimesLocation >= 0) {
-			//printf("Times [%f,%f,%f,%f]\n", m_times.x, m_times.y, m_times.z, m_times.w);
+		if (m_inputTimesLocation  >= 0)
 			m_extensions.glUniform4fARB(m_inputTimesLocation, m_times.x, m_times.y, m_times.z, m_times.w);
-		}
+
 
 		// Bind a texture if the shader needs one
 		if(m_inputTextureLocation >= 0 && Texture0.Handle > 0) {
@@ -695,9 +771,10 @@ char * ShaderMaker::GetParameterDisplay(DWORD dwIndex) {
 	memset(m_DisplayValue, 0, 15);
 	switch (dwIndex) {
 
-		case FFPARAM_SPEED:
-			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserSpeed*100.0));
-			return m_DisplayValue;
+	case FFPARAM_SPEED:
+		cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserSpeed*100.0));
+		return m_DisplayValue;
+	 
 	
 		case FFPARAM_MOUSEX:
 			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserMouseX*m_vpWidth));
@@ -777,6 +854,7 @@ FFResult ShaderMaker::GetInputStatus(DWORD dwIndex)
 
 float ShaderMaker::GetFloatParameter(unsigned int index)
 {
+	// printf("GetFloatParameter %d   \n", index);
 	switch (index) {
 
 		case FFPARAM_SPEED:
@@ -806,28 +884,28 @@ float ShaderMaker::GetFloatParameter(unsigned int index)
 		case FFPARAM_ALPHA:
 			return m_UserAlpha;
 
-		case FFPARAM_VECTOR1_X:
+		case FFPARAM_VECTOR1_X: 
 			return m_vector1.x;
 
-		case FFPARAM_VECTOR1_Y:
+		case FFPARAM_VECTOR1_Y: 
 			return m_vector1.y;
 
-		case FFPARAM_VECTOR1_Z:
+		case FFPARAM_VECTOR1_Z: 
 			return m_vector1.z;
 
 		case FFPARAM_VECTOR1_W:
 			return m_vector1.w;
 
-		case FFPARAM_VECTOR2_X:
+		case FFPARAM_VECTOR2_X: 
 			return m_vector2.x;
 
-		case FFPARAM_VECTOR2_Y:
+		case FFPARAM_VECTOR2_Y: 
 			return m_vector2.y;
 
-		case FFPARAM_VECTOR2_Z:
+		case FFPARAM_VECTOR2_Z:	 
 			return m_vector2.z;
 
-		case FFPARAM_VECTOR2_W:
+		case FFPARAM_VECTOR2_W:	 
 			return m_vector2.w;
 
 
@@ -873,6 +951,7 @@ float ShaderMaker::GetFloatParameter(unsigned int index)
 
 FFResult ShaderMaker::SetFloatParameter(unsigned int index, float value)
 {
+	 
 		switch (index) {
 
 			case FFPARAM_SPEED:
@@ -912,18 +991,22 @@ FFResult ShaderMaker::SetFloatParameter(unsigned int index, float value)
 				break;
 
 			case FFPARAM_VECTOR1_X:
+				// printf("SetFloatParameter %d %f FFPARAM_VECTOR1_X\n", index, value);
 				m_vector1.x = value;
 				break;
 
 			case FFPARAM_VECTOR1_Y:
+				// printf("SetFloatParameter %d %f FFPARAM_VECTOR1_Y\n", index, value);
 				m_vector1.y = value;
 				break;
 
 			case FFPARAM_VECTOR1_Z:
+				// printf("SetFloatParameter %d %f FFPARAM_VECTOR1_Z\n", index, value);
 				m_vector1.z = value;
 				break;
 
 			case FFPARAM_VECTOR1_W:
+				// printf("SetFloatParameter %d %f \n", index, value);
 				m_vector1.w = value;
 				break;
 
@@ -1144,15 +1227,15 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 									  "uniform float iFrameRate;\n"
 									  "uniform float iSampleRate;\n"
 									  "uniform vec4 iMouse;\n"
+				"const float PI = 3.1415926535897932384626433832795; "
+				"uniform vec4 inputTimes; "
 									  "uniform vec4 iDate;\n"
 									  "uniform float iChannelTime[4];\n"
 									  "uniform vec3 iChannelResolution[4];\n"
 									  "uniform sampler2D iChannel0;\n"
 									  "uniform sampler2D iChannel1;\n"
 									  "uniform sampler2D iChannel2;\n"
-									  "uniform sampler2D iChannel3;\n"
-									  "const float PI = 3.1415926535897932384626433832795;\n "
-									  "uniform vec4 inputTimes;\n " };
+									  "uniform sampler2D iChannel3;\n" };
 			
 			stoyUniforms = uniforms;
 			stoyUniforms += extraUniforms;
@@ -1408,7 +1491,8 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 					m_inputVector3Location = m_shader.FindUniform("inputVector3");
 
 				if (m_inputVector4Location  < 0)
-					m_inputVector4Location = m_shader.FindUniform("inputVector4"); 
+					m_inputVector4Location = m_shader.FindUniform("inputVector4");
+
 
 				if (m_inputTimesLocation  < 0)
 					m_inputTimesLocation = m_shader.FindUniform("inputTimes");

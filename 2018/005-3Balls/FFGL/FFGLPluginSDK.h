@@ -78,10 +78,10 @@ public:
 
 	/* Added the following to obscure the casting to FFMixed from implementations. Could/should also deal with other paramter types
 	    in a similar way */
-	virtual FFResult SetFloatParameter(unsigned int index, float value); 
+	virtual FFResult SetFloatParameter(unsigned int index, float value);
 	virtual FFResult SetTextParameter(unsigned int index, const char *value);
 	virtual float GetFloatParameter(unsigned int index);
-	virtual char* GetTextParameter(unsigned int index); 
+	virtual char* GetTextParameter(unsigned int index);
 	
 	/// Default implementation of the FFGL ProcessOpenGL instance specific function. This function processes 
 	/// the input texture(s) by 

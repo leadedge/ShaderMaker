@@ -66,18 +66,17 @@ char* CFreeFrameGLPlugin::GetParameterDisplay(unsigned int index)
 
 FFResult CFreeFrameGLPlugin::SetFloatParameter(unsigned int index, float value)
 {
-	return FF_FAIL;
+  return FF_FAIL;
 }
 
 FFResult CFreeFrameGLPlugin::SetTextParameter(unsigned int index, const char *value)
 {
-	return FF_FAIL;
+  return FF_FAIL;
 }
- 
 
 float CFreeFrameGLPlugin::GetFloatParameter(unsigned int index)
 {
-	return 0.0;
+  return 0.0;
 }
 
 char* CFreeFrameGLPlugin::GetTextParameter(unsigned int index)

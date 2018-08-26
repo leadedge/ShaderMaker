@@ -81,9 +81,7 @@ public:
 	// FreeFrameGL plugin methods
 	///////////////////////////////////////////////////
     FFResult SetFloatParameter(unsigned int index, float value);
-	FFResult SetBooleanParameter(unsigned int index, bool value);
-	float GetFloatParameter(unsigned int index);
-	bool GetBooleanParameter(unsigned int index);
+    float GetFloatParameter(unsigned int index);
 	FFResult ProcessOpenGL(ProcessOpenGLStruct* pGL);
 	FFResult InitGL(const FFGLViewportStruct *vp);
 	FFResult DeInitGL();
@@ -124,8 +122,6 @@ protected:
 	float m_julia;
     float m_showKnobs;
 
-	Vector m_color1;
-	Vector m_color2;
 	Vector m_speeds;
 
 	Vector m_times;
@@ -228,8 +224,6 @@ protected:
 	GLint m_inputVector2Location;
 	GLint m_inputVector3Location;
 	GLint m_inputVector4Location;
-	GLint m_inputColor1Location;
-	GLint m_inputColor2Location;
 	GLint m_inputTimesLocation;
 
 	GLint m_inputJuliaLocation;

@@ -17,7 +17,7 @@ The concept shall barry itself, selling drinks, food (broccoli) and merchandise 
 mentioned spaces around the world spreading knowledge and letting most of the money create either other spaces or sense full contributions to the development of the world - where not only art and free minded spaces carry on but following mostly the golden rule to participate in any outcomings ... 
  
  
- ![one of i-love-chaos logos print your own more than endless possibilities](release/media/i-love-chaos-white-000000000000002.png "One of I-Love-Chaos")
+ ![one of i-love-chaos logos print your own more than endless possibilities](release/media/i-love-chaos-white-000000000000003.png "One of I-Love-Chaos")
 
 
 # Repository 

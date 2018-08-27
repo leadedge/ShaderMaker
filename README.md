@@ -91,3 +91,12 @@ is so utterly important for working with the provided effects by this repository
 - the time can usually NOT be reseted or rolled back, its a continuos value that increases up to defined limit ( 32/64 bit) by the speeds  
 
 - there may be more than 1 time variable : some effects introduce own time variables with their own, either by extended mode or by definition (example: sinus) 
+
+## Hybridisation -> Alternation
+
+the method used in all of the plugins that deal with chaotic image creation (fractals) use a simple hybridisation approach, it is always using 3-alternate-hybrids, meaning that when alternation starts, three sets of parameters are cycled through ind subsequent iterations
+
+## Exponentional Parameters
+
+some parameters use exponential scaling, i found out about it in the ultrafractal documentation, the behaviour is that some parameters
+are exponential by nature, e.g. scale 1 to 2 of an image is double the size, but scaling from 2 to 3 is just a quarter, making it always smaller the performed visual size change, wen exponentating the param here everything stays at the same speeed (tbd)

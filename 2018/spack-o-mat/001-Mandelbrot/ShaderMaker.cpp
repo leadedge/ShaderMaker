@@ -223,17 +223,19 @@ const bool julia =false;
 
 
 
+vec2 seeds[3]=vec2[3](inputVector1.zw, inputVector2.zw, inputVector3.zw);
+
 void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {
 	float n = 0.0;
 	// important: exponential interpolation is done in c area
 	// float scale = 10.0*(1.0 / exp(inputColour.x*10.0));
 
-	vec2 seeds[3]; 
+//	vec2 seeds[3]; 
 
-	seeds[0] = inputVector1.zw;
-	seeds[1] = inputVector2.zw;
-	seeds[2] = inputVector3.zw;
+//	seeds[0] = inputVector1.zw;
+//	seeds[1] = inputVector2.zw;
+//	seeds[2] = inputVector3.zw;
 	
 		float scale = inputVector4.x;
 	// float scale = inputColour.x*10.0;

@@ -76,32 +76,32 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #define FFPARAM_BLUE        (4)
 #define FFPARAM_ALPHA       (5)
 
-#define FFPARAM_VECTOR1_X       (109)
+#define FFPARAM_VECTOR1_X       (6)
 #define FFPARAM_SPEEDS_X        (107)
-#define FFPARAM_VECTOR1_Y       (108)
-#define FFPARAM_VECTOR1_Z       (6)
-#define FFPARAM_VECTOR1_W       (7)
+#define FFPARAM_VECTOR1_Y       (7)
+#define FFPARAM_VECTOR1_Z       (8)
+#define FFPARAM_VECTOR1_W       (9)
 
-#define FFPARAM_VECTOR2_X       (1013)
+#define FFPARAM_VECTOR2_X       (10)
 #define FFPARAM_SPEEDS_Y        (1011)
 #define FFPARAM_VECTOR2_Y       (1012)
-#define FFPARAM_VECTOR2_Z       (8)
-#define FFPARAM_VECTOR2_W       (9)
+#define FFPARAM_VECTOR2_Z       (11)
+#define FFPARAM_VECTOR2_W       (12)
 
-#define FFPARAM_VECTOR3_X       (1017)
+#define FFPARAM_VECTOR3_X       (13)
 #define FFPARAM_SPEEDS_Z        (1015)
 #define FFPARAM_VECTOR3_Y       (1016)
-#define FFPARAM_VECTOR3_Z       (10)
-#define FFPARAM_VECTOR3_W       (11)
+#define FFPARAM_VECTOR3_Z       (14)
+#define FFPARAM_VECTOR3_W       (15)
 
-#define FFPARAM_VECTOR4_X       (2017)
-#define FFPARAM_VECTOR4_Y       (2016)
+#define FFPARAM_VECTOR4_X       (2016)
+#define FFPARAM_VECTOR4_Y       (2017)
 #define FFPARAM_VECTOR4_Z       (2011)
 #define FFPARAM_VECTOR4_W       (2012)
 
 #define FFPARAM_SPEEDS_W        (2015)
-#define FFPARAM_SHOW_KNOBS        (12)
-#define FFPARAM_JULIA        (13)
+#define FFPARAM_SHOW_KNOBS        (16)
+#define FFPARAM_JULIA        (17)
  
 
 #define STRINGIFY(A) #A
@@ -109,10 +109,10 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // +++++++++++ IMPORTANT : DEFINE YOUR PLUGIN INFORMATION HERE +++++++++++
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-static CFFGLPluginInfo PluginInfo ( 
+static CFFGLPluginInfo PluginInfo(
 	ShaderMaker::CreateInstance,		// Create method
-	"SM01",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
-	"SoM Mandelbrot",						// *** Plugin name - make it different for each plugin 
+	"SM05",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
+	"SoM 3-Balls",						// *** Plugin name - make it different for each plugin 
 	1,						   			// API major version number 													
 	006,								// API minor version number	
 	2,									// *** Plugin major version number
@@ -165,33 +165,7 @@ void main()
 char *fragmentShaderCode = STRINGIFY (
 // ==================== PASTE WITHIN THESE LINES =======================
 
-
-float triangulate(float x) {
-	// creates a triangular function that maps 0..1 to 0..1..0 
-	// helper method used to create properties that are loopable
-	return 1.0-abs((mod(x, 1.0) - 0.5)) * 2.0;
-}
-vec2 triangulate(vec2 x) {
-	// creates a triangular function that maps 0..1 to 0..1..0 
-	// helper method used to create properties that are loopable
-	return 1.0 - abs((mod(x, 1.0) - 0.5)) * 2.0;;
-}
-vec2 expandNormalizedToNegative1(vec2 x) {
-	// creates a triangular function that maps 0..1 to 0..1..0 
-	// helper method used to create properties that are loopable
-	return x *2.0 - 1.0;
-}
-
-vec2 triangulateNormalize(vec2 x) {
-	// creates a triangular function that maps 0..1 to 0..1..0 
-	// helper method used to create properties that are loopable
-	return expandNormalizedToNegative1(x);
-}
-vec2 piiate(vec2 x) {
-	// creates a triangular function that maps 0..1 to 0..1..0 
-	// helper method used to create properties that are loopable
-	return vec2(triangulate(x.x), triangulate(x.y));
-}
+  
 vec2 rotate(vec2 v, float a) {
 	float s = sin(a);
 	float c = cos(a);
@@ -212,65 +186,45 @@ const float maxIterations = 1000;
 const bool doMarker = true;
 const bool julia = true;
 
+
+float fold(float x) {
+	if (x > 1.0) {
+		return x - 2.0;
+	}
+	if (x < -1) {
+		return x + 2.0;
+	}
+	return x;
+}
+
+vec2 fold(vec2 x) {
+	return vec2(fold(x.x), fold(x.y));
+}
 void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {
 	float n = 0.0;
 	// important: exponential interpolation is done in c area
 	// float scale = 10.0*(1.0 / exp(inputColour.x*10.0));
 
-	vec2 seeds[3]; 
+	vec4 seeds[3]; 
 
-	seeds[0] = inputVector1.zw;
-	seeds[1] = inputVector2.zw;
-	seeds[2] = inputVector3.zw;
+	seeds[0] = inputVector1;
+	seeds[1] = inputVector2;
+	seeds[2] = inputVector3;
 	
 		float scale = inputVector4.x;
 	// float scale = inputColour.x*10.0;
 	// vec2 center = (iMouse.xy / iResolution.xy)*4.0 - 2.0;
 	vec2 center = inputVector4.zw;
-	vec2 pixel = center + rotate(scale*((fragCoord / iResolution.xy)*2.0 - 1.0), inputVector4.y);
-	vec2 c = pixel;
-	vec2 z = seeds[0];
-	int i;
-	if (julia) {
-		z = pixel;
-		c = c*n;
-	}
-	else {
-		c = pixel;
-		z = c*n;
-	}
-
-	// seeds[3] = vec2(sin(iGlobalTime + inputTimes[3] * 10.0), cos(iGlobalTime + inputTimes[3] * 10.0))*inputVector4.y + triangulateNormalize(inputVector4.zw);
-	int depthNormalized = int(inputColour.y * maxIterations * inputColour.w);
-
-	int iterationsCalc = int(maxIterations*inputColour.w);
-	for (i = 0; i <iterationsCalc; i++)
-	{ 
-
-		z = vec2(z.x*z.x - z.y*z.y, 2.*z.x*z.y) + c;
-
-		if (i > depthNormalized) {
-			z += seeds[i % 3];
-		}
-
-		// most simple coloring/breaking condition using small bailout of 4
-		if (length(z) >4.0) {
-			break;
-		}
-
-		n++;
-	}
-	fragColor = vec4(mix(outerColor, innerColor, n / iterationsCalc), 1.0);
-
-	if (doMarker) {
+	vec2 pixel = (fragCoord / iResolution.xy)*2.0 - 1.0; // +rotate(scale*((fragCoord / iResolution.xy)*2.0 - 1.0), inputVector4.y);
+	fragColor = vec4(0.0, 0.0, 0.0, 0.0);
 		// mark the seeds
 		for (float k = 0; k < 3.0; k++) {
-			if (length(pixel - seeds[int(k)]) < 0.05) {
-				fragColor = vec4(0.5 + k / 3.0, 0.5, 0.5 + k / 3.0, 1.0);
+			if (length(fold(pixel - seeds[int(k)].zw)) < seeds[int(k)].x) {
+				fragColor += vec4(0.33, 0.33, 0.33, 1.0);
 			}
 		}
-	}
+ 
 
 
 	// fragColor =  vec4(1.0-i / round(128 * inputColour.w), 1.0 - i / round(128 * inputColour.w), 1.0 - i / round(128 * inputColour.w), 1.0);
@@ -282,7 +236,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 
 );
 
-
+#define DEBUG
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //  Constructor and destructor
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -293,8 +247,9 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	// Debug console window so printf works
 	FILE* pCout; // should really be freed on exit 
 	AllocConsole();
-	freopen_s(&pCout, "CONOUT$", "w", stdout); 
+	freopen_s(&pCout, "CONOUT$", "w", stdout);
 	printf("Shader Maker Vers 1.004\n");
+	printf("Spack-O-Mat Shader 3 Balls\n");
 	printf("GLSL version [%s]\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 #endif
 
@@ -315,21 +270,21 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 
 
 
-	//SetParamInfo(FFPARAM_VECTOR1_X, "Vector1X", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR1_X, "Vector1X", FF_TYPE_STANDARD, 0.0f);
 //	SetParamInfo(FFPARAM_SPEEDS_X, "Seed 1 Speed", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_VECTOR1_Y, "Seed 1 Radius", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR1_Y, "Seed 1 Radius", FF_TYPE_STANDARD, 0.0f);
 	SetParamInfo(FFPARAM_VECTOR1_Z, "Seed 1 Real", FF_TYPE_STANDARD, 0.5f);
 	SetParamInfo(FFPARAM_VECTOR1_W, "Seed 1 Imag", FF_TYPE_STANDARD, 0.5f);
 
 
-	//SetParamInfo(FFPARAM_VECTOR2_X, "Vector2X", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR2_X, "Vector2X", FF_TYPE_STANDARD, 0.0f);
 //	SetParamInfo(FFPARAM_SPEEDS_Y, "Seed 2 Speed", FF_TYPE_STANDARD, 0.0f);
 //	SetParamInfo(FFPARAM_VECTOR2_Y, "Seed 2 Radius", FF_TYPE_STANDARD, 0.0f);
 	SetParamInfo(FFPARAM_VECTOR2_Z, "Seed 2 Real", FF_TYPE_STANDARD, 0.50f);
 	SetParamInfo(FFPARAM_VECTOR2_W, "Seed 2 Imag", FF_TYPE_STANDARD, 0.50f);
 
 
-	//SetParamInfo(FFPARAM_VECTOR3_X, "Vector3X", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR3_X, "Vector3X", FF_TYPE_STANDARD, 0.0f);
 //	SetParamInfo(FFPARAM_SPEEDS_Z, "Seed 3 Speed", FF_TYPE_STANDARD, 0.0f);
 //	SetParamInfo(FFPARAM_VECTOR3_Y, "Seed 3 Radius", FF_TYPE_STANDARD, 0.0f);
 	SetParamInfo(FFPARAM_VECTOR3_Z, "Seed 3 Real", FF_TYPE_STANDARD, 0.50f);

@@ -1,5 +1,5 @@
 #include "FFGLShader.h"
-
+#include "stdio.h"
 FFGLShader::FFGLShader()
 {
   m_linkStatus = 0;
@@ -137,7 +137,12 @@ int FFGLShader::Compile(const char *vtxProgram, const char *fragProgram)
         log);
 
       log[returnedLength] = 0;
-	  MessageBox(NULL, log, 0, 0);
+	  // MessageBox(NULL, log, 0, 0);
+	  printf("\nCode Fragment\n");
+	  printf(fragProgram);
+	  printf("\nLog\n");
+
+	  printf(log);
       int a;
       a=0;
     }

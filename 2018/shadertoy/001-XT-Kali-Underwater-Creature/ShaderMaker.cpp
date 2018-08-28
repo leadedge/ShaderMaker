@@ -66,7 +66,10 @@ int (*cross_secure_sprintf)(char *, size_t, const char *,...) = sprintf_s;
 int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #endif
 
-#define FFPARAM_SPEED       (0)
+#define FFPARAM_SPEED       (100000)
+
+
+
 #define FFPARAM_MOUSEX      (10001)
 #define FFPARAM_MOUSEY      (10002)
 #define FFPARAM_MOUSELEFTX  (10003)
@@ -76,53 +79,54 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #define FFPARAM_BLUE        (10007)
 #define FFPARAM_ALPHA       (10008)
 
-#define FFPARAM_VECTOR1_X       (1)
-#define FFPARAM_VECTOR1_Y       (2)
-#define FFPARAM_VECTOR1_Z       (3)
-#define FFPARAM_VECTOR1_W       (4)
+#define FFPARAM_VECTOR1_X       (0)
+#define FFPARAM_VECTOR1_Y       (1)
+#define FFPARAM_VECTOR1_Z       (2)
+#define FFPARAM_VECTOR1_W       (3)
 
-#define FFPARAM_VECTOR2_X       (5)
-#define FFPARAM_VECTOR2_Y       (6)
-#define FFPARAM_VECTOR2_Z       (7)
-#define FFPARAM_VECTOR2_W       (8)
+#define FFPARAM_VECTOR5_X       (4)
+#define FFPARAM_VECTOR5_Y       (5)
+#define FFPARAM_VECTOR5_Z       (6)
 
-#define FFPARAM_VECTOR3_X       (9)
-#define FFPARAM_VECTOR3_Y       (10)
-#define FFPARAM_VECTOR3_Z       (11)
-#define FFPARAM_VECTOR3_W       (12)
+#define FFPARAM_VECTOR2_X       (7)
+#define FFPARAM_VECTOR2_Y       (8)
+#define FFPARAM_VECTOR2_Z       (9)
+#define FFPARAM_VECTOR2_W       (10)
 
-#define FFPARAM_VECTOR4_X       (13)
-#define FFPARAM_VECTOR4_Y       (14)
-#define FFPARAM_VECTOR4_Z       (15)
-#define FFPARAM_VECTOR4_W       (16)
+#define FFPARAM_VECTOR3_X       (11)
+#define FFPARAM_VECTOR3_Y       (12)
+#define FFPARAM_VECTOR3_Z       (13)
+#define FFPARAM_VECTOR3_W       (14)
 
-
-
-#define FFPARAM_VECTOR5_X       (17)
-#define FFPARAM_VECTOR5_Y       (18)
-#define FFPARAM_VECTOR5_Z       (19)
-#define FFPARAM_VECTOR5_W       (20)
-
-#define FFPARAM_VECTOR6_X       (21)
-#define FFPARAM_VECTOR6_Y       (22)
-#define FFPARAM_VECTOR6_Z       (23)
-#define FFPARAM_VECTOR6_W       (24)
+#define FFPARAM_VECTOR4_X       (15)
+#define FFPARAM_VECTOR4_Y       (16)
+#define FFPARAM_VECTOR4_Z       (17)
+#define FFPARAM_VECTOR4_W       (18)
 
 
-#define FFPARAM_VECTOR7_X       (25)
-#define FFPARAM_VECTOR7_Y       (26)
-#define FFPARAM_VECTOR7_Z       (27)
-#define FFPARAM_VECTOR7_W       (28)
+
+#define FFPARAM_VECTOR5_W       (100020)
+
+#define FFPARAM_VECTOR6_X       (19)
+#define FFPARAM_VECTOR6_Y       (20)
+#define FFPARAM_VECTOR6_Z       (21)
+#define FFPARAM_VECTOR6_W       (22)
 
 
-#define FFPARAM_COLOR1_RED       (29)  
-#define FFPARAM_COLOR1_GREEN     (30)  
-#define FFPARAM_COLOR1_BLUE      (31)  
+#define FFPARAM_VECTOR7_X       (23)
+#define FFPARAM_VECTOR7_Y       (24)
+#define FFPARAM_VECTOR7_Z       (1000027)
+#define FFPARAM_VECTOR7_W       (100028)
+
+
+#define FFPARAM_COLOR1_RED       (25)  
+#define FFPARAM_COLOR1_GREEN     (26)  
+#define FFPARAM_COLOR1_BLUE      (27)  
 #define FFPARAM_COLOR1_ALPHA     (1118)  
 
-#define FFPARAM_COLOR2_RED       (32)  
-#define FFPARAM_COLOR2_GREEN     (33)  
-#define FFPARAM_COLOR2_BLUE      (34)  
+#define FFPARAM_COLOR2_RED       (28)  
+#define FFPARAM_COLOR2_GREEN     (29)  
+#define FFPARAM_COLOR2_BLUE      (30)  
 #define FFPARAM_COLOR2_ALPHA     (1110)   
 #define STRINGIFY(A) #A
 
@@ -131,16 +135,16 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 static CFFGLPluginInfo PluginInfo ( 
 	ShaderMaker::CreateInstance,		// Create method
-	"ST01",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
-	"Shadertoy Kali Underwater",						// *** Plugin name - make it different for each plugin 
+	"SX01",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
+	"SoM XT Kali Underwater",						// *** Plugin name - make it different for each plugin 
 	1,						   			// API major version number 													
 	006,								// API minor version number	
 	1,									// *** Plugin major version number
 	001,								// *** Plugin minor version number
 	// FF_EFFECT,							// Plugin type can always be an effect
 	FF_SOURCE,						// or change this to FF_SOURCE for shaders that do not use a texture
-	"SoM Base Shader - extended from", // *** Plugin description - you can expand on this
-	"https://github.com/leadedge/ShaderMaker"			// *** About - use your own name and details
+	"SoM Kali Underwater Extended", // *** Plugin description - you can expand on this
+	"https://www.shadertoy.com/view/Mtf3Rr https://github.com/leadedge/ShaderMaker"			// *** About - use your own name and details
 );
 
 
@@ -187,32 +191,46 @@ char *fragmentShaderCode = STRINGIFY (
 // https://www.shadertoy.com/view/Mtf3Rr
 // http://www.fractalforums.com/movies-showcase-%28rate-my-movie%29/very-rare-deep-sea-fractal-creature/
 
-vec3 spherical(float inclination, float elevation) {   
-return vec3(
-	sin(inclination)*cos(elevation),
-	sin(inclination)*sin(inclination),
-	sin(inclination)
-	);
+
+// util library
+vec3 spherical(float inclination, float elevation) {
+	return vec3(
+		sin(inclination)*cos(elevation),
+		sin(inclination)*sin(elevation),
+		cos(inclination)
+		);
 }
 
+mat3  rotationMatrix3Radian(vec3 v, float angleRadian)
+{
+	float c = cos(angleRadian);
+	float s = sin(angleRadian);
 
-const int Iterations = 25;
-float Scale = inputVector1.x*6.0-3.0;
-vec3 Julia = inputVector2.xyz*6.0-3.0;// vec3(-3., -1.5, -0.5);
-// use spherical coordinates for rot vector definition azimut/latitude only 2 values instead of 3
-vec3 RotVector = vec3(sin(inputVector5.x*2.0*PI),cos(inputVector5.x*2.0*PI),sin(inputVector5.y*PI));// vec3(0.5, -0.05, -1.);
-float RotAngle = inputVector1.y*360;
-float Speed = inputVector1.z*2.0;// 1.3;
-float Amplitude = inputVector1.w;// 0.6;
-const float detail = .0005;
+	return mat3(c + (1.0 - c) * v.x * v.x, (1.0 - c) * v.x * v.y - s * v.z, (1.0 - c) * v.x * v.z + s * v.y,
+		(1.0 - c) * v.x * v.y + s * v.z, c + (1.0 - c) * v.y * v.y, (1.0 - c) * v.y * v.z - s * v.x,
+		(1.0 - c) * v.x * v.z - s * v.y, (1.0 - c) * v.y * v.z + s * v.x, c + (1.0 - c) * v.z * v.z
+		);
+}
+
+mat3  rotationMatrix3(vec3 v, float angleDegree)
+{
+	return rotationMatrix3Radian(v, radians(angleDegree));
+}
+
+// util library end
+
+const int Iterations = 25; 
+const float detail = .025;
 const vec3 lightdir = -vec3(0., 1., 0.);
  
-float Scales[3] = float[3](inputVector5.x*4.0 - 2.0, inputVector5.x*4.0 - 2.0, inputVector5.x*4.0 -2.0);
+float Scales[3] = float[3](inputVector1.x*4.0 - 2.0, inputVector1.x*4.0 - 2.0, inputVector1.x*4.0 -2.0);
 
 
 
-float viewScale =inputVector5.y;
-float viewRotation = inputVector5.z; 
+float objectScale = inputVector5.x *inputVector5.x*2.0;
+vec3 objectTranslate = vec3(inputVector1.y*40.0-20.0, inputVector1.z*40.0 - 20.0, inputVector1.w*40.0 - 20.0);
+
+mat3 objectRotation =rotationMatrix3(vec3(0.0, 1.0, 0.0), inputVector5.z*360 - 180.0)* rotationMatrix3(vec3(1.0, 0.0, 0.0), inputVector5.y*180.0 - 90.0);
 
 
 
@@ -222,16 +240,15 @@ float RotAngles[3] = float [3](inputVector2.w*360.0, inputVector3.w*360.0, input
 
 vec3 RotVectors[3] = vec3[3](
 
-	spherical(inputVector6.x*2.0*PI-PI, inputVector6.y*PI - PI / 2.0),
-	spherical(inputVector6.z*2.0*PI - PI, inputVector6.w*PI - PI / 2.0),
-	spherical(inputVector7.x*2.0*PI - PI, inputVector7.y*PI - PI/2.0)
+	spherical(inputVector6.x*2.0*PI , inputVector6.y*2.0*PI ),
+	spherical(inputVector6.z*2.0*PI , inputVector6.w*2.0*PI ),
+	spherical(inputVector7.x*2.0*PI , inputVector7.y*2.0*PI )
 	 
 	);
 mat2 rot;
 
 float de(vec3 p);
-vec3 color(vec3 p);
-mat3  rotationMatrix3(vec3 v, float angle);
+vec3 color(vec3 p); 
 
 vec3 normal(vec3 p) {
 	vec3 e = vec3(0.0, detail, 0.0);
@@ -275,31 +292,15 @@ float softshadow(in vec3 ro, in vec3 rd, float mint, float k)
 
 
 
-float time = iTime*Speed;
-vec3 aniXXX = vec3(sin(time), sin(time), cos(time))*Amplitude;
-
+ 
 
 mat3 rots[3] = mat3[3](
-	rotationMatrix3(normalize(RotVectors[0] + aniXXX), RotAngles[0] + sin(time)*10.),
-	rotationMatrix3(normalize(RotVectors[1] + aniXXX), RotAngles[1] + sin(time)*10.),
-	rotationMatrix3(normalize(RotVectors[2] + aniXXX), RotAngles[2] + sin(time)*10.));
+	rotationMatrix3(normalize(RotVectors[0] ), RotAngles[0]  ),
+	rotationMatrix3(normalize(RotVectors[1]  ), RotAngles[1] ),
+	rotationMatrix3(normalize(RotVectors[2]  ), RotAngles[2] ));
 
-vec3 color(vec3 p) {
-	p = p.zxy;
-	float a = 1.5 + sin(iTime*.3578)*.5;
-	p.xy = p.xy*mat2(cos(a), sin(a), -sin(a), cos(a));
-	p.x *= .75; 
-	vec3 ani;
-	// ani = vec3(sin(time), sin(time), cos(time))*Amplitude;
-	p += sin(p*3. + time*6.)*.04;
-	// mat3 rot = rotationMatrix3(normalize(RotVector + aniXXX), RotAngle + sin(time)*10.);
-
-	/*
-	mat3 rots[3] = mat3[3](
-		rotationMatrix3(normalize(RotVector + ani), RotAngles[0] + sin(time)*10.),
-		rotationMatrix3(normalize(RotVector + ani), RotAngles[1] + sin(time)*10.),
-		rotationMatrix3(normalize(RotVector + ani), RotAngles[2]+ sin(time)*10.));
-		*/
+vec3 color(vec3 p) { 
+	p = objectScale* (p + objectTranslate)* objectRotation;
 	vec3 pp = p;
 	float l;
 	float ot = 9999.;
@@ -327,16 +328,7 @@ vec3 light(in vec3 p, in vec3 dir) {
 	return (diff*sh + .15*max(0., dot(normalize(dir), -n))*calcAO(p, n))*colo + pow(spec, 30.)*.5*sh;
 }
 
-
-
-float kaliset(vec3 p) {
-	return 1.0;
-	//p.y -= iTime;
-	//p.y = abs(2. - mod(p.y, 4.));
-	//for (int i = 0; i<18; i++) p = abs(p) / dot(p, p) - .8;
-	//return length(p);
-}
-
+ 
 
 vec3 raymarch(in vec3 from, in vec3 dir, vec2 fragCoord)
 {
@@ -344,16 +336,15 @@ vec3 raymarch(in vec3 from, in vec3 dir, vec2 fragCoord)
 	float st =  0.0;
 	float d = 1.0;
 	float  totdist = 0; 
-	vec3 p;
-	float k;
+	vec3 p; 
 	for (int i = 0; i<70; i++) {
 		if (d>detail && totdist<50.)
 		{
-			k += kaliset(p)*exp(-.002*totdist*totdist)*max(0., totdist - 3.)*(1. - step(0., .2 - d));
 			p = from + totdist*dir;
 			d = de(p);
 			totdist += d;
 		}
+		 
 	}
 	// vec3 backg = vec3(.4, .5, .55)*(1. + fragCoord.y / iResolution.y*1.5);
 	if (d<detail) {
@@ -368,11 +359,10 @@ vec3 raymarch(in vec3 from, in vec3 dir, vec2 fragCoord)
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {
-	float t = iTime*.3;
-	vec2 uv = -1.0*(fragCoord.xy / iResolution.xy*2. - 1.);
-	uv *= viewScale;
+	float t =1.0;
+	vec2 uv = -1.0*(fragCoord.xy / iResolution.xy*2. - 1.); 
 	uv.y *= iResolution.y / iResolution.x;
-	vec3 from = vec3(0., -.7, -25. + sin(t)*8.);
+	vec3 from = vec3(0., -.7, -25.  );
 	vec3 dir = normalize(vec3(uv, 1.));
 	rot = mat2(cos(-.5), sin(-.5), -sin(-.5), cos(-.5));
 	dir.yz = dir.yz*rot;
@@ -382,42 +372,13 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 	fragColor = vec4(col, 1.);
 
 }
-
-
-mat3  rotationMatrix3(vec3 v, float angle)
-{
-	float c = cos(radians(angle));
-	float s = sin(radians(angle));
-
-	return mat3(c + (1.0 - c) * v.x * v.x, (1.0 - c) * v.x * v.y - s * v.z, (1.0 - c) * v.x * v.z + s * v.y,
-		(1.0 - c) * v.x * v.y + s * v.z, c + (1.0 - c) * v.y * v.y, (1.0 - c) * v.y * v.z - s * v.x,
-		(1.0 - c) * v.x * v.z - s * v.y, (1.0 - c) * v.y * v.z + s * v.x, c + (1.0 - c) * v.z * v.z
-		);
-}
-
+ 
 
 
 
 float de(vec3 p) {
-	p = p.zxy;
-	float a = 1.5 + sin(iTime*.3578)*.5;
-	p.xy = p.xy*mat2(cos(a), sin(a), -sin(a), cos(a));
-	p.x *= .75;
-	float time = iTime*Speed;
-	vec3 ani;
-	// ani = vec3(sin(time), sin(time), cos(time))*Amplitude;
-	p += sin(p*3. + time*6.)*.04;
-	
-	// mat3 rot = rotationMatrix3(normalize(RotVector + ani), RotAngle + sin(time)*10.);
-	
-	/*
-
-	mat3 rots[3] = mat3[3](
-		rotationMatrix3(normalize(RotVector + ani), RotAngles[0] + sin(time)*10.),
-		rotationMatrix3(normalize(RotVector + ani), RotAngles[1] + sin(time)*10.),
-		rotationMatrix3(normalize(RotVector + ani), RotAngles[2] + sin(time)*10.));
-		*/
-	
+	p = objectScale* (p + objectTranslate)* objectRotation;
+		 
 	vec3 pp = p;
 	float l;
 	for (int i = 0; i<Iterations; i++) {
@@ -459,7 +420,7 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	SetMaxInputs(2); // TODO - 4 inputs
 
 	// Parameters
-	SetParamInfo(FFPARAM_SPEED,         "Speed",         FF_TYPE_STANDARD, 0.0f); m_UserSpeed = 0.5f;
+//	SetParamInfo(FFPARAM_SPEED,         "Speed",         FF_TYPE_STANDARD, 0.0f); m_UserSpeed = 0.5f;
 //	SetParamInfo(FFPARAM_MOUSEX,        "X mouse",       FF_TYPE_STANDARD, 0.5f); m_UserMouseX = 0.5f;
 //	SetParamInfo(FFPARAM_MOUSEY,        "Y mouse",       FF_TYPE_STANDARD, 0.5f); m_UserMouseY = 0.5f;
 //	SetParamInfo(FFPARAM_MOUSELEFTX,    "X mouse left",  FF_TYPE_STANDARD, 0.5f); m_UserMouseLeftX = 0.5f;
@@ -472,45 +433,47 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 
 
 
-	SetParamInfo(FFPARAM_VECTOR1_X, "kaliScale", FF_TYPE_STANDARD, 0.1f);
-	SetParamInfo(FFPARAM_VECTOR1_Y, "Vector1Y unused", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR1_Z, "kaliSpeed", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR1_W, "Amplitude", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR1_X, "kaliScale", FF_TYPE_STANDARD, 0.2f);
+	SetParamInfo(FFPARAM_VECTOR1_Y, "Object X", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR1_Z, "Object Y", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR1_W, "Object Z", FF_TYPE_STANDARD, 0.5f);
 
 
-	SetParamInfo(FFPARAM_VECTOR2_X, "Julia X", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR2_Y, "Julia Y", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR2_Z, "Julia Z", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR2_W, "Rotangle 1", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR5_X, "Object Scale ", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR5_Y, "Object Inclination", FF_TYPE_STANDARD, 0.f);
+	SetParamInfo(FFPARAM_VECTOR5_Z, "Object Elevation", FF_TYPE_STANDARD, 0.f);
 
 
-	SetParamInfo(FFPARAM_VECTOR3_X, " Julia2 X", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR3_Y, " JuliaJulia2 Y", FF_TYPE_STANDARD, 0.5f); 
-	SetParamInfo(FFPARAM_VECTOR3_Z, " Julia2 Z", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR3_W, "Rotangle 2", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR2_X, "Julia1 X", FF_TYPE_STANDARD, 0.65f);
+	SetParamInfo(FFPARAM_VECTOR2_Y, "Julia1 Y", FF_TYPE_STANDARD, 0.65f);
+	SetParamInfo(FFPARAM_VECTOR2_Z, "Julia1 Z", FF_TYPE_STANDARD, 0.65f);
+	SetParamInfo(FFPARAM_VECTOR2_W, "Angle 1", FF_TYPE_STANDARD, 0.00f);
 
 
-	SetParamInfo(FFPARAM_VECTOR4_X, "Julia 3 X", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR4_Y, "Julia 3 Y", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR4_Z, "Julia 3 Z", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR4_W, "Rotangle 3", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR3_X, "Julia2 X", FF_TYPE_STANDARD, 0.65f);
+	SetParamInfo(FFPARAM_VECTOR3_Y, "Julia2 Y", FF_TYPE_STANDARD, 0.65f); 
+	SetParamInfo(FFPARAM_VECTOR3_Z, "Julia2 Z", FF_TYPE_STANDARD, 0.65f);
+	SetParamInfo(FFPARAM_VECTOR3_W, "Angle 2", FF_TYPE_STANDARD, 0.25f);
 
 
-	SetParamInfo(FFPARAM_VECTOR5_X, "Scale1", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR5_Y, "Scale2", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR5_Z, "Scale3", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR5_W, "unusedVector5W", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR4_X, "Julia 3 X", FF_TYPE_STANDARD, 0.65f);
+	SetParamInfo(FFPARAM_VECTOR4_Y, "Julia 3 Y", FF_TYPE_STANDARD, 0.65f);
+	SetParamInfo(FFPARAM_VECTOR4_Z, "Julia 3 Z", FF_TYPE_STANDARD, 0.65f);
+	SetParamInfo(FFPARAM_VECTOR4_W, "Angle 3", FF_TYPE_STANDARD, 0.5f);
 
 
-	SetParamInfo(FFPARAM_VECTOR6_X, "Azimut 1", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR6_Y, "Latitude 1", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR6_Z, "Azimut 2", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR6_W, "Latitude 2", FF_TYPE_STANDARD, 0.5f);
+	//SetParamInfo(FFPARAM_VECTOR5_W, "-------------", FF_TYPE_STANDARD, 0.5f);
 
-	SetParamInfo(FFPARAM_VECTOR7_X, "Azimut 3", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR7_Y, "Latitude 3", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR7_Z, "unusedJulia 7 Z", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR7_W, "Rotangle 7", FF_TYPE_STANDARD, 0.5f);
+
+	SetParamInfo(FFPARAM_VECTOR6_X, "Azimut 1", FF_TYPE_STANDARD, 0.1f);
+	SetParamInfo(FFPARAM_VECTOR6_Y, "Latitude 1", FF_TYPE_STANDARD, 0.1f);
+	SetParamInfo(FFPARAM_VECTOR6_Z, "Azimut 2", FF_TYPE_STANDARD, 0.2f);
+	SetParamInfo(FFPARAM_VECTOR6_W, "Latitude 2", FF_TYPE_STANDARD, 0.2f);
+
+	SetParamInfo(FFPARAM_VECTOR7_X, "Azimut 3", FF_TYPE_STANDARD, 0.4f);
+	SetParamInfo(FFPARAM_VECTOR7_Y, "Latitude 3", FF_TYPE_STANDARD, 0.4f);
+	//SetParamInfo(FFPARAM_VECTOR7_Z, "------------ 7 Z", FF_TYPE_STANDARD, 0.5f);
+	//SetParamInfo(FFPARAM_VECTOR7_W, "------------ 7", FF_TYPE_STANDARD, 0.5f);
 
 	SetParamInfo(FFPARAM_COLOR1_RED, "Color 1 Red", FF_TYPE_RED, 1.0f);
 	SetParamInfo(FFPARAM_COLOR1_GREEN, "Color 1 Green", FF_TYPE_GREEN, 1.0f);
@@ -861,7 +824,6 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 			m_extensions.glUniform4fARB(m_inputVector7Location, m_vector7.x, m_vector7.y, m_vector7.z, m_vector7.w);
 		if (m_inputColor1Location >= 0)
 			m_extensions.glUniform4fARB(m_inputColor1Location, m_color1.x, m_color1.y, m_color1.z, 0.0f);
-
 		if (m_inputColor2Location >= 0)
 			m_extensions.glUniform4fARB(m_inputColor2Location, m_color2.x, m_color2.y, m_color2.z, 0.0f);
 

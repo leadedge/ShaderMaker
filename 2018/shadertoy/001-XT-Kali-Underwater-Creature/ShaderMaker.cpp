@@ -58,7 +58,7 @@
 //
 //
 #include "ShaderMaker.h"
-#include <windows.h>
+
 #if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__))
 int (*cross_secure_sprintf)(char *, size_t, const char *,...) = sprintf_s;
 #else 
@@ -66,52 +66,64 @@ int (*cross_secure_sprintf)(char *, size_t, const char *,...) = sprintf_s;
 int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #endif
 
-#define FFPARAM_SPEED       (100)
-#define FFPARAM_MOUSEX      (0)
-#define FFPARAM_MOUSEY      (1)
-#define FFPARAM_MOUSELEFTX  (103)
-#define FFPARAM_MOUSELEFTY  (104)
-#define FFPARAM_RED         (2)
-#define FFPARAM_GREEN       (3)
-#define FFPARAM_BLUE        (4)
-#define FFPARAM_ALPHA       (5)
+#define FFPARAM_SPEED       (0)
+#define FFPARAM_MOUSEX      (10001)
+#define FFPARAM_MOUSEY      (10002)
+#define FFPARAM_MOUSELEFTX  (10003)
+#define FFPARAM_MOUSELEFTY  (10004)
+#define FFPARAM_RED         (10005)
+#define FFPARAM_GREEN       (10006)
+#define FFPARAM_BLUE        (10007)
+#define FFPARAM_ALPHA       (10008)
 
-#define FFPARAM_VECTOR1_X       (109)
-#define FFPARAM_SPEEDS_X        (107)
-#define FFPARAM_VECTOR1_Y       (6)
-#define FFPARAM_VECTOR1_Z       (7)
-#define FFPARAM_VECTOR1_W       (8)
+#define FFPARAM_VECTOR1_X       (1)
+#define FFPARAM_VECTOR1_Y       (2)
+#define FFPARAM_VECTOR1_Z       (3)
+#define FFPARAM_VECTOR1_W       (4)
 
-#define FFPARAM_VECTOR2_X       (1013)
-#define FFPARAM_SPEEDS_Y        (1011)
-#define FFPARAM_VECTOR2_Y       (9)
-#define FFPARAM_VECTOR2_Z       (10)
-#define FFPARAM_VECTOR2_W       (11)
+#define FFPARAM_VECTOR2_X       (5)
+#define FFPARAM_VECTOR2_Y       (6)
+#define FFPARAM_VECTOR2_Z       (7)
+#define FFPARAM_VECTOR2_W       (8)
 
-#define FFPARAM_VECTOR3_X       (1017)
-#define FFPARAM_SPEEDS_Z        (1015)
-#define FFPARAM_VECTOR3_Y       (12)
-#define FFPARAM_VECTOR3_Z       (13)
-#define FFPARAM_VECTOR3_W       (14)
+#define FFPARAM_VECTOR3_X       (9)
+#define FFPARAM_VECTOR3_Y       (10)
+#define FFPARAM_VECTOR3_Z       (11)
+#define FFPARAM_VECTOR3_W       (12)
 
-#define FFPARAM_VECTOR4_X       (2017)
-#define FFPARAM_VECTOR4_Y       (2016)
-#define FFPARAM_VECTOR4_Z       (2011)
-#define FFPARAM_VECTOR4_W       (2012)
+#define FFPARAM_VECTOR4_X       (13)
+#define FFPARAM_VECTOR4_Y       (14)
+#define FFPARAM_VECTOR4_Z       (15)
+#define FFPARAM_VECTOR4_W       (16)
 
-#define FFPARAM_SPEEDS_W        (2015) 
- 
 
-#define FFPARAM_COLOR1_RED       (15)  
-#define FFPARAM_COLOR1_GREEN       (16)  
-#define FFPARAM_COLOR1_BLUE       (17)  
-#define FFPARAM_COLOR1_ALPHA       (1115)  
 
-#define FFPARAM_COLOR2_RED       (18)  
-#define FFPARAM_COLOR2_GREEN       (19)  
-#define FFPARAM_COLOR2_BLUE       (20)  
-#define FFPARAM_COLOR2_ALPHA       (1110)   
+#define FFPARAM_VECTOR5_X       (17)
+#define FFPARAM_VECTOR5_Y       (18)
+#define FFPARAM_VECTOR5_Z       (19)
+#define FFPARAM_VECTOR5_W       (20)
 
+#define FFPARAM_VECTOR6_X       (21)
+#define FFPARAM_VECTOR6_Y       (22)
+#define FFPARAM_VECTOR6_Z       (23)
+#define FFPARAM_VECTOR6_W       (24)
+
+
+#define FFPARAM_VECTOR7_X       (25)
+#define FFPARAM_VECTOR7_Y       (26)
+#define FFPARAM_VECTOR7_Z       (27)
+#define FFPARAM_VECTOR7_W       (28)
+
+
+#define FFPARAM_COLOR1_RED       (29)  
+#define FFPARAM_COLOR1_GREEN     (30)  
+#define FFPARAM_COLOR1_BLUE      (31)  
+#define FFPARAM_COLOR1_ALPHA     (1118)  
+
+#define FFPARAM_COLOR2_RED       (32)  
+#define FFPARAM_COLOR2_GREEN     (33)  
+#define FFPARAM_COLOR2_BLUE      (34)  
+#define FFPARAM_COLOR2_ALPHA     (1110)   
 #define STRINGIFY(A) #A
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -119,16 +131,16 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 static CFFGLPluginInfo PluginInfo ( 
 	ShaderMaker::CreateInstance,		// Create method
-	"SM01",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
-	"SoM Mandelbrot",						// *** Plugin name - make it different for each plugin 
+	"ST01",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
+	"Shadertoy Kali Underwater",						// *** Plugin name - make it different for each plugin 
 	1,						   			// API major version number 													
 	006,								// API minor version number	
-	2,									// *** Plugin major version number
-	000,								// *** Plugin minor version number
+	1,									// *** Plugin major version number
+	001,								// *** Plugin minor version number
 	// FF_EFFECT,							// Plugin type can always be an effect
 	FF_SOURCE,						// or change this to FF_SOURCE for shaders that do not use a texture
-	"SoM Mandelbrot",     // *** Plugin description - you can expand on this
-	"c.Kleinhuis 2018"			// *** About - use your own name and details
+	"SoM Base Shader - extended from", // *** Plugin description - you can expand on this
+	"https://github.com/leadedge/ShaderMaker"			// *** About - use your own name and details
 );
 
 
@@ -172,202 +184,333 @@ void main()
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 char *fragmentShaderCode = STRINGIFY (
 // ==================== PASTE WITHIN THESE LINES =======================
+// https://www.shadertoy.com/view/Mtf3Rr
+// http://www.fractalforums.com/movies-showcase-%28rate-my-movie%29/very-rare-deep-sea-fractal-creature/
+
+vec3 spherical(float inclination, float elevation) {   
+return vec3(
+	sin(inclination)*cos(elevation),
+	sin(inclination)*sin(inclination),
+	sin(inclination)
+	);
+}
 
 
-float triangulate(float x) {
-	// creates a triangular function that maps 0..1 to 0..1..0 
-	// helper method used to create properties that are loopable
-	return 1.0-abs((mod(x, 1.0) - 0.5)) * 2.0;
-}
-vec2 triangulate(vec2 x) {
-	// creates a triangular function that maps 0..1 to 0..1..0 
-	// helper method used to create properties that are loopable
-	return 1.0 - abs((mod(x, 1.0) - 0.5)) * 2.0;;
-}
-vec2 expandNormalizedToNegative1(vec2 x) {
-	// creates a triangular function that maps 0..1 to 0..1..0 
-	// helper method used to create properties that are loopable
-	return x *2.0 - 1.0;
+const int Iterations = 25;
+float Scale = inputVector1.x*6.0-3.0;
+vec3 Julia = inputVector2.xyz*6.0-3.0;// vec3(-3., -1.5, -0.5);
+// use spherical coordinates for rot vector definition azimut/latitude only 2 values instead of 3
+vec3 RotVector = vec3(sin(inputVector5.x*2.0*PI),cos(inputVector5.x*2.0*PI),sin(inputVector5.y*PI));// vec3(0.5, -0.05, -1.);
+float RotAngle = inputVector1.y*360;
+float Speed = inputVector1.z*2.0;// 1.3;
+float Amplitude = inputVector1.w;// 0.6;
+const float detail = .0005;
+const vec3 lightdir = -vec3(0., 1., 0.);
+ 
+float Scales[3] = float[3](inputVector5.x*4.0 - 2.0, inputVector5.x*4.0 - 2.0, inputVector5.x*4.0 -2.0);
+
+
+
+float viewScale =inputVector5.y;
+float viewRotation = inputVector5.z; 
+
+
+
+vec3 Julias[3] = vec3[3](inputVector2.xyz*6.0 - 3.0, inputVector3.xyz*6.0 - 3.0, inputVector4.xyz*6.0-3.0);
+float RotAngles[3] = float [3](inputVector2.w*360.0, inputVector3.w*360.0, inputVector4.w*360.0);
+
+
+vec3 RotVectors[3] = vec3[3](
+
+	spherical(inputVector6.x*2.0*PI-PI, inputVector6.y*PI - PI / 2.0),
+	spherical(inputVector6.z*2.0*PI - PI, inputVector6.w*PI - PI / 2.0),
+	spherical(inputVector7.x*2.0*PI - PI, inputVector7.y*PI - PI/2.0)
+	 
+	);
+mat2 rot;
+
+float de(vec3 p);
+vec3 color(vec3 p);
+mat3  rotationMatrix3(vec3 v, float angle);
+
+vec3 normal(vec3 p) {
+	vec3 e = vec3(0.0, detail, 0.0);
+
+	return normalize(vec3(
+		de(p + e.yxx) - de(p - e.yxx),
+		de(p + e.xyx) - de(p - e.xyx),
+		de(p + e.xxy) - de(p - e.xxy)
+		)
+		);
 }
 
-vec2 triangulateNormalize(vec2 x) {
-	// creates a triangular function that maps 0..1 to 0..1..0 
-	// helper method used to create properties that are loopable
-	return expandNormalizedToNegative1(x);
-}
-vec2 piiate(vec2 x) {
-	// creates a triangular function that maps 0..1 to 0..1..0 
-	// helper method used to create properties that are loopable
-	return vec2(triangulate(x.x), triangulate(x.y));
-}
-vec2 rotate(vec2 v, float a) {
-	float s = sin(a);
-	float c = cos(a);
-	mat2 m = mat2(c, -s, s, c);
-	return m * v;
+float calcAO(const vec3 pos, const vec3 nor) {
+	float aodet = detail*3.;
+	float totao = 0.0;
+	float sca = 1.0;
+	for (int aoi = 0; aoi<5; aoi++) {
+		float hr = aodet*float(aoi*aoi);
+		vec3 aopos = nor * hr + pos;
+		float dd = de(aopos);
+		totao += -(dd - hr)*sca;
+		sca *= 0.7;
+	}
+	return clamp(1.0 - 5.0*totao, 0., 1.0);
 }
 
-vec3 hsv2rgb(vec3 c)
+
+float softshadow(in vec3 ro, in vec3 rd, float mint, float k)
 {
-	vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
-	vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
-	return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-}
-
-const vec3 innerColor = vec3(1.0, 0.0, 0.0);
-const vec3 outerColor = vec3(1.0, 1.0, 1.0);
-const float maxIterations = 128;
-const bool showKnobs=false ;
-const bool julia =false;
-
-
-vec2 c_from_polar(float r, float theta) {
-	return vec2(r * cos(theta), r * sin(theta));
-}
-
-vec2 c_to_polar(vec2 c) {
-	return vec2(length(c), atan(c.y, c.x));
-}
-
-/// Raises `c` to a floating point power `e`.
-vec2 c_pow(vec2 c, float e) {
-	vec2 p = c_to_polar(c);
-	return c_from_polar(pow(p.x, e), p.y*e);
+	float res = 1.0;
+	float t = mint;
+	for (int i = 0; i<48; i++)
+	{
+		float h = de(ro + rd*t);
+		h = max(h, 0.0);
+		res = min(res, k*h / t);
+		t += clamp(h, 0.01, 0.5);
+	}
+	return clamp(res, 0., 1.0);
 }
 
 
 
-vec2 seeds[3]=vec2[3](inputVector1.zw, inputVector2.zw, inputVector3.zw);
-float powers[3] = float[3]( (inputVector1.y*16.0 - 8.0) ,  (inputVector2.y*16.0 - 8.0)  , (inputVector3.y*16.0 - 8.0)  );
-void mainImage(out vec4 fragColor, in vec2 fragCoord)
-{
-	float n = 0.0;
-	// important: exponential interpolation is done in c area
-	// float scale = 10.0*(1.0 / exp(inputColour.x*10.0));
+float time = iTime*Speed;
+vec3 aniXXX = vec3(sin(time), sin(time), cos(time))*Amplitude;
 
-//	vec2 seeds[3]; 
 
-//	seeds[0] = inputVector1.zw;
-//	seeds[1] = inputVector2.zw;
-//	seeds[2] = inputVector3.zw;
+mat3 rots[3] = mat3[3](
+	rotationMatrix3(normalize(RotVectors[0] + aniXXX), RotAngles[0] + sin(time)*10.),
+	rotationMatrix3(normalize(RotVectors[1] + aniXXX), RotAngles[1] + sin(time)*10.),
+	rotationMatrix3(normalize(RotVectors[2] + aniXXX), RotAngles[2] + sin(time)*10.));
+
+vec3 color(vec3 p) {
+	p = p.zxy;
+	float a = 1.5 + sin(iTime*.3578)*.5;
+	p.xy = p.xy*mat2(cos(a), sin(a), -sin(a), cos(a));
+	p.x *= .75; 
+	vec3 ani;
+	// ani = vec3(sin(time), sin(time), cos(time))*Amplitude;
+	p += sin(p*3. + time*6.)*.04;
+	// mat3 rot = rotationMatrix3(normalize(RotVector + aniXXX), RotAngle + sin(time)*10.);
+
+	/*
+	mat3 rots[3] = mat3[3](
+		rotationMatrix3(normalize(RotVector + ani), RotAngles[0] + sin(time)*10.),
+		rotationMatrix3(normalize(RotVector + ani), RotAngles[1] + sin(time)*10.),
+		rotationMatrix3(normalize(RotVector + ani), RotAngles[2]+ sin(time)*10.));
+		*/
+	vec3 pp = p;
+	float l;
+	float ot = 9999.;
+	for (int i = 0; i < Iterations; i++) {
+		p.xy = abs(p.xy);
+		p = p*Scales[i%3] + Julias[i % 3]; 
+
+		p *= rots[i % 3];  
+
+		l = length(p.x);
+		ot = min(l, ot);
+	}
+	return mix(inputColor1.xyz, inputColor2.xyz, max(0., 2. - ot) / 2.);
+}
+
+vec3 light(in vec3 p, in vec3 dir) {
+	vec3 ldir = normalize(lightdir);
+	vec3 n = normal(p);
+	float sh =    softshadow(p, -ldir, 1., 20.);
 	
-		float scale = inputVector4.x;
-	// float scale = inputColour.x*10.0;
-	// vec2 center = (iMouse.xy / iResolution.xy)*4.0 - 2.0;
-	vec2 center = inputVector4.zw;
-	vec2 pixel = center + rotate(scale*((fragCoord / iResolution.xy)*2.0 - 1.0), inputVector4.y);
-	vec2 c = pixel;
-	vec2 z = seeds[0];
-	int i;
-	if (julia) {
-		  z = pixel;
-		  c = seeds[0];
+	float diff = max(.1, dot(ldir, -n));
+	vec3 r = reflect(ldir, n);
+	float spec = max(0., dot(dir, -r));
+	vec3 colo = color(p);
+	return (diff*sh + .15*max(0., dot(normalize(dir), -n))*calcAO(p, n))*colo + pow(spec, 30.)*.5*sh;
+}
+
+
+
+float kaliset(vec3 p) {
+	return 1.0;
+	//p.y -= iTime;
+	//p.y = abs(2. - mod(p.y, 4.));
+	//for (int i = 0; i<18; i++) p = abs(p) / dot(p, p) - .8;
+	//return length(p);
+}
+
+
+vec3 raymarch(in vec3 from, in vec3 dir, vec2 fragCoord)
+{
+	vec3 col = vec3(0.);
+	float st =  0.0;
+	float d = 1.0;
+	float  totdist = 0; 
+	vec3 p;
+	float k;
+	for (int i = 0; i<70; i++) {
+		if (d>detail && totdist<50.)
+		{
+			k += kaliset(p)*exp(-.002*totdist*totdist)*max(0., totdist - 3.)*(1. - step(0., .2 - d));
+			p = from + totdist*dir;
+			d = de(p);
+			totdist += d;
+		}
+	}
+	// vec3 backg = vec3(.4, .5, .55)*(1. + fragCoord.y / iResolution.y*1.5);
+	if (d<detail) {
+		col = light(p - detail*dir, dir);
 	}
 	else {
-		  c = pixel;
-		  z = seeds[0];
+		col = vec3(0.0,0.0,0.0);
 	}
-
-	// seeds[3] = vec2(sin(iGlobalTime + inputTimes[3] * 10.0), cos(iGlobalTime + inputTimes[3] * 10.0))*inputVector4.y + triangulateNormalize(inputVector4.zw);
-	int depthNormalized = int(inputColour.y * maxIterations * inputColour.w);
-
-	int iterationsCalc = int(maxIterations*inputColour.w);
-	for (i = 0; i <iterationsCalc; i++)
-	{ 
-
-		// z = vec2(z.x*z.x - z.y*z.y, 2.*z.x*z.y) + c;
-
-		
-		if (i > depthNormalized) {
-			z = c_pow(z, powers[i % 3]) + c;
-			z += seeds[i % 3];
-		}
-		else {
-
-			z = c_pow(z, powers[0]) + c;
-		}
-
-		// most simple coloring/breaking condition using small bailout of 4
-		if (length(z) >4.0) {
-			break;
-		}
-
-		n++;
-	}
-	fragColor = vec4(mix(inputColor1.xyz, inputColor2.xyz, n / iterationsCalc), 1.0);
-
-	if (showKnobs) {
-		// mark the seeds
-		for (float k = 0; k < 3.0; k++) {
-			if (length(pixel - seeds[int(k)]) < 0.05) {
-				fragColor = vec4(0.5 + k / 3.0, 0.5, 0.5 + k / 3.0, 1.0);
-			}
-		}
-	}
-
-
-	// fragColor =  vec4(1.0-i / round(128 * inputColour.w), 1.0 - i / round(128 * inputColour.w), 1.0 - i / round(128 * inputColour.w), 1.0);
+	// col = mix(col, vec3(backg), 1.0 - exp(-.002*totdist*totdist));
+	return col; // +k*.002;
 }
+
+void mainImage(out vec4 fragColor, in vec2 fragCoord)
+{
+	float t = iTime*.3;
+	vec2 uv = -1.0*(fragCoord.xy / iResolution.xy*2. - 1.);
+	uv *= viewScale;
+	uv.y *= iResolution.y / iResolution.x;
+	vec3 from = vec3(0., -.7, -25. + sin(t)*8.);
+	vec3 dir = normalize(vec3(uv, 1.));
+	rot = mat2(cos(-.5), sin(-.5), -sin(-.5), cos(-.5));
+	dir.yz = dir.yz*rot;
+	from.yz = from.yz*rot; 
+	vec3 col = raymarch(from, dir, fragCoord);
+	col *= max(0., .1 - length(uv*.05)) / .1;
+	fragColor = vec4(col, 1.);
+
+}
+
+
+mat3  rotationMatrix3(vec3 v, float angle)
+{
+	float c = cos(radians(angle));
+	float s = sin(radians(angle));
+
+	return mat3(c + (1.0 - c) * v.x * v.x, (1.0 - c) * v.x * v.y - s * v.z, (1.0 - c) * v.x * v.z + s * v.y,
+		(1.0 - c) * v.x * v.y + s * v.z, c + (1.0 - c) * v.y * v.y, (1.0 - c) * v.y * v.z - s * v.x,
+		(1.0 - c) * v.x * v.z - s * v.y, (1.0 - c) * v.y * v.z + s * v.x, c + (1.0 - c) * v.z * v.z
+		);
+}
+
+
+
+
+float de(vec3 p) {
+	p = p.zxy;
+	float a = 1.5 + sin(iTime*.3578)*.5;
+	p.xy = p.xy*mat2(cos(a), sin(a), -sin(a), cos(a));
+	p.x *= .75;
+	float time = iTime*Speed;
+	vec3 ani;
+	// ani = vec3(sin(time), sin(time), cos(time))*Amplitude;
+	p += sin(p*3. + time*6.)*.04;
+	
+	// mat3 rot = rotationMatrix3(normalize(RotVector + ani), RotAngle + sin(time)*10.);
+	
+	/*
+
+	mat3 rots[3] = mat3[3](
+		rotationMatrix3(normalize(RotVector + ani), RotAngles[0] + sin(time)*10.),
+		rotationMatrix3(normalize(RotVector + ani), RotAngles[1] + sin(time)*10.),
+		rotationMatrix3(normalize(RotVector + ani), RotAngles[2] + sin(time)*10.));
+		*/
+	
+	vec3 pp = p;
+	float l;
+	for (int i = 0; i<Iterations; i++) {
+		p.xy = abs(p.xy);
+		p = p*Scales[i % 3] + Julias[i%3];
+
+
+		p *= rots[i%3];
+	}
+		l = length(p);
+	return l*pow(Scales[(Iterations-1) % 3], -float(Iterations)) - .1;
+}
+
 
 
 // ==================== END OF SHADER CODE PASTE =======================
 
 
 );
-#define DEBUG_
 
+#define DEBUG
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //  Constructor and destructor
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 {
 
-	#ifdef DEBUG
 	// Debug console window so printf works
 	FILE* pCout; // should really be freed on exit 
 	AllocConsole();
 	freopen_s(&pCout, "CONOUT$", "w", stdout); 
 	printf("Shader Maker Vers 1.004\n");
+	printf("Spack-O-Mat Shadertoy Kali Underwater Creature \n");
 	printf("GLSL version [%s]\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-#endif
+	
 
 	// Input properties allow for no texture or for four textures
 	SetMinInputs(0);
 	SetMaxInputs(2); // TODO - 4 inputs
 
 	// Parameters
-	// SetParamInfo(FFPARAM_SPEED,         "Speed",         FF_TYPE_STANDARD, 0.5f); 
- 	SetParamInfo(FFPARAM_MOUSEX,        "Center X",       FF_TYPE_STANDARD, 0.5f);  
-	 SetParamInfo(FFPARAM_MOUSEY,        "Center Y",       FF_TYPE_STANDARD, 0.5f); 
-	//SetParamInfo(FFPARAM_MOUSELEFTX,    "X mouse left",  FF_TYPE_STANDARD, 0.5f); 
-	//SetParamInfo(FFPARAM_MOUSELEFTY,    "Y mouse left",  FF_TYPE_STANDARD, 0.5f);  
-	SetParamInfo(FFPARAM_RED,           "Zoom",           FF_TYPE_STANDARD,0.1f);  
-	SetParamInfo(FFPARAM_GREEN,         "Start of Alternation",         FF_TYPE_STANDARD, 0.0f);  
-	SetParamInfo(FFPARAM_BLUE,          "Rotation",          FF_TYPE_STANDARD, 0.0f);  
- 	SetParamInfo(FFPARAM_ALPHA,         "MaxIter",         FF_TYPE_STANDARD, 0.1f);  
+	SetParamInfo(FFPARAM_SPEED,         "Speed",         FF_TYPE_STANDARD, 0.0f); m_UserSpeed = 0.5f;
+//	SetParamInfo(FFPARAM_MOUSEX,        "X mouse",       FF_TYPE_STANDARD, 0.5f); m_UserMouseX = 0.5f;
+//	SetParamInfo(FFPARAM_MOUSEY,        "Y mouse",       FF_TYPE_STANDARD, 0.5f); m_UserMouseY = 0.5f;
+//	SetParamInfo(FFPARAM_MOUSELEFTX,    "X mouse left",  FF_TYPE_STANDARD, 0.5f); m_UserMouseLeftX = 0.5f;
+//	SetParamInfo(FFPARAM_MOUSELEFTY,    "Y mouse left",  FF_TYPE_STANDARD, 0.5f); m_UserMouseLeftY = 0.5f;
+//	SetParamInfo(FFPARAM_RED,           "Red",           FF_TYPE_STANDARD, 0.5f); m_UserRed = 0.5f;
+	
+//	SetParamInfo(FFPARAM_GREEN,         "Green",         FF_TYPE_STANDARD, 0.5f); m_UserGreen = 0.5f;
+//	SetParamInfo(FFPARAM_BLUE,          "Blue",          FF_TYPE_STANDARD, 0.5f); m_UserBlue = 0.5f;
+//	SetParamInfo(FFPARAM_ALPHA,         "Alpha",         FF_TYPE_STANDARD, 1.0f); m_UserAlpha = 1.0f;
 
 
 
-	//SetParamInfo(FFPARAM_VECTOR1_X, "Vector1X", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_SPEEDS_X, "Seed 1 Speed", FF_TYPE_STANDARD, 0.0f);
-    SetParamInfo(FFPARAM_VECTOR1_Y, "Seed 1 Power", FF_TYPE_STANDARD, 0.625f);
-	SetParamInfo(FFPARAM_VECTOR1_Z, "Seed 1 Real", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR1_W, "Seed 1 Imag", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR1_X, "kaliScale", FF_TYPE_STANDARD, 0.1f);
+	SetParamInfo(FFPARAM_VECTOR1_Y, "Vector1Y unused", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR1_Z, "kaliSpeed", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR1_W, "Amplitude", FF_TYPE_STANDARD, 0.5f);
 
 
-	//SetParamInfo(FFPARAM_VECTOR2_X, "Vector2X", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_SPEEDS_Y, "Seed 2 Speed", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR2_Y, "Seed 2 Power", FF_TYPE_STANDARD, 0.625f);
-	SetParamInfo(FFPARAM_VECTOR2_Z, "Seed 2 Real", FF_TYPE_STANDARD, 0.50f);
-	SetParamInfo(FFPARAM_VECTOR2_W, "Seed 2 Imag", FF_TYPE_STANDARD, 0.50f);
+	SetParamInfo(FFPARAM_VECTOR2_X, "Julia X", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR2_Y, "Julia Y", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR2_Z, "Julia Z", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR2_W, "Rotangle 1", FF_TYPE_STANDARD, 0.5f);
 
 
-	//SetParamInfo(FFPARAM_VECTOR3_X, "Vector3X", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_SPEEDS_Z, "Seed 3 Speed", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR3_Y, "Seed 3 Power", FF_TYPE_STANDARD, 0.625f);
-	SetParamInfo(FFPARAM_VECTOR3_Z, "Seed 3 Real", FF_TYPE_STANDARD, 0.50f);
-	SetParamInfo(FFPARAM_VECTOR3_W, "Seed 3 Imag", FF_TYPE_STANDARD, 0.50f);
+	SetParamInfo(FFPARAM_VECTOR3_X, " Julia2 X", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR3_Y, " JuliaJulia2 Y", FF_TYPE_STANDARD, 0.5f); 
+	SetParamInfo(FFPARAM_VECTOR3_Z, " Julia2 Z", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR3_W, "Rotangle 2", FF_TYPE_STANDARD, 0.5f);
 
+
+	SetParamInfo(FFPARAM_VECTOR4_X, "Julia 3 X", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR4_Y, "Julia 3 Y", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR4_Z, "Julia 3 Z", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR4_W, "Rotangle 3", FF_TYPE_STANDARD, 0.5f);
+
+
+	SetParamInfo(FFPARAM_VECTOR5_X, "Scale1", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR5_Y, "Scale2", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR5_Z, "Scale3", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR5_W, "unusedVector5W", FF_TYPE_STANDARD, 0.5f);
+
+
+	SetParamInfo(FFPARAM_VECTOR6_X, "Azimut 1", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR6_Y, "Latitude 1", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR6_Z, "Azimut 2", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR6_W, "Latitude 2", FF_TYPE_STANDARD, 0.5f);
+
+	SetParamInfo(FFPARAM_VECTOR7_X, "Azimut 3", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR7_Y, "Latitude 3", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR7_Z, "unusedJulia 7 Z", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR7_W, "Rotangle 7", FF_TYPE_STANDARD, 0.5f);
 
 	SetParamInfo(FFPARAM_COLOR1_RED, "Color 1 Red", FF_TYPE_RED, 1.0f);
 	SetParamInfo(FFPARAM_COLOR1_GREEN, "Color 1 Green", FF_TYPE_GREEN, 1.0f);
@@ -376,8 +519,7 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 
 	SetParamInfo(FFPARAM_COLOR2_RED, "Color 2 Red", FF_TYPE_RED, 1.0f);
 	SetParamInfo(FFPARAM_COLOR2_GREEN, "Color 2 Green", FF_TYPE_GREEN, 0.0f);
-	SetParamInfo(FFPARAM_COLOR2_BLUE, "Color 2 Blue", FF_TYPE_BLUE, 0.0f); 
-	  
+	SetParamInfo(FFPARAM_COLOR2_BLUE, "Color 2 Blue", FF_TYPE_BLUE, 0.0f);
 
 	// Set defaults
 	SetDefaults();
@@ -554,14 +696,7 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		// Calculate elapsed time
 		lastTime = elapsedTime;
 		elapsedTime = GetCounter()/1000.0; // In seconds - higher resolution than timeGetTime()
-		m_time = m_time + (float)(elapsedTime - lastTime)*m_UserSpeed*2.0f; // increment scaled by user input 0.0 - 2.0
-
-
-		m_times.x = m_times.x + (float)(elapsedTime - lastTime)*m_speeds.x*2.0f; // increment scaled by user input 0.0 - 2.0
-		m_times.y = m_times.y + (float)(elapsedTime - lastTime)*m_speeds.y*2.0f; // increment scaled by user input 0.0 - 2.0
-		m_times.z = m_times.z + (float)(elapsedTime - lastTime)*m_speeds.z*2.0f; // increment scaled by user input 0.0 - 2.0
-		m_times.w = m_times.w + (float)(elapsedTime - lastTime)*m_speeds.w*2.0f; // increment scaled by user input 0.0 - 2.0
-
+		m_time = m_time + (float)(elapsedTime-lastTime)*m_UserSpeed*2.0f; // increment scaled by user input 0.0 - 2.0
 
 		// ShaderToy new uniforms
 		m_frame = m_frame + 1.0f;
@@ -711,28 +846,24 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 			m_extensions.glUniform4fARB(m_inputColourLocation, m_UserRed, m_UserGreen, m_UserBlue, m_UserAlpha);
 
 		if (m_inputVector1Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector1Location, m_vector1.x, m_vector1.y, m_vector1.z*SCALE_SEED+ SHIFT_SEED, m_vector1.w*SCALE_SEED + SHIFT_SEED);
+			m_extensions.glUniform4fARB(m_inputVector1Location, m_vector1.x, m_vector1.y, m_vector1.z, m_vector1.w);
 		if (m_inputVector2Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector2Location, m_vector2.x, m_vector2.y, m_vector2.z*SCALE_SEED + SHIFT_SEED, m_vector2.w*SCALE_SEED + SHIFT_SEED);
+			m_extensions.glUniform4fARB(m_inputVector2Location, m_vector2.x, m_vector2.y, m_vector2.z, m_vector2.w);
 		if (m_inputVector3Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector3Location, m_vector3.x, m_vector3.y, m_vector3.z*SCALE_SEED + SHIFT_SEED, m_vector3.w*SCALE_SEED + SHIFT_SEED);
+			m_extensions.glUniform4fARB(m_inputVector3Location, m_vector3.x, m_vector3.y, m_vector3.z, m_vector3.w);
 		if (m_inputVector4Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector4Location, 10.0f*(1.0f / exp(m_UserRed*10.0f)), m_UserBlue*PI_2, m_UserMouseX*SCALE_SEED + SHIFT_SEED, m_UserMouseY*SCALE_SEED + SHIFT_SEED);
+			m_extensions.glUniform4fARB(m_inputVector4Location, m_vector4.x, m_vector4.y, m_vector4.z, m_vector4.w);
+		if (m_inputVector5Location >= 0)
+			m_extensions.glUniform4fARB(m_inputVector5Location, m_vector5.x, m_vector5.y, m_vector5.z, m_vector5.w);
+		if (m_inputVector6Location >= 0)
+			m_extensions.glUniform4fARB(m_inputVector6Location, m_vector6.x, m_vector6.y, m_vector6.z, m_vector6.w);
+		if (m_inputVector7Location >= 0)
+			m_extensions.glUniform4fARB(m_inputVector7Location, m_vector7.x, m_vector7.y, m_vector7.z, m_vector7.w);
 		if (m_inputColor1Location >= 0)
-			m_extensions.glUniform4fARB(m_inputColor1Location, m_color1.x, m_color1.y, m_color1.z,0.0f);
+			m_extensions.glUniform4fARB(m_inputColor1Location, m_color1.x, m_color1.y, m_color1.z, 0.0f);
 
 		if (m_inputColor2Location >= 0)
-			m_extensions.glUniform4fARB(m_inputColor2Location, m_color2.x, m_color2.y, m_color2.z,0.0f);
-
-		if (m_inputTimesLocation >= 0)
-			m_extensions.glUniform4fARB(m_inputTimesLocation, m_times.x, m_times.y, m_times.z, m_times.w);
-
-
-		if (m_inputJuliaLocation >= 0)
-			m_extensions.glUniform1iARB(m_inputJuliaLocation, m_julia > 0.5f  );
-
-		if (m_inputShowKnobsLocation >= 0)
-			m_extensions.glUniform1iARB(m_inputShowKnobsLocation, m_showKnobs >0.5f  );
+			m_extensions.glUniform4fARB(m_inputColor2Location, m_color2.x, m_color2.y, m_color2.z, 0.0f);
 
 
 		// Bind a texture if the shader needs one
@@ -826,10 +957,9 @@ char * ShaderMaker::GetParameterDisplay(DWORD dwIndex) {
 	memset(m_DisplayValue, 0, 15);
 	switch (dwIndex) {
 
-	case FFPARAM_SPEED:
-		cross_secure_sprintf(m_DisplayValue, 16, "xxx%dxxx", (int)(m_UserSpeed*100.0));
-		return m_DisplayValue;
-	 
+		case FFPARAM_SPEED:
+			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserSpeed*100.0));
+			return m_DisplayValue;
 	
 		case FFPARAM_MOUSEX:
 			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserMouseX*m_vpWidth));
@@ -862,7 +992,6 @@ char * ShaderMaker::GetParameterDisplay(DWORD dwIndex) {
 		case FFPARAM_ALPHA:
 			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserAlpha*256.0));
 			return m_DisplayValue;
- 
 
 		default:
 			return m_DisplayValue;
@@ -910,7 +1039,6 @@ FFResult ShaderMaker::GetInputStatus(DWORD dwIndex)
 
 float ShaderMaker::GetFloatParameter(unsigned int index)
 {
-	// printf("GetFloatParameter %d   \n", index);
 	switch (index) {
 
 		case FFPARAM_SPEED:
@@ -940,28 +1068,28 @@ float ShaderMaker::GetFloatParameter(unsigned int index)
 		case FFPARAM_ALPHA:
 			return m_UserAlpha;
 
-		case FFPARAM_VECTOR1_X: 
+		case FFPARAM_VECTOR1_X:
 			return m_vector1.x;
 
-		case FFPARAM_VECTOR1_Y: 
+		case FFPARAM_VECTOR1_Y:
 			return m_vector1.y;
 
-		case FFPARAM_VECTOR1_Z: 
+		case FFPARAM_VECTOR1_Z:
 			return m_vector1.z;
 
 		case FFPARAM_VECTOR1_W:
 			return m_vector1.w;
 
-		case FFPARAM_VECTOR2_X: 
+		case FFPARAM_VECTOR2_X:
 			return m_vector2.x;
 
-		case FFPARAM_VECTOR2_Y: 
+		case FFPARAM_VECTOR2_Y:
 			return m_vector2.y;
 
-		case FFPARAM_VECTOR2_Z:	 
+		case FFPARAM_VECTOR2_Z:
 			return m_vector2.z;
 
-		case FFPARAM_VECTOR2_W:	 
+		case FFPARAM_VECTOR2_W:
 			return m_vector2.w;
 
 
@@ -991,15 +1119,39 @@ float ShaderMaker::GetFloatParameter(unsigned int index)
 		case FFPARAM_VECTOR4_W:
 			return m_vector4.w;
 
+		case FFPARAM_VECTOR5_X:
+			return m_vector5.x;
 
-		case FFPARAM_SPEEDS_X:
-			return m_speeds.x;
-		case FFPARAM_SPEEDS_Y:
-			return m_speeds.y;
-		case FFPARAM_SPEEDS_Z:
-			return m_speeds.z;
-		case FFPARAM_SPEEDS_W:
-			return m_speeds.w;
+		case FFPARAM_VECTOR5_Y:
+			return m_vector5.y;
+
+		case FFPARAM_VECTOR5_Z:
+			return m_vector5.z;
+
+		case FFPARAM_VECTOR5_W:
+			return m_vector5.w;
+		case FFPARAM_VECTOR6_X:
+			return m_vector6.x;
+
+		case FFPARAM_VECTOR6_Y:
+			return m_vector6.y;
+
+		case FFPARAM_VECTOR6_Z:
+			return m_vector6.z;
+
+		case FFPARAM_VECTOR6_W:
+			return m_vector6.w;
+		case FFPARAM_VECTOR7_X:
+			return m_vector7.x;
+
+		case FFPARAM_VECTOR7_Y:
+			return m_vector7.y;
+
+		case FFPARAM_VECTOR7_Z:
+			return m_vector7.z;
+
+		case FFPARAM_VECTOR7_W:
+			return m_vector7.w;
 
 		case FFPARAM_COLOR1_RED:
 			return m_color1.x;
@@ -1016,15 +1168,13 @@ float ShaderMaker::GetFloatParameter(unsigned int index)
 			return m_color2.z;
 
 
-
 		default:
 			return FF_FAIL;
 	}
 }
- 
-FFResult ShaderMaker::SetFloatParameter(unsigned int index, float value)
-	{
 
+FFResult ShaderMaker::SetFloatParameter(unsigned int index, float value)
+{
 		switch (index) {
 
 			case FFPARAM_SPEED:
@@ -1064,22 +1214,18 @@ FFResult ShaderMaker::SetFloatParameter(unsigned int index, float value)
 				break;
 
 			case FFPARAM_VECTOR1_X:
-				// printf("SetFloatParameter %d %f FFPARAM_VECTOR1_X\n", index, value);
 				m_vector1.x = value;
 				break;
 
 			case FFPARAM_VECTOR1_Y:
-				// printf("SetFloatParameter %d %f FFPARAM_VECTOR1_Y\n", index, value);
 				m_vector1.y = value;
 				break;
 
 			case FFPARAM_VECTOR1_Z:
-				// printf("SetFloatParameter %d %f FFPARAM_VECTOR1_Z\n", index, value);
 				m_vector1.z = value;
 				break;
 
 			case FFPARAM_VECTOR1_W:
-				// printf("SetFloatParameter %d %f \n", index, value);
 				m_vector1.w = value;
 				break;
 
@@ -1135,43 +1281,74 @@ FFResult ShaderMaker::SetFloatParameter(unsigned int index, float value)
 				m_vector4.w = value;
 				break;
 
-
-			case FFPARAM_SPEEDS_X:
-				m_speeds.x = value;
+			case FFPARAM_VECTOR5_X:
+				m_vector5.x = value;
 				break;
 
-			case FFPARAM_SPEEDS_Y:
-				m_speeds.y = value;
+			case FFPARAM_VECTOR5_Y:
+				m_vector5.y = value;
 				break;
 
-			case FFPARAM_SPEEDS_Z:
-				m_speeds.z = value;
+			case FFPARAM_VECTOR5_Z:
+				m_vector5.z = value;
 				break;
 
-			case FFPARAM_SPEEDS_W:
-				m_speeds.w = value;
+			case FFPARAM_VECTOR5_W:
+				m_vector5.w = value;
+				break;
+
+			case FFPARAM_VECTOR6_X:
+				m_vector6.x = value;
+				break;
+
+			case FFPARAM_VECTOR6_Y:
+				m_vector6.y = value;
+				break;
+
+			case FFPARAM_VECTOR6_Z:
+				m_vector6.z = value;
+				break;
+
+			case FFPARAM_VECTOR6_W:
+				m_vector6.w = value;
+				break;
+
+			case FFPARAM_VECTOR7_X:
+				m_vector7.x = value;
+				break;
+
+			case FFPARAM_VECTOR7_Y:
+				m_vector7.y = value;
+				break;
+
+			case FFPARAM_VECTOR7_Z:
+				m_vector7.z = value;
+				break;
+
+			case FFPARAM_VECTOR7_W:
+				m_vector7.w = value;
 				break;
 
 			case FFPARAM_COLOR1_RED:
 				// printf("Color 1 red %f\n", value);
-				  m_color1.x=value;
-				  break;
+				m_color1.x = value;
+				break;
 			case FFPARAM_COLOR1_GREEN:
-				 m_color1.y = value;
-				 break;
+				m_color1.y = value;
+				break;
 			case FFPARAM_COLOR1_BLUE:
-				 m_color1.z = value;
-				 break;
+				m_color1.z = value;
+				break;
 
 			case FFPARAM_COLOR2_RED:
-				 m_color2.x = value;
-				 break;
+				m_color2.x = value;
+				break;
 			case FFPARAM_COLOR2_GREEN:
-				 m_color2.y = value;
-				 break;
+				m_color2.y = value;
+				break;
 			case FFPARAM_COLOR2_BLUE:
-				 m_color2.z = value;
-				 break;
+				m_color2.z = value;
+				break;
 
 			default:
 				return FF_FAIL;
@@ -1228,15 +1405,12 @@ void ShaderMaker::SetDefaults() {
 	m_vector4.z = 0.0;
 	m_vector4.w = 0.0;
 
-	m_speeds.x = 0.0;
-	m_speeds.y = 0.0;
-	m_speeds.z = 0.0;
-	m_speeds.w = 0.0;
 
-	m_times.x = 0.0;
-	m_times.y = 0.0;
-	m_times.z = 0.0;
-	m_times.w = 0.0;
+
+	m_vector5.x = 0.0;
+	m_vector5.y = 0.0;
+	m_vector5.z = 0.0;
+	m_vector5.w = 0.0;
 
 
 	m_channelTime[0]       = 0.0;
@@ -1284,7 +1458,7 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 		// Extra uniforms specific to ShaderMaker for buth GLSL Sandbox and ShaderToy
 		// For GLSL Sandbox, the extra "inputColour" uniform has to be typed into the shader
 		//		uniform vec4 inputColour
-		static char *extraUniforms = { "uniform vec4 inputTimes;\n uniform vec4 inputColor1; \n uniform vec4 inputColor2; \n uniform vec4 inputColour;\nuniform vec4 inputVector1; \nuniform vec4 inputVector2; \nuniform vec4 inputVector3; \nuniform vec4 inputVector4; \n" };
+		static char *extraUniforms = { "uniform vec4 inputColour;\nuniform vec4 inputVector1; \nuniform vec4 inputVector2; \nuniform vec4 inputVector3; \nuniform vec4 inputVector4; \nuniform vec4 inputVector5;\n\nuniform vec4 inputVector6; \nuniform vec4 inputVector7; " };
 		
 		// Is it a GLSL Sandbox file?
 		// look for "uniform float time;". If it does not exist it is a ShaderToy file
@@ -1320,8 +1494,10 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 									  "uniform float iFrame;\n"
 									  "uniform float iFrameRate;\n"
 									  "uniform float iSampleRate;\n"
+									  "uniform vec4 inputColor1;\n"
+									  "uniform vec4 inputColor2;\n"
 									  "uniform vec4 iMouse;\n"
-				"const float PI = 3.1415926535897932384626433832795; "
+									  "const float PI=3.14159265359;\n"
 									  "uniform vec4 iDate;\n"
 									  "uniform float iChannelTime[4];\n"
 									  "uniform vec3 iChannelResolution[4];\n"
@@ -1383,18 +1559,7 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 				m_inputTextureLocation2		 = -1;
 				m_inputTextureLocation3		 = -1;
 				m_screenLocation			 = -1;
-				m_surfaceSizeLocation = -1;
-				m_inputVector1Location = -1;
-				m_inputVector2Location = -1;
-				m_inputVector3Location = -1;
-				m_inputVector4Location = -1;
-
-				m_inputVector4Location = -1;
-
-				m_inputShowKnobsLocation   = -1;
-
-				m_inputColor1Location = -1;
-				m_inputColor2Location = -1;
+				m_surfaceSizeLocation		 = -1;
 				// m_surfacePositionLocation	= -1; // TODO
 				// m_vertexPositionLocation    = -1; // TODO
 
@@ -1416,7 +1581,12 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 				m_inputVector2Location = -1;
 				m_inputVector3Location = -1;
 				m_inputVector4Location = -1;
+				m_inputVector5Location = -1;
+				m_inputVector6Location = -1;
+				m_inputVector7Location = -1;
 
+					m_inputColor1Location =-1; 
+					m_inputColor2Location = -1;
 				// ===========================================================
 				// ShaderToy new uniforms
 				m_frameLocation				= -1; // iFrame - frame number
@@ -1597,22 +1767,20 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 				if (m_inputVector4Location  < 0)
 					m_inputVector4Location = m_shader.FindUniform("inputVector4");
 
+				if (m_inputVector5Location  < 0)
+					m_inputVector5Location = m_shader.FindUniform("inputVector5");
+
+				if (m_inputVector6Location  < 0)
+					m_inputVector6Location = m_shader.FindUniform("inputVector6");
+
+				if (m_inputVector7Location  < 0)
+					m_inputVector7Location = m_shader.FindUniform("inputVector7");
+
 				if (m_inputColor1Location  < 0)
 					m_inputColor1Location = m_shader.FindUniform("inputColor1");
 
 				if (m_inputColor2Location  < 0)
 					m_inputColor2Location = m_shader.FindUniform("inputColor2");
-
-
-				if (m_inputTimesLocation  < 0)
-					m_inputTimesLocation = m_shader.FindUniform("inputTimes");
-
-				if (m_inputJuliaLocation  < 0)
-					m_inputJuliaLocation = m_shader.FindUniform("julia");
-
-				if (m_inputShowKnobsLocation  < 0)
-					m_inputShowKnobsLocation = m_shader.FindUniform("showKnobs");
-
 
 				m_shader.UnbindShader();
 

@@ -21,6 +21,7 @@
 - Rotation - the rotation angle of the image        
 - Max Iterations - the maximum number of iterations to use
 - Seed 1..3 Real/Imaginary	- the seeds to be used in alternation, the first is pertubation
+- Power 1..3 The power used in the mandelbrot equation 0.3125=1, 0.625=2.0, ... stepp is 0.0625 -8..8 
 - Color1/2 - the inner and outer colors as RGB
      
 

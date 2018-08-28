@@ -66,7 +66,7 @@ int (*cross_secure_sprintf)(char *, size_t, const char *,...) = sprintf_s;
 int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #endif
 
-#define FFPARAM_SPEED       (100)
+#define FFPARAM_SPEED       (0)
 #define FFPARAM_MOUSEX      (101)
 #define FFPARAM_MOUSEY      (102)
 #define FFPARAM_MOUSELEFTX  (103)
@@ -77,28 +77,28 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #define FFPARAM_ALPHA       (108)
 
 #define FFPARAM_VECTOR1_X       (1000)
-#define FFPARAM_SPEEDS_X      (0)
-#define FFPARAM_VECTOR1_Y       (1)
-#define FFPARAM_VECTOR1_Z       (2)
+#define FFPARAM_SPEEDS_X      (1)
+#define FFPARAM_VECTOR1_Y       (2)
+#define FFPARAM_VECTOR1_Z       (3)
 #define FFPARAM_VECTOR1_W       (1012)
 
 
 #define FFPARAM_VECTOR2_X       (4000)
-#define FFPARAM_SPEEDS_Y      (3)
-#define FFPARAM_VECTOR2_Y       (4)
-#define FFPARAM_VECTOR2_Z       (5)
+#define FFPARAM_SPEEDS_Y      (4)
+#define FFPARAM_VECTOR2_Y       (5)
+#define FFPARAM_VECTOR2_Z       (6)
 #define FFPARAM_VECTOR2_W       (1016)
 
 #define FFPARAM_VECTOR3_X       (7000)
-#define FFPARAM_SPEEDS_Z      (6)
-#define FFPARAM_VECTOR3_Y       (7)
-#define FFPARAM_VECTOR3_Z       (8)
+#define FFPARAM_SPEEDS_Z      (7)
+#define FFPARAM_VECTOR3_Y       (8)
+#define FFPARAM_VECTOR3_Z       (9)
 #define FFPARAM_VECTOR3_W       (1020)
 
 #define FFPARAM_VECTOR4_X       (10000)
-#define FFPARAM_SPEEDS_W      (9)
-#define FFPARAM_VECTOR4_Y       (10)
-#define FFPARAM_VECTOR4_Z       (11)
+#define FFPARAM_SPEEDS_W      (10)
+#define FFPARAM_VECTOR4_Y       (11)
+#define FFPARAM_VECTOR4_Z       (12)
 #define FFPARAM_VECTOR4_W       (1024)
 
 
@@ -180,9 +180,9 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 	vec4 color = vec4(1, 1, 1, 1);
 
 	// warning here inputVector1 is the current time after increments, not the input value of parameter
-	float val =  sin( iGlobalTime + inputVector1.x + uv.x * inputVector1.y)*inputVector1.z;
-	      val += sin( iGlobalTime + inputVector2.x + uv.x * inputVector2.y)*inputVector2.z;
-	      val += sin( iGlobalTime + inputVector3.x  + uv.x * inputVector3.y)*inputVector3.z;
+	float val =  sin( iGlobalTime + inputVector1.x + uv.x * inputVector1.y )*inputVector1.z;
+	      val += sin( iGlobalTime + inputVector2.x +uv.x *   inputVector2.y )*inputVector2.z;
+	      val += sin( iGlobalTime + inputVector3.x  +uv.x * inputVector3.y )*inputVector3.z;
 	 //     val += sin( iGlobalTime + inputVector4.x * 10.0 + uv.x  *inputVector4.y*100.0*PI)*inputVector4.z;
 	    
 	fragColor = color*(val>uv.y ? 1. : 0.);
@@ -214,7 +214,7 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	SetMaxInputs(2); // TODO - 4 inputs
 
 	// Parameters
-//	SetParamInfo(FFPARAM_SPEED,         "Speed",         FF_TYPE_STANDARD, 0.5f); m_UserSpeed = 0.5f;
+ 	SetParamInfo(FFPARAM_SPEED,         "Speed",         FF_TYPE_STANDARD, 0.5f); m_UserSpeed = 0.5f;
 //	SetParamInfo(FFPARAM_MOUSEX,        "X mouse",       FF_TYPE_STANDARD, 0.5f); m_UserMouseX = 0.5f;
 //	SetParamInfo(FFPARAM_MOUSEY,        "Y mouse",       FF_TYPE_STANDARD, 0.5f); m_UserMouseY = 0.5f;
 //	SetParamInfo(FFPARAM_MOUSELEFTX,    "X mouse left",  FF_TYPE_STANDARD, 0.5f); m_UserMouseLeftX = 0.5f;
@@ -227,20 +227,20 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 
 
 //	SetParamInfo(FFPARAM_VECTOR1_X, "Frequency 1", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_SPEEDS_X, "Frequency 1", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR1_Y, "Wavelength 1", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR1_Z, "Amplitude 1", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_SPEEDS_X, "Frequency 1", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR1_Y, "Wavelength 1", FF_TYPE_STANDARD, 0.10f);
+	SetParamInfo(FFPARAM_VECTOR1_Z, "Amplitude 1", FF_TYPE_STANDARD, 0.10f);
 //	SetParamInfo(FFPARAM_VECTOR1_W, "Vector1W", FF_TYPE_STANDARD, 0.0f);
 
 	
 //	SetParamInfo(FFPARAM_VECTOR2_X, "Frequency 2", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_SPEEDS_Y, "Frequency 2", FF_TYPE_STANDARD,0.0f);
+	SetParamInfo(FFPARAM_SPEEDS_Y, "Frequency 2", FF_TYPE_STANDARD,0.5f);
 	SetParamInfo(FFPARAM_VECTOR2_Y, "Wavelength 2", FF_TYPE_STANDARD, 0.0f);
 	SetParamInfo(FFPARAM_VECTOR2_Z, "Amplitude 2", FF_TYPE_STANDARD, 0.0f);
 //	SetParamInfo(FFPARAM_VECTOR2_W, "Vector2W", FF_TYPE_STANDARD, 0.0f);
 
 //	SetParamInfo(FFPARAM_VECTOR3_X, "Frequency 3", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_SPEEDS_Z, "Frequency 3", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_SPEEDS_Z, "Frequency 3", FF_TYPE_STANDARD, 0.5f);
 	SetParamInfo(FFPARAM_VECTOR3_Y, "Wavelength 3", FF_TYPE_STANDARD, 0.0f);
 	SetParamInfo(FFPARAM_VECTOR3_Z, "Amplitude 3", FF_TYPE_STANDARD, 0.0f);
 //	SetParamInfo(FFPARAM_VECTOR3_W, "Vector3W", FF_TYPE_STANDARD, 0.0f);
@@ -429,13 +429,12 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		// Calculate elapsed time
 		lastTime = elapsedTime;
 		elapsedTime = GetCounter()/1000.0; // In seconds - higher resolution than timeGetTime()
-		m_time = m_time + (float)(elapsedTime - lastTime)*m_UserSpeed*2.0f; // increment scaled by user input 0.0 - 2.0
+		m_time = m_time + (float)(elapsedTime - lastTime)*(m_UserSpeed*40.0f-20.0f); // increment scaled by user input 0.0 - 2.0
 
-
-		m_times.x = m_times.x + (float)(elapsedTime - lastTime)*m_speeds.x*2.0f; // increment scaled by user input 0.0 - 2.0
-		m_times.y = m_times.y + (float)(elapsedTime - lastTime)*m_speeds.y*2.0f; // increment scaled by user input 0.0 - 2.0
-		m_times.z = m_times.z + (float)(elapsedTime - lastTime)*m_speeds.z*2.0f; // increment scaled by user input 0.0 - 2.0
-		m_times.w = m_times.w + (float)(elapsedTime - lastTime)*m_speeds.w*2.0f; // increment scaled by user input 0.0 - 2.0
+		m_times.x = m_times.x + (float)(elapsedTime - lastTime)*((m_speeds.x)*4.0f- 2.0f); // increment scaled by user input 0.0 - 2.0
+		m_times.y = m_times.y + (float)(elapsedTime - lastTime)*((m_speeds.y)*4.0f - 2.0f); // increment scaled by user input 0.0 - 2.0
+		m_times.z = m_times.z + (float)(elapsedTime - lastTime)*((m_speeds.z)*4.0f - 2.0f); // increment scaled by user input 0.0 - 2.0
+		m_times.w = m_times.w + (float)(elapsedTime - lastTime)*((m_speeds.w)*4.0f - 2.0f); // increment scaled by user input 0.0 - 2.0
 
 		// printf("Times [%f,%f,%f,%f]\n", m_times.x, m_times.y, m_times.z, m_times.w);
 		// printf("Speeds [%f,%f,%f,%f]\n", m_speeds.x, m_speeds.y,m_speeds.z, m_speeds.w);
@@ -589,14 +588,14 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 
 		if (m_inputVector1Location >= 0) {
 			//m_extensions.glUniform4fARB(m_inputVector1Location, m_vector1.x, m_vector1.y, m_vector1.z, m_vector1.w);
-			m_extensions.glUniform4fARB(m_inputVector1Location, m_times.x*SCALE_FREQUENCY, m_vector1.y*SCALE_WAVELENGTH, m_vector1.z*SCALE_AMPLITUDE, m_vector1.w);
+			m_extensions.glUniform4fARB(m_inputVector1Location, m_times.x*SCALE_FREQUENCY, m_vector1.y*m_vector1.y*SCALE_WAVELENGTH, m_vector1.z*SCALE_AMPLITUDE, m_vector1.w);
 		}
 		if (m_inputVector2Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector2Location, m_times.y*SCALE_FREQUENCY, m_vector2.y*SCALE_WAVELENGTH, m_vector2.z*SCALE_AMPLITUDE, m_vector2.w);
+			m_extensions.glUniform4fARB(m_inputVector2Location, m_times.y*SCALE_FREQUENCY, m_vector2.y*m_vector2.y*SCALE_WAVELENGTH, m_vector2.z*SCALE_AMPLITUDE, m_vector2.w);
 		if (m_inputVector3Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector3Location, m_times.z*SCALE_FREQUENCY, m_vector3.y*SCALE_WAVELENGTH, m_vector3.z*SCALE_AMPLITUDE, m_vector3.w);
+			m_extensions.glUniform4fARB(m_inputVector3Location, m_times.z*SCALE_FREQUENCY, m_vector3.y*m_vector3.y*SCALE_WAVELENGTH, m_vector3.z*SCALE_AMPLITUDE, m_vector3.w);
 		if (m_inputVector4Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector4Location, m_times.w*SCALE_FREQUENCY, m_vector4.y*SCALE_WAVELENGTH, m_vector4.z*SCALE_AMPLITUDE, m_vector4.w);
+			m_extensions.glUniform4fARB(m_inputVector4Location, m_times.w*SCALE_FREQUENCY, m_vector4.y*m_vector4.y*SCALE_WAVELENGTH, m_vector4.z*SCALE_AMPLITUDE, m_vector4.w);
 
 		if (m_inputTimesLocation >= 0) {
 			//printf("Times [%f,%f,%f,%f]\n", m_times.x, m_times.y, m_times.z, m_times.w);

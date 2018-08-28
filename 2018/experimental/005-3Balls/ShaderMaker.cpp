@@ -102,6 +102,23 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #define FFPARAM_SPEEDS_W        (2015)
 #define FFPARAM_SHOW_KNOBS        (16)
 #define FFPARAM_JULIA        (17)
+
+
+#define FFPARAM_COLOR1_RED       (18)  
+#define FFPARAM_COLOR1_GREEN       (19)  
+#define FFPARAM_COLOR1_BLUE       (20)  
+#define FFPARAM_COLOR1_ALPHA       (21)   
+
+#define FFPARAM_COLOR2_RED       (22)  
+#define FFPARAM_COLOR2_GREEN       (23)  
+#define FFPARAM_COLOR2_BLUE       (24)  
+#define FFPARAM_COLOR2_ALPHA       (25)   
+
+#define FFPARAM_COLOR3_RED       (26)  
+#define FFPARAM_COLOR3_GREEN       (27)  
+#define FFPARAM_COLOR3_BLUE       (28)  
+#define FFPARAM_COLOR3_ALPHA       (29)   
+
  
 
 #define STRINGIFY(A) #A
@@ -186,13 +203,17 @@ const float maxIterations = 1000;
 const bool doMarker = true;
 const bool julia = true;
 
-
+vec3 colors[3] = vec3[3](
+	vec3(1.0, 0.0, 0.0),
+	vec3(1.0, 1.0, 0.0),
+	vec3(1.0, 1.0, 1.0)
+	);
 float fold(float x) {
 	if (x > 1.0) {
-		return x - 2.0;
+		return x - 1.0;
 	}
-	if (x < -1) {
-		return x + 2.0;
+	if (x < 0) {
+		return x + 1.0;
 	}
 	return x;
 }
@@ -200,6 +221,43 @@ float fold(float x) {
 vec2 fold(vec2 x) {
 	return vec2(fold(x.x), fold(x.y));
 }
+
+float distCircle1(vec2 pos,vec2 circleCenter,float radius){
+
+	float dist = length(circleCenter - pos);
+
+	if (dist < radius) {
+		return 1.0;
+	}
+	else if (dist>radius) {
+		return 0.0;
+	}
+	else {
+		return 0.0;
+	}
+
+
+}
+float distCircle(vec2 pos, vec2 circleCenter, float radius) {
+
+	float dist = 0.0;
+	 dist = max(dist, distCircle1(pos, circleCenter, radius));
+	 dist = max(dist, distCircle1(pos, circleCenter + vec2(1.0, 0.0), radius));
+	 dist = max(dist, distCircle1(pos, circleCenter + vec2(-1.0, 0.0), radius));
+	 dist = max(dist, distCircle1(pos, circleCenter + vec2(0.0, 1.0), radius));
+	 dist = max(dist, distCircle1(pos, circleCenter + vec2(0.0, -1.0), radius));
+
+	 dist = max(dist, distCircle1(pos, circleCenter + vec2(-1.0, -1.0), radius));
+	 dist = max(dist, distCircle1(pos, circleCenter + vec2(1.0, 1.0), radius));
+	 dist = max(dist, distCircle1(pos, circleCenter + vec2(1.0, -1.0), radius));
+	 dist = max(dist, distCircle1(pos, circleCenter + vec2(-1.0, 1.0), radius));
+	  
+	
+	return dist;
+
+
+}
+
 void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {
 	float n = 0.0;
@@ -208,24 +266,34 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 
 	vec4 seeds[3]; 
 
-	seeds[0] = inputVector1;
+	seeds[0] = inputVector1 ;
 	seeds[1] = inputVector2;
 	seeds[2] = inputVector3;
 	
 		float scale = inputVector4.x;
 	// float scale = inputColour.x*10.0;
 	// vec2 center = (iMouse.xy / iResolution.xy)*4.0 - 2.0;
-	vec2 center = inputVector4.zw;
-	vec2 pixel = (fragCoord / iResolution.xy)*2.0 - 1.0; // +rotate(scale*((fragCoord / iResolution.xy)*2.0 - 1.0), inputVector4.y);
+	 
+	vec2 pixel = (fragCoord / iResolution.xy) ; // +rotate(scale*((fragCoord / iResolution.xy)*2.0 - 1.0), inputVector4.y);
 	fragColor = vec4(0.0, 0.0, 0.0, 0.0);
-		// mark the seeds
-		for (float k = 0; k < 3.0; k++) {
-			if (length(fold(pixel - seeds[int(k)].zw)) < seeds[int(k)].x) {
-				fragColor += vec4(0.33, 0.33, 0.33, 1.0);
-			}
-		}
- 
 
+	pixel = mod(pixel, vec3(2.0, 2.0, 2.0));
+	float dist = 10000;
+		// mark the seeds
+
+	float distC = distCircle(pixel, seeds[0].zw, seeds[0].x);
+	fragColor += inputColor1*distC; 
+
+	  distC = distCircle(pixel, seeds[1].zw, seeds[1].x);
+	fragColor += inputColor2*distC; 
+
+	  distC = distCircle(pixel, seeds[2].zw, seeds[2].x);
+	fragColor += inputColor3*distC; 
+
+		 
+		 
+ 
+	//	fragColor = vec4(-dist, -dist, -dist, 1.0);
 
 	// fragColor =  vec4(1.0-i / round(128 * inputColour.w), 1.0 - i / round(128 * inputColour.w), 1.0 - i / round(128 * inputColour.w), 1.0);
 }
@@ -292,18 +360,23 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	SetParamInfo(FFPARAM_JULIA, "yyy", FF_TYPE_BOOLEAN, 0.00f);
 	SetParamInfo(FFPARAM_SHOW_KNOBS, "xxx", FF_TYPE_BOOLEAN, 1.00f);
 
-/*
 
-if you like add as many seeds/radii but 3 are the number of alternating seeds in this effect, not 2 nor 4 it shall be three
 
-	//SetParamInfo(FFPARAM_VECTOR4_X, "Seed 4 ", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_SPEEDS_W, "Seed 4 Speed", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR4_Y, "Seed 4 Radius", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR4_Z, "Seed 4 Real", FF_TYPE_STANDARD, 0.50f);
-	SetParamInfo(FFPARAM_VECTOR4_W, "Seed 4 Imag", FF_TYPE_STANDARD, 0.50f);
 
-	*/
+	SetParamInfo(FFPARAM_COLOR1_RED, "Color 1 Red", FF_TYPE_RED, 1.0f);
+	SetParamInfo(FFPARAM_COLOR1_GREEN, "Color 1 Green", FF_TYPE_GREEN, 1.0f);
+	SetParamInfo(FFPARAM_COLOR1_BLUE, "Color 1 Blue", FF_TYPE_BLUE, 1.0f);
+	SetParamInfo(FFPARAM_COLOR1_ALPHA, "Color 1 Alpha", FF_TYPE_STANDARD, 0.50f);
 
+	SetParamInfo(FFPARAM_COLOR2_RED, "Color 2 Red", FF_TYPE_RED, 1.0f);
+	SetParamInfo(FFPARAM_COLOR2_GREEN, "Color 2 Green", FF_TYPE_GREEN, 1.0f);
+	SetParamInfo(FFPARAM_COLOR2_BLUE, "Color 2 Blue", FF_TYPE_BLUE, 1.0f);
+	SetParamInfo(FFPARAM_COLOR2_ALPHA, "Color 2 Alpha", FF_TYPE_STANDARD, 0.50f);
+
+	SetParamInfo(FFPARAM_COLOR3_RED, "Color 3 Red", FF_TYPE_RED, 1.0f);
+	SetParamInfo(FFPARAM_COLOR3_GREEN, "Color 3 Green", FF_TYPE_GREEN, 1.0f);
+	SetParamInfo(FFPARAM_COLOR3_BLUE, "Color 3 Blue", FF_TYPE_BLUE, 1.0f);
+	SetParamInfo(FFPARAM_COLOR3_ALPHA, "Color 3 Alpha", FF_TYPE_STANDARD, 0.50f);
 
 	// Set defaults
 	SetDefaults();
@@ -637,16 +710,23 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 			m_extensions.glUniform4fARB(m_inputColourLocation, m_UserRed, m_UserGreen, m_UserBlue, m_UserAlpha);
 
 		if (m_inputVector1Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector1Location, m_vector1.x, m_vector1.y, m_vector1.z*SCALE_SEED+ SHIFT_SEED, m_vector1.w*SCALE_SEED + SHIFT_SEED);
+			m_extensions.glUniform4fARB(m_inputVector1Location, m_vector1.x, m_vector1.y, m_vector1.z, m_vector1.w);
 		if (m_inputVector2Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector2Location, m_vector2.x, m_vector2.y, m_vector2.z*SCALE_SEED + SHIFT_SEED, m_vector2.w*SCALE_SEED + SHIFT_SEED);
+			m_extensions.glUniform4fARB(m_inputVector2Location, m_vector2.x, m_vector2.y, m_vector2.z, m_vector2.w);
 		if (m_inputVector3Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector3Location, m_vector3.x, m_vector3.y, m_vector3.z*SCALE_SEED + SHIFT_SEED, m_vector3.w*SCALE_SEED + SHIFT_SEED);
+			m_extensions.glUniform4fARB(m_inputVector3Location, m_vector3.x, m_vector3.y, m_vector3.z, m_vector3.w);
 		if (m_inputVector4Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector4Location,10.0f*(1.0f/exp( m_UserRed*50.0f)) , m_UserBlue*PI_2, m_UserMouseX*SCALE_SEED + SHIFT_SEED, m_UserMouseY*SCALE_SEED + SHIFT_SEED);
-		                                                       
-		if (m_inputTimesLocation  >= 0)
+			m_extensions.glUniform4fARB(m_inputVector4Location,10.0f*(1.0f/exp( m_UserRed*50.0f)) , m_UserBlue*PI_2, m_UserMouseX, m_UserMouseY);
+
+		if (m_inputTimesLocation >= 0)
 			m_extensions.glUniform4fARB(m_inputTimesLocation, m_times.x, m_times.y, m_times.z, m_times.w);
+
+		if (m_inputColor1Location >= 0)
+			m_extensions.glUniform4fARB(m_inputColor1Location, m_color1.x, m_color1.y, m_color1.z, m_color1.w);
+		if (m_inputColor2Location >= 0)
+			m_extensions.glUniform4fARB(m_inputColor2Location, m_color2.x, m_color2.y, m_color2.z, m_color2.w);
+		if (m_inputColor3Location >= 0)
+			m_extensions.glUniform4fARB(m_inputColor3Location, m_color3.x, m_color3.y, m_color3.z, m_color3.w);
 
 
 		// Bind a texture if the shader needs one
@@ -917,6 +997,44 @@ float ShaderMaker::GetFloatParameter(unsigned int index)
 			return m_showKnobs ;
 		case FFPARAM_JULIA:
 			return m_julia;
+
+
+
+		case FFPARAM_COLOR1_RED:
+			return m_color1.x;
+		case FFPARAM_COLOR1_GREEN:
+			return m_color1.y;
+		case FFPARAM_COLOR1_BLUE:
+			return m_color1.z;
+
+		case FFPARAM_COLOR1_ALPHA:
+			return m_color1.w;
+
+		case FFPARAM_COLOR2_RED:
+			return m_color2.x;
+		case FFPARAM_COLOR2_GREEN:
+			return m_color2.y;
+		case FFPARAM_COLOR2_BLUE:
+			return m_color2.z;
+
+
+		case FFPARAM_COLOR2_ALPHA:
+			return m_color2.w;
+
+		case FFPARAM_COLOR3_RED:
+			return m_color3.x;
+		case FFPARAM_COLOR3_GREEN:
+			return m_color3.y;
+		case FFPARAM_COLOR3_BLUE:
+			return m_color3.z;
+
+		case FFPARAM_COLOR3_ALPHA:
+			return m_color3.w;
+
+
+
+
+
 		default:
 			return FF_FAIL;
 	}
@@ -1060,6 +1178,45 @@ FFResult ShaderMaker::SetFloatParameter(unsigned int index, float value)
 				m_showKnobs = value;
 				break;
 
+			case FFPARAM_COLOR1_RED:
+				// printf("Color 1 red %f\n", value);
+				m_color1.x = value;
+				break;
+			case FFPARAM_COLOR1_GREEN:
+				m_color1.y = value;
+				break;
+			case FFPARAM_COLOR1_BLUE:
+				m_color1.z = value;
+				break;
+
+			case FFPARAM_COLOR1_ALPHA:
+				m_color1.w = value;
+				break;
+
+			case FFPARAM_COLOR2_RED:
+				m_color2.x = value;
+				break;
+			case FFPARAM_COLOR2_GREEN:
+				m_color2.y = value;
+				break;
+			case FFPARAM_COLOR2_BLUE:
+				m_color2.z = value;
+				break;
+			case FFPARAM_COLOR2_ALPHA:
+				m_color2.w = value;
+				break;
+			case FFPARAM_COLOR3_RED:
+				m_color3.x = value;
+				break;
+			case FFPARAM_COLOR3_GREEN:
+				m_color3.y = value;
+				break;
+			case FFPARAM_COLOR3_BLUE:
+				m_color3.z = value;
+				break;
+			case FFPARAM_COLOR3_ALPHA:
+				m_color3.w = value;
+				break;
 			default:
 				return FF_FAIL;
 		}
@@ -1208,6 +1365,9 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 									  "uniform float iFrameRate;\n"
 									  "uniform float iSampleRate;\n"
 									  "uniform vec4 iMouse;\n"
+									  "uniform vec4 inputColor1;\n"
+									  "uniform vec4 inputColor2;\n"
+									  "uniform vec4 inputColor3;\n"
 				"const float PI = 3.1415926535897932384626433832795; "
 				"uniform vec4 inputTimes; "
 									  "uniform vec4 iDate;\n"
@@ -1473,6 +1633,17 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 
 				if (m_inputVector4Location  < 0)
 					m_inputVector4Location = m_shader.FindUniform("inputVector4");
+
+
+
+				if (m_inputColor1Location  < 0)
+					m_inputColor1Location = m_shader.FindUniform("inputColor1");
+
+				if (m_inputColor2Location  < 0)
+					m_inputColor2Location = m_shader.FindUniform("inputColor2");
+
+				if (m_inputColor3Location  < 0)
+					m_inputColor3Location = m_shader.FindUniform("inputColor3");
 
 
 				if (m_inputTimesLocation  < 0)

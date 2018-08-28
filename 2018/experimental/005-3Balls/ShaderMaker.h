@@ -119,6 +119,9 @@ protected:
 	float vector2_W;
 	Vector m_vector3;
 	Vector m_vector4;
+	Vector m_color1;
+	Vector m_color2;
+	Vector m_color3;
 	float m_julia;
     float m_showKnobs;
 
@@ -224,6 +227,9 @@ protected:
 	GLint m_inputVector2Location;
 	GLint m_inputVector3Location;
 	GLint m_inputVector4Location;
+	GLint m_inputColor1Location;
+	GLint m_inputColor2Location;
+	GLint m_inputColor3Location;
 	GLint m_inputTimesLocation;
 
 	GLint m_inputJuliaLocation;

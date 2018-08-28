@@ -265,7 +265,7 @@ float softshadow(in vec3 ro, in vec3 rd, float mint, float k)
 vec3 objectTranslate = vec3(inputVector4.x*20.0 - 10.0, inputVector4.y*20.0 - 10.0, inputVector4.z*20.0 - 10.0);
 
 mat3 objectRot =
-rotationMatrix3(vec3(1.0, 0.0, 0.0), inputVector3.y*180.0 - 90.0 ) *
+rotationMatrix3(vec3(1.0, 0.0, 0.0), inputVector3.y*360-0.0 - 180.0 ) *
 rotationMatrix3(vec3(0.0, 1.0, 0.0), inputVector3.x*360.0 - 180.0 );
 
 

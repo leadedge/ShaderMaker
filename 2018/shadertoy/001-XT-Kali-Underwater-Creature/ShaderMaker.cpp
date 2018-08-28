@@ -230,7 +230,7 @@ float Scales[3] = float[3](inputVector1.x*4.0 - 2.0, inputVector1.x*4.0 - 2.0, i
 float objectScale = inputVector5.x *inputVector5.x*2.0;
 vec3 objectTranslate = vec3(inputVector1.y*40.0-20.0, inputVector1.z*40.0 - 20.0, inputVector1.w*40.0 - 20.0);
 
-mat3 objectRotation =rotationMatrix3(vec3(0.0, 1.0, 0.0), inputVector5.z*360 - 180.0)* rotationMatrix3(vec3(1.0, 0.0, 0.0), inputVector5.y*180.0 - 90.0);
+mat3 objectRotation =rotationMatrix3(vec3(0.0, 1.0, 0.0), inputVector5.z*360 - 180.0)* rotationMatrix3(vec3(1.0, 0.0, 0.0), inputVector5.y*360 - 180.0);
 
 
 

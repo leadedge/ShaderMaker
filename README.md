@@ -7,7 +7,7 @@ this repository is a huge development repository for plugins by VJ-Spack-O-Mat
 # QuickStart
 
 - for downloading binaries and documentation
-    [Spack-O-Mat Plugins Binaries](release/README.md)
+    [Spack-O-Mat Plugins Binaries](release)
     
 - for developing with this repository
     [Spack-O-Mat Plugin Development](DEVELOPMENT.md)

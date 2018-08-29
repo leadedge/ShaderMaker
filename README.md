@@ -1,6 +1,16 @@
-# VJ Spack-O-Mat FFGL Plugins development repo
 
+# VJ Spack-O-Mat FFGL Plugins 
+![one of i-love-chaos logos print your own more than endless possibilities](release/media/i-love-chaos-white-000000000000003.png "One of I-Love-Chaos")
+          
 this repository is a huge development repository for plugins by VJ-Spack-O-Mat
+        
+# QuickStart
+
+- for downloading binaries and documentation
+    [Spack-O-Mat Plugins Binaries](release/README.md)
+    
+- for developing with this repository
+    [Spack-O-Mat Plugin Development](DEVELOPMENT.md)
 
 # Mission Statement
 
@@ -16,87 +26,4 @@ This shall be a physical space with musical resting and dancing opportunities - 
 The concept shall barry itself, selling drinks, food (broccoli) and merchandise should produce the income needed to supply the above
 mentioned spaces around the world spreading knowledge and letting most of the money create either other spaces or sense full contributions to the development of the world - where not only art and free minded spaces carry on but following mostly the golden rule to participate in any outcomings ... 
  
- 
- ![one of i-love-chaos logos print your own more than endless possibilities](release/media/i-love-chaos-white-000000000000003.png "One of I-Love-Chaos")
-
-
-# Repository 
-
-this repository is a collection of adjusted [https://github.com/leadedge/ShaderMaker][ShaderMaker] templates with a very high redundancy,
-the build process is - as of now - only manual 64Bit build in [https://visualstudio.microsoft.com/](VisualStudio) and copying of .dll files to resolume plugin directory.
-
-## Quickstart (only dll copy)
-
-the precompiled 64 bit windows .dll files can be found in the release folder of this repository, just copy them to your resolume plugin folder to check them out
-
-in the release folder is a .resolume file with an example deck containing examples for most of the .dlls
-
-
-
-## Concepts
-
-since this is a public repository and - as described above - only serves the demonstration of chaos theory let me include the ideas that will help to understand why the particular resolume plugins are designed the way they are
-
-### 3-Arity
-
-the [https://www.wikiwand.com/en/Three-body_problem_(disambiguation)](three body problem) leads to a simple conclusion: 'you just need 3'. Christian conclusing is in popular speaking that 3 makes an interesting pattern, which is we may not encounter the exactly underlying rules at first glance, which makes it interesting. 
- 
- 		hint:
- 		
- 		prime number repetitions make for very long loops, 
- 		let's say we have 3 angles that rotate, each at the same speed
- 		then the whole system wil repeat after 1 cycle
- 		 
- 		now, when using different speeds one can caluclate the repeat cycle 
- 		like: speed1*speed2*speed3
- 		
- 		e.g. when the speeds are 1 and twice and triple the speed of the first
- 		the result would be 1*2*3= 6 cycles needed to repeat the whole process
- 		so it takes 6 times longer
- 		
- 		and here comes the tip, using prime numbers here for creating non visible loops
- 		
- 		
-### Repeatable parameters
- 
- some parameters in the plugins are repeatable by nature, for example the angle parameter of any effect can be easily
- animated becaus when it jumps from end to beginning (360degree to 0degree) its exactly the same repeating the whole process
- 
- Resolume6 introduced the parameter hull curve functionality which allows you to make evey parameter loopable 
- 		 
- 		 
- 		NOTE ON RESOLUME 6 Hull Curve improvements
- 		as of the current version of resolume it does not contain:
- 		- please introduce the ping-pong loop mode for all of your timelines
- 		- make hull curves loopable and allow the first and last keyframes not sticked to the borders
-
-
-
-### Simple / Complex
-
-when a effect is available in SIMPLE or COMPLEX mode, basically means the complex has more parameters :) but beside of that, the complexity
-usually introduces the same 2 parameters for a selected bunch of effect parameters, which are:
-
-- radius
-- speed
-
-which gives a - usually a 2 or 3 dimensional - parameter a radius which it rotates around with defined speed, see remarks about time for more information
-
-### Time 
-
-
-[http://shadertoy.com](Shadertoy.com) which defined the main syntax for the shader parameters introduces a 'time' concept, this time conecpt
-is so utterly important for working with the provided effects by this repository that i need to loose a word about it
-
-- the time can usually NOT be reseted or rolled back, its a continuos value that increases up to defined limit ( 32/64 bit) by the speeds  
-
-- there may be more than 1 time variable : some effects introduce own time variables with their own, either by extended mode or by definition (example: sinus) 
-
-## Hybridisation -> Alternation
-
-the method used in all of the plugins that deal with chaotic image creation (fractals) use a simple hybridisation approach, it is always using 3-alternate-hybrids, meaning that when alternation starts, three sets of parameters are cycled through ind subsequent iterations
-
-## Exponentional Parameters
-
-some parameters use exponential scaling, i found out about it in the ultrafractal documentation, the behaviour is that some parameters
-are exponential by nature, e.g. scale 1 to 2 of an image is double the size, but scaling from 2 to 3 is just a quarter, making it always smaller the performed visual size change, wen exponentating the param here everything stays at the same speeed (tbd)
+    

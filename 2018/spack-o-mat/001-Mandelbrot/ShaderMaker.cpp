@@ -73,8 +73,8 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #define FFPARAM_MOUSELEFTX  (103)
 #define FFPARAM_MOUSELEFTY  (104)
 #define FFPARAM_RED         (3)
-#define FFPARAM_GREEN       (4)
-#define FFPARAM_BLUE        (5)
+#define FFPARAM_BLUE        (4)
+#define FFPARAM_GREEN       (5)
 #define FFPARAM_ALPHA       (6)
 
 #define FFPARAM_VECTOR1_X       (109)
@@ -129,7 +129,7 @@ static CFFGLPluginInfo PluginInfo (
 	002,								// *** Plugin minor version number
 	// FF_EFFECT,							// Plugin type can always be an effect
 	FF_SOURCE,						// or change this to FF_SOURCE for shaders that do not use a texture
-	"SoM Mandelbrot",     // *** Plugin description - you can expand on this
+	"SoM Mandelbrot 2D",     // *** Plugin description - you can expand on this
 	"c.Kleinhuis 2018"			// *** About - use your own name and details
 );
 
@@ -346,9 +346,9 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	 SetParamInfo(FFPARAM_MOUSEY,        "Center Y",       FF_TYPE_STANDARD, 0.5f); 
 	//SetParamInfo(FFPARAM_MOUSELEFTX,    "X mouse left",  FF_TYPE_STANDARD, 0.5f); 
 	//SetParamInfo(FFPARAM_MOUSELEFTY,    "Y mouse left",  FF_TYPE_STANDARD, 0.5f);  
-	SetParamInfo(FFPARAM_RED,           "Zoom",           FF_TYPE_STANDARD,0.5f);  
+	SetParamInfo(FFPARAM_RED,           "Zoom",           FF_TYPE_STANDARD,0.5f);
+	SetParamInfo(FFPARAM_BLUE, "Rotation", FF_TYPE_STANDARD, 0.0f);
 	SetParamInfo(FFPARAM_GREEN,         "Start of Alternation",         FF_TYPE_STANDARD, 0.0f);  
-	SetParamInfo(FFPARAM_BLUE,          "Rotation",          FF_TYPE_STANDARD, 0.0f);  
  	SetParamInfo(FFPARAM_ALPHA,         "MaxIter",         FF_TYPE_STANDARD, 0.25f);  
 
 	//SetParamInfo(FFPARAM_VECTOR1_X, "Vector1X", FF_TYPE_STANDARD, 0.0f);

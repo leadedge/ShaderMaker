@@ -1,24 +1,23 @@
 # Spack O Mat Shader Collection
 
-![one of i-love-chaos logos print your own more than endless possibilities](media/i-love-chaos-white-000000000000003.png "One of I-Love-Chaos")
+![one of i-love-chaos logos print your own more than endless possibilities](media/i-love-chaos-white-000000000000003.png )
 
 
 ## Source Plugins
 
-### 001 Mandelbrot    
+### 001 Mandelbrot   ![Generic badge](https://img.shields.io/badge/HYBRID-ALTERNATE-green.svg) [![Generic badge](https://img.shields.io/badge/3ARY-YES-green.svg)](https://shields.io/)
        
 |  |  |
 | ------------- | ------------- |
-| ![one of i-love-chaos logos print your own more than endless possibilities](media/001-mandelbrot.png "One of I-Love-Chaos")  | ![one of i-love-chaos logos print your own more than endless possibilities](media/001-mandelbrot-params.png "One of I-Love-Chaos") |
-
-
-2d Alternating Hybrid [Mandelbrot](https://www.wikiwand.com/en/Mandelbrot_set) with 3 seeds.
+| ![Mandelbrot S01 Exampole](media/001-mandelbrot.png )  | ![Mandelbrot Params](media/001-mandelbrot-params.png ) |
+ id [Mandelbrot](https://www.wikiwand.com/en/Mandelbrot_set) with 3 seeds.
            
 #### Parameters 
+- Julia - switches julia/mandelbrot mode
 - CenterX/Y - the zoom center and center of image
-- Zoom - the zoom of the whole image
-- Start of Alternation - iteration when alternation kicks in after this iteration the seeds are alternated                             
-- Rotation - the rotation angle of the image        
+-  Zoom  [![Generic badge](https://img.shields.io/badge/EXPONENTIAL-YES-green.svg)](https://shields.io/) - the zoom of the whole image
+- Rotation  [![Generic badge](https://img.shields.io/badge/LOOPABLE-YES-green.svg)](https://shields.io/)  - the rotation angle of the image     
+- Start of Alternation - iteration when alternation kicks in after this iteration the seeds are alternated                                
 - Max Iterations - the maximum number of iterations to use
 - Seed 1..3 Real/Imaginary	- the seeds to be used in alternation, the first is pertubation
 - Power 1..3 The power used in the mandelbrot equation 0.3125=1, 0.625=2.0, ... stepp is 0.0625 -8..8 
@@ -30,21 +29,20 @@
 
 ID: SM01
 Version: 2.0
+ 
 
-core functionality, perhaps a power parameter will be introduced in future versions
-
-### 002 Mandelbox
+### 002 Mandelbox ![Generic badge](https://img.shields.io/badge/HYBRID-ALTERNATE-green.svg) [![Generic badge](https://img.shields.io/badge/3ARY-YES-green.svg)](https://shields.io/)
 |  |  |
 | ------------- | ------------- |
-| ![one of i-love-chaos logos print your own more than endless possibilities](media/002-mandelbox.png "One of I-Love-Chaos")  |  ![one of i-love-chaos logos print your own more than endless possibilities](media/002-mandelbox-params.png "One of I-Love-Chaos")  |
+| ![Mandelbox Example](media/002-mandelbox.png )  |  ![Mandelbox Params](media/002-mandelbox-params.png )  |
  
  2d alternating Hybrid [Mandelbox](https://www.wikiwand.com/en/Mandelbox) with 3 alternating seeds.
          
 #### Parameters 
           
 - CenterX/Y - the zoom center and center of image
-- Zoom - the zoom of the whole image                                                                      
-- Rotation - the rotation angle of the image     
+- [![Generic badge](https://img.shields.io/badge/EXPONENTIAL-YES-green.svg)](https://shields.io/)Zoom - the zoom of the whole image                                                                      
+- [![Generic badge](https://img.shields.io/badge/LOOPABLE-YES-green.svg)](https://shields.io/) Rotation - the rotation angle of the image     
 - Start of Alternation - iteration when alternation kicks in after this iteration the seeds are alternated 
 - Max Iterations - the maximum number of iterations to use
 - Seed 1..3 Real/Imaginary	- the seeds to be used in alternation, the first is pertubation
@@ -58,11 +56,11 @@ Version: 2.0
 
 core functionality, perhaps make scale parameter a alternation option
 
-### 003 Sinewave 1D
+### 003 Sinewave 1D  [![Generic badge](https://img.shields.io/badge/3ARY-YES-green.svg)](https://shields.io/)
        
 |  |  |
 | ------------- | ------------- |                
-| ![one of i-love-chaos logos print your own more than endless possibilities](media/003-sinewave.png "One of I-Love-Chaos")   | ![one of i-love-chaos logos print your own more than endless possibilities](media/003-sinewave-params.png "One of I-Love-Chaos")       |
+| ![Sinewave Example](media/003-sinewave.png )   | ![Sinewave Params](media/003-sinewave-params.png )       |
 
 Renders 3 [Sinewaves](https://www.wikiwand.com/en/Sine_wave) defined by frequency, wavelength and amplitude added together
 
@@ -70,7 +68,7 @@ Renders 3 [Sinewaves](https://www.wikiwand.com/en/Sine_wave) defined by frequenc
 
 - Frequency 1..3 - the speed of the particular sine wave
 
-- Wavelength 1..3 - for each wave defines the number of repetitions (exponential grow)
+- Wavelength 1..3 ![Generic badge](https://img.shields.io/badge/EXPONENTIAL-YES-green.svg) - for each wave defines the number of repetitions (exponential grow)
 
 - Amplitude 1..3 - for each sine wave, the amplitude or height of the sine wave
 
@@ -83,11 +81,11 @@ Version: 2.0
 core functionality, no changes planned, inversions and line mode can be achieved using other visual plugins/options
 
 
-### 004 Circle Sun    
+### 004 Circle Sun      [![Generic badge](https://img.shields.io/badge/3ARY-YES-green.svg)](https://shields.io/)
          
 |  |  |
 | ------------- | ------------- |       
-|![one of i-love-chaos logos print your own more than endless possibilities](media/004-circlesun.png "One of I-Love-Chaos") |![one of i-love-chaos logos print your own more than endless possibilities](media/004-circlesun-params.png "One of I-Love-Chaos")           |
+|![one of i-love-chaos logos print your own more than endless possibilities](media/004-circlesun.png ) |![one of i-love-chaos logos print your own more than endless possibilities](media/004-circlesun-params.png )           |
           
 #### Status 
 
@@ -102,7 +100,7 @@ core fun functionality, huge parameter shifts planned, use with caution
 ### 001 God Rays        
 |  |  |
 | ------------- | ------------- |                      
-|![one of i-love-chaos logos print your own more than endless possibilities](media/sf-001-godrays.png "One of I-Love-Chaos")  | ![one of i-love-chaos logos print your own more than endless possibilities](media/sf-001-godrays-params.png "One of I-Love-Chaos")   |
+|![GodRays Example](media/sf-001-godrays.png )  | ![GodRays Params](media/sf-001-godrays-params.png)   |
 
 
 the godray filter works as any othe filter producing a light beam on areas that are below a grayscale limit
@@ -131,7 +129,14 @@ nice core functionality, not using a pre render step, might receive a gaussian b
                                     
 |  |  |
 | ------------- | ------------- |   
-|![one of i-love-chaos logos print your own more than endless possibilities](media/st-001-kaliseacreature.png "One of I-Love-Chaos")   |
+|![one of i-love-chaos logos print your own more than endless possibilities](media/st-001-kaliseacreature.png )   |
+           
+
+### 001 Kali Sea Creature Extended
+                                    
+|  |  |
+| ------------- | ------------- |   
+|![one of i-love-chaos logos print your own more than endless possibilities](media/st-001-kaliseacreature.png )   |
            
 #### Status 
 

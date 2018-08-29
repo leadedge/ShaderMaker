@@ -235,14 +235,14 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	
 //	SetParamInfo(FFPARAM_VECTOR2_X, "Frequency 2", FF_TYPE_STANDARD, 0.0f);
 	SetParamInfo(FFPARAM_SPEEDS_Y, "Frequency 2", FF_TYPE_STANDARD,0.5f);
-	SetParamInfo(FFPARAM_VECTOR2_Y, "Wavelength 2", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR2_Z, "Amplitude 2", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR2_Y, "Wavelength 2", FF_TYPE_STANDARD, 0.125f);
+	SetParamInfo(FFPARAM_VECTOR2_Z, "Amplitude 2", FF_TYPE_STANDARD, 0.15f);
 //	SetParamInfo(FFPARAM_VECTOR2_W, "Vector2W", FF_TYPE_STANDARD, 0.0f);
 
 //	SetParamInfo(FFPARAM_VECTOR3_X, "Frequency 3", FF_TYPE_STANDARD, 0.0f);
 	SetParamInfo(FFPARAM_SPEEDS_Z, "Frequency 3", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR3_Y, "Wavelength 3", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR3_Z, "Amplitude 3", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR3_Y, "Wavelength 3", FF_TYPE_STANDARD, 0.175f);
+	SetParamInfo(FFPARAM_VECTOR3_Z, "Amplitude 3", FF_TYPE_STANDARD, 0.30f);
 //	SetParamInfo(FFPARAM_VECTOR3_W, "Vector3W", FF_TYPE_STANDARD, 0.0f);
 
 /* three shall they be, not 2 nor 4

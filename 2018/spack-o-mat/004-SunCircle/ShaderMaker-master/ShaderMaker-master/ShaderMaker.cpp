@@ -72,16 +72,16 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #define FFPARAM_PARAM3_Z       (6)
 #define FFPARAM_PARAM3_W       (7)
 
-#define FFPARAM_PARAM4_X       (12)
-#define FFPARAM_PARAM4_Y       (13)
-#define FFPARAM_PARAM4_Z       (14)
-#define FFPARAM_PARAM4_W       (15)
-
-
 #define FFPARAM_PARAM5_X       (8)
 #define FFPARAM_PARAM5_Y       (9)
 #define FFPARAM_PARAM5_Z       (10)
 #define FFPARAM_PARAM5_W       (11)
+
+
+#define FFPARAM_PARAM6_X       (12)
+#define FFPARAM_PARAM6_Y       (13)
+#define FFPARAM_PARAM6_Z       (14)
+#define FFPARAM_PARAM6_W       (15)
 
 
 
@@ -99,6 +99,29 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #define FFPARAM_GREEN       (17)
 #define FFPARAM_BLUE        (18)
 #define FFPARAM_ALPHA       (19)
+
+#define FFPARAM_PARAM4_X       (20)
+#define FFPARAM_PARAM4_Y       (21)
+#define FFPARAM_PARAM4_Z       (22)
+#define FFPARAM_PARAM4_W       (23)
+
+
+
+#define FFPARAM_COLOR1_RED         (24)
+#define FFPARAM_COLOR1_GREEN       (25)
+#define FFPARAM_COLOR1_BLUE        (26)
+#define FFPARAM_COLOR1_ALPHA       (27)
+
+#define FFPARAM_COLOR2_RED         (28)
+#define FFPARAM_COLOR2_GREEN       (29)
+#define FFPARAM_COLOR2_BLUE        (30)
+#define FFPARAM_COLOR2_ALPHA       (31)
+
+#define FFPARAM_COLOR3_RED         (32)
+#define FFPARAM_COLOR3_GREEN       (33)
+#define FFPARAM_COLOR3_BLUE        (34)
+#define FFPARAM_COLOR3_ALPHA       (35)
+
 
 
 #define STRINGIFY(A) #A
@@ -177,7 +200,7 @@ float circle(vec2 center,float radius,float width)
 
 
 
-if(l<-width)result=0.0;
+if(l<0.0)result=0.0;
 if(l>width)result=0.0;
 
 	return result;
@@ -206,19 +229,19 @@ center=rotate2d(center,rot);
 		float angle=atan(center.x,center.y)+PI;
 		float modulu=mod(angle,dist);
 
-		if(modulu>dist/2){
-			val=0;
-		}else{
-			if(modulu<dist*width*0.25)
+//		if(modulu>dist/2){
+//			val=0;
+//		}else{
+			if(modulu>dist*width )
 			{
 				val=0;
 			}else if(
-			modulu>dist*0.5-dist*width*.25
+			modulu<0.0
 			){
 				val=0;
 			}
 
-		}
+//		}
 
 
 		return val;				;
@@ -227,7 +250,7 @@ center=rotate2d(center,rot);
 float wheel(float rot,vec2 center,float radius,float width, float height,float dist)
 {
 	// use exponential interpolation for radius and height
-	float val=circleSegmentModulus(rot,center,4.0-4.0*(1.0/exp(radius)),  width, 4.0-4.0*(1.0 / exp(height)),dist);
+	float val=circleSegmentModulus(rot,center,radius*2.0,  width, height,dist);
 	return val;//+circle(center,radius-width/2,width/2);
 }
 
@@ -241,30 +264,34 @@ vec2 aspect=vec2(iResolution.x/iResolution.y,1.0);
 float val=0;
 
 
-uv=rotate2d(uv+iParam2.yz*aspect,iParam2.x*PI);
+uv=rotate2d(uv+(iParam2.yz*2.0-1.0)*aspect,iParam2.x*2*PI);
 
 
-vec2 uv1=rotate2d(uv,iParam3.w*PI);
-vec2 uv2=rotate2d(uv,iParam5.w*PI);
+vec2 uv1=rotate2d(uv,iParam3.w*PI*2.0);
+vec2 uv2 = rotate2d(uv, iParam5.w*PI*2.0);
+vec2 uv3 = rotate2d(uv, iParam6.w*PI*2.0);
 
-float step=2*PI/ floor((iParam2.w+1.0)*64.0);
-float height1=iParam3.z*2.0+2.0;
-float height2=iParam5.z*2.0+2.0;
+float step=2*PI/ floor((iParam2.w)*64.0);
+float height1= iParam3.z*iParam3.z*4.0;
+float height2 = iParam5.z*iParam5.z*4.0;
+float height3 = iParam6.z*iParam6.z*4.0;
 
-    color=wheel (0       ,uv1,iParam3.x+1.0,1.0-(iParam3.y*0.5+.50),height1,step)*inputColour;
-if(length(color)==0.0){
-	color+=wheel(step/2.0,uv2,iParam5.x+1.0,1.0-(iParam5.y*0.5+.50),height2,step)*iParam4;
-}
+     color=wheel (0.0       ,uv1, iParam3.x*iParam3.x,iParam3.y,height1,step)*inputColour;
+	 
+	 	color += wheel(step / 2.0, uv2, iParam5.x*iParam5.x, iParam5.y, height2, step)*iParam4;
+  
+		color += wheel(step / 2.0, uv3, iParam6.x*iParam6.x, iParam6.y, height3, step)*iParam4;
+ 
 	  
-vec4 inputColor=texture2D(iChannel0,pos.xy / iChannelResolution[0].xy);
-color.xyz=color.xyz*color.w+inputColor.xyz*(1.0-color.w); 
-color.w=1.0;
+//vec4 inputColor=texture2D(iChannel0,pos.xy / iChannelResolution[0].xy);
+//color.xyz=color.xyz*color.w; 
+//color.w=1.0;
 }
 
 	)
 ;
 
-#define DEBUG
+#define DEBUG 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //  Constructor and destructor
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -278,6 +305,8 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	printf("Shader Maker Vers 1.004\n");
 	printf("GLSL version [%s]\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 #endif
+	printf("id: %s name: %s", PluginInfo.GetPluginInfo()->PluginUniqueID, PluginInfo.GetPluginInfo()->PluginName);
+	printf(" version: %i.%i\n", PluginInfo.GetPluginExtendedInfo()->PluginMajorVersion, PluginInfo.GetPluginExtendedInfo()->PluginMinorVersion);
 
 	// Input properties allow for no texture or for four textures
 	SetMinInputs(0);
@@ -296,34 +325,39 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 
 	/*
 	*/
-SetParamInfo(FFPARAM_PARAM2_X,         "Rotation",         FF_TYPE_STANDARD, 0.0f); m_UserParam2z = 0.0f;	
-
-SetParamInfo(FFPARAM_PARAM2_Y,         "Pos X",         FF_TYPE_STANDARD, 0.5f); m_UserParam2x = 0.0f;
-	SetParamInfo(FFPARAM_PARAM2_Z,         "Pos Y",         FF_TYPE_STANDARD, 0.5f); m_UserParam2y = 0.0f;
-	SetParamInfo(FFPARAM_PARAM2_W,         "Divisions",         FF_TYPE_STANDARD, 0.5f); m_UserParam2z = 0.0f;	
+SetParamInfo(FFPARAM_PARAM2_X,         "Rotation",         FF_TYPE_STANDARD, 0.0f); 
+SetParamInfo(FFPARAM_PARAM2_Y,         "Pos X",         FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_PARAM2_Z,         "Pos Y",         FF_TYPE_STANDARD, 0.5f); 
+	SetParamInfo(FFPARAM_PARAM2_W,         "Divisions",         FF_TYPE_STANDARD, 0.05f); 
 	
 
-	SetParamInfo(FFPARAM_PARAM3_X,         "Radius 1",         FF_TYPE_STANDARD, 0.2f); m_UserParam2x = 0.0f;
-	SetParamInfo(FFPARAM_PARAM3_Y,         "Width 1",         FF_TYPE_STANDARD, 1.0f); m_UserParam4x = 0.0f;
-	SetParamInfo(FFPARAM_PARAM3_Z,         "Height 1",         FF_TYPE_STANDARD, 0.1f); m_UserParam2y = 0.0f;
-	SetParamInfo(FFPARAM_PARAM3_W,         "Rotation 1",         FF_TYPE_STANDARD, 1.0f); m_UserParam4z = 0.0f;	
+	SetParamInfo(FFPARAM_PARAM3_X,         "Radius 1",         FF_TYPE_STANDARD, 0.2f); 
+	SetParamInfo(FFPARAM_PARAM3_Y,         "Width 1",         FF_TYPE_STANDARD, 1.0f);
+	SetParamInfo(FFPARAM_PARAM3_Z,         "Height 1",         FF_TYPE_STANDARD, 0.01f); 
+	SetParamInfo(FFPARAM_PARAM3_W,         "Rotation 1",         FF_TYPE_STANDARD, 1.0f); 
 
-SetParamInfo(FFPARAM_PARAM5_X,         "Radius 2",         FF_TYPE_STANDARD, 0.2f); m_UserParam2z = 0.0f;	
-	SetParamInfo(FFPARAM_PARAM5_Y,         "Width 2",         FF_TYPE_STANDARD, 1.0f); m_UserParam4y = 0.0f;
-		SetParamInfo(FFPARAM_PARAM5_Z,         "Height 2",         FF_TYPE_STANDARD, 0.05f); m_UserParam2z = 0.0f;	
-		SetParamInfo(FFPARAM_PARAM5_W,         "Rotation 2",         FF_TYPE_STANDARD, 1.0f); m_UserParam4w = 0.75f;
+SetParamInfo(FFPARAM_PARAM5_X,         "Radius 2",         FF_TYPE_STANDARD, 0.01f); 
+	SetParamInfo(FFPARAM_PARAM5_Y,         "Width 2",         FF_TYPE_STANDARD, 1.0f); 
+		SetParamInfo(FFPARAM_PARAM5_Z,         "Height 2",         FF_TYPE_STANDARD, 0.05f); 
+		SetParamInfo(FFPARAM_PARAM5_W,         "Rotation 2",         FF_TYPE_STANDARD, 1.0f); 
 
-	SetParamInfo(FFPARAM_RED,           "Color 1 Red",           FF_TYPE_STANDARD, 1.0f); m_UserRed = 07.5f;
-	SetParamInfo(FFPARAM_GREEN,         "Color 1 Green",         FF_TYPE_STANDARD, 1.0f); m_UserGreen = 0.5f;
-	SetParamInfo(FFPARAM_BLUE,          "Color 1 Blue",          FF_TYPE_STANDARD, 1.0f); m_UserBlue = 0.5f;
-	SetParamInfo(FFPARAM_ALPHA,         "Color 1 Alpha",         FF_TYPE_STANDARD, 1.0f); m_UserAlpha = 1.0f;
-	
-	
-	SetParamInfo(FFPARAM_PARAM4_X,         "Color 2  Red",         FF_TYPE_STANDARD, 1.0f); m_UserParam4x = 0.0f;
-	SetParamInfo(FFPARAM_PARAM4_Y,         "Color 2  Green",         FF_TYPE_STANDARD, 1.0f); m_UserParam4y = 0.0f;
-	SetParamInfo(FFPARAM_PARAM4_Z,         "Color 2  Blue",         FF_TYPE_STANDARD, 1.0f); m_UserParam4z = 0.0f;	
-	SetParamInfo(FFPARAM_PARAM4_W,         "Color 2  Alpha",         FF_TYPE_STANDARD, 1.0f); m_UserParam4w = 0.75f;
-	
+
+		SetParamInfo(FFPARAM_PARAM6_X, "Radius 3", FF_TYPE_STANDARD, 0.01f);
+		SetParamInfo(FFPARAM_PARAM6_Y, "Width 3", FF_TYPE_STANDARD, 1.0f);
+		SetParamInfo(FFPARAM_PARAM6_Z, "Height 3", FF_TYPE_STANDARD, 0.05f);
+		SetParamInfo(FFPARAM_PARAM6_W, "Rotation 3", FF_TYPE_STANDARD, 1.0f);
+
+	SetParamInfo(FFPARAM_RED,           "Color 1 Red",           FF_TYPE_RED, 1.0f); 
+	SetParamInfo(FFPARAM_GREEN,         "Color 1 Green",         FF_TYPE_GREEN, 1.0f); 
+	SetParamInfo(FFPARAM_BLUE,          "Color 1 Blue",          FF_TYPE_BLUE, 1.0f); 
+	SetParamInfo(FFPARAM_ALPHA,         "Color 1 Alpha",         FF_TYPE_STANDARD, 1.0f);
+
+
+	SetParamInfo(FFPARAM_PARAM4_X, "Color 2  Red", FF_TYPE_RED, 1.0f);
+	SetParamInfo(FFPARAM_PARAM4_Y, "Color 2  Green", FF_TYPE_GREEN, 1.0f);
+	SetParamInfo(FFPARAM_PARAM4_Z, "Color 2  Blue", FF_TYPE_BLUE, 1.0f);
+	SetParamInfo(FFPARAM_PARAM4_W, "Color 2  Alpha", FF_TYPE_STANDARD, 1.0f);
+
 	
 	/*SetParamInfo(FFPARAM_PARAM3_CAMERA_X,"Camera X",         FF_TYPE_STANDARD, 0.750f); m_Camera_x = .75f;
 	SetParamInfo(FFPARAM_PARAM3_CAMERA_Y,"Camera Y",         FF_TYPE_STANDARD, 0.50f); m_Camera_y= 0.5f;
@@ -568,11 +602,17 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		// Elapsed time
 		if(m_timeLocation >= 0) 
 			m_extensions.glUniform1fARB(m_timeLocation, m_time);
-	
-		m_extensions.glUniform4fARB(m_iParam2Location, m_UserParam2x*2.0f-1.0f,m_UserParam2y*2.0f-1.0f,m_UserParam2z*2.0f-1.0f,m_UserParam2w*2.0f-1.0f); 
-		m_extensions.glUniform4fARB(m_iParam3Location, m_UserParam3x*2.0f-1.0f,m_UserParam3y*2.0f-1.0f,m_UserParam3z*2.0f-1.0f,m_UserParam3w*2.0f-1.0f); 
-		m_extensions.glUniform4fARB(m_iParam4Location, m_UserParam4x,m_UserParam4y,m_UserParam4z,m_UserParam4w); 
-		m_extensions.glUniform4fARB(m_iParam5Location, m_UserParam5x*2.0f-1.0f,m_UserParam5y*2.0f-1.0f,m_UserParam5z*2.0f-1.0f,m_UserParam5w*2.0f-1.0f); 
+
+		if (m_iParam2Location >= 0)
+		m_extensions.glUniform4fARB(m_iParam2Location, m_UserParam2.x,m_UserParam2.y,m_UserParam2.z,m_UserParam2.w);
+		if (m_iParam3Location >= 0)
+		m_extensions.glUniform4fARB(m_iParam3Location, m_UserParam3.x,m_UserParam3.y,m_UserParam3.z,m_UserParam3.w);
+		if (m_iParam4Location >= 0)
+		m_extensions.glUniform4fARB(m_iParam4Location, m_UserParam4.x,m_UserParam4.y,m_UserParam4.z,m_UserParam4.w);
+		if (m_iParam5Location >= 0)
+		m_extensions.glUniform4fARB(m_iParam5Location, m_UserParam5.x, m_UserParam5.y, m_UserParam5.z, m_UserParam5.w);
+		if (m_iParam6Location >= 0) 
+		m_extensions.glUniform4fARB(m_iParam6Location, m_UserParam6.x, m_UserParam6.y, m_UserParam6.z, m_UserParam6.w);
 		//
 		// GLSL sandbox
 		//
@@ -780,46 +820,7 @@ char * ShaderMaker::GetParameterDisplay(DWORD dwIndex) {
 		case FFPARAM_SPEED4:
 			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserSpeed4*100.0));
 			return m_DisplayValue;
-	
-		case FFPARAM_PARAM2_X:
-			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserParam2x));
-			return m_DisplayValue;
-		case FFPARAM_PARAM2_Y:
-			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserParam2y));
-			return m_DisplayValue;
-		case FFPARAM_PARAM2_Z:
-			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserParam2z));
-			return m_DisplayValue;
-		case FFPARAM_PARAM2_W:
-			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserParam2w));
-			return m_DisplayValue;
-			
-		case FFPARAM_PARAM3_X:
-			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserParam3x));
-			return m_DisplayValue;
-		case FFPARAM_PARAM3_Y:
-			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserParam3y));
-			return m_DisplayValue;
-		case FFPARAM_PARAM3_Z:
-			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserParam3z));
-			return m_DisplayValue;
-		case FFPARAM_PARAM3_W:
-			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserParam3w));
-			return m_DisplayValue;
-			
-		case FFPARAM_PARAM4_X:
-			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserParam4x));
-			return m_DisplayValue;
-		case FFPARAM_PARAM4_Y:
-			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserParam4y));
-			return m_DisplayValue;
-		case FFPARAM_PARAM4_Z:
-			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserParam4z));
-			return m_DisplayValue;
-		case FFPARAM_PARAM4_W:
-			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserParam4w));
-			return m_DisplayValue;
-
+	  
 		case FFPARAM_MOUSEX:
 			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserMouseX*m_vpWidth));
 			return m_DisplayValue;
@@ -955,33 +956,78 @@ float ShaderMaker::GetFloatParameter(unsigned int index)
 			return m_UserAlpha;
 
 		case FFPARAM_PARAM2_X:
-			return m_UserParam2x;
+			return m_UserParam2.x;
 case FFPARAM_PARAM2_Y:
-			return m_UserParam2y;
+			return m_UserParam2.y;
 case FFPARAM_PARAM2_Z:
-			return m_UserParam2z;
+			return m_UserParam2.z;
 case FFPARAM_PARAM2_W:
-			return m_UserParam2w;
+			return m_UserParam2.w;
 
 
 		case FFPARAM_PARAM3_X:
-			return m_UserParam3x;
+			return m_UserParam3.x;
 case FFPARAM_PARAM3_Y:
-			return m_UserParam3y;
+			return m_UserParam3.y;
 case FFPARAM_PARAM3_Z:
-			return m_UserParam3z;
+			return m_UserParam3.z;
 case FFPARAM_PARAM3_W:
-			return m_UserParam3w;
+			return m_UserParam3.w;
 
 
-		case FFPARAM_PARAM4_X:
-			return m_UserParam4x;
+case FFPARAM_PARAM4_X:
+	return m_UserParam4.x;
 case FFPARAM_PARAM4_Y:
-			return m_UserParam4y;
+	return m_UserParam4.y;
 case FFPARAM_PARAM4_Z:
-			return m_UserParam4z;
+	return m_UserParam4.z;
 case FFPARAM_PARAM4_W:
-			return m_UserParam4w;
+	return m_UserParam4.w;
+
+case FFPARAM_PARAM5_X:
+	return m_UserParam5.x;
+case FFPARAM_PARAM5_Y:
+	return m_UserParam5.y;
+case FFPARAM_PARAM5_Z:
+	return m_UserParam5.z;
+case FFPARAM_PARAM5_W:
+	return m_UserParam5.w;
+
+case FFPARAM_PARAM6_X:
+	return m_UserParam6.x;
+case FFPARAM_PARAM6_Y:
+	return m_UserParam6.y;
+case FFPARAM_PARAM6_Z:
+	return m_UserParam6.z;
+case FFPARAM_PARAM6_W:
+	return m_UserParam6.w;
+
+case FFPARAM_COLOR1_RED:
+	return m_color1.x;
+case FFPARAM_COLOR1_GREEN:
+	return m_color1.y;
+case FFPARAM_COLOR1_BLUE:
+	return m_color1.z;
+case FFPARAM_COLOR1_ALPHA:
+	return m_color1.w;
+
+case FFPARAM_COLOR2_RED:
+	return m_color2.x;
+case FFPARAM_COLOR2_GREEN:
+	return m_color2.y;
+case FFPARAM_COLOR2_BLUE:
+	return m_color2.z;
+case FFPARAM_COLOR2_ALPHA:
+	return m_color2.w;
+
+case FFPARAM_COLOR3_RED:
+	return m_color3.x;
+case FFPARAM_COLOR3_GREEN:
+	return m_color3.y;
+case FFPARAM_COLOR3_BLUE:
+	return m_color3.z;
+case FFPARAM_COLOR3_ALPHA:
+	return m_color3.w;
 
 		default:
 			return FF_FAIL;
@@ -1035,59 +1081,74 @@ FFResult ShaderMaker::SetFloatParameter(unsigned int index, float value)
 				break;
 			
 			case FFPARAM_PARAM2_X:
-				m_UserParam2x = value;
+				m_UserParam2.x = value;
 				break;
 			case FFPARAM_PARAM2_Y:
-				m_UserParam2y = value;
+				m_UserParam2.y = value;
 				break;
 			case FFPARAM_PARAM2_Z:
-				m_UserParam2z = value;
+				m_UserParam2.z = value;
 				break;
 			case FFPARAM_PARAM2_W:
-				m_UserParam2w = value;
+				m_UserParam2.w = value;
 				break;
 
 			
 			case FFPARAM_PARAM3_X:
-				m_UserParam3x = value;
+				m_UserParam3.x = value;
 				break;
 			case FFPARAM_PARAM3_Y:
-				m_UserParam3y = value;
+				m_UserParam3.y = value;
 				break;
 			case FFPARAM_PARAM3_Z:
-				m_UserParam3z = value;
+				m_UserParam3.z = value;
 				break;
 			case FFPARAM_PARAM3_W:
-				m_UserParam3w = value;
+				m_UserParam3.w = value;
 				break;
 				
 			
 			case FFPARAM_PARAM4_X:
-				m_UserParam4x = value;
+				m_UserParam4.x = value;
 				break;
 			case FFPARAM_PARAM4_Y:
-				m_UserParam4y = value;
+				m_UserParam4.y = value;
 				break;
 			case FFPARAM_PARAM4_Z:
-				m_UserParam4z = value;
+				m_UserParam4.z = value;
 				break;
 			case FFPARAM_PARAM4_W:
-				m_UserParam4w = value;
+				m_UserParam4.w = value;
 				break;
 
 
-			
+
 			case FFPARAM_PARAM5_X:
-				m_UserParam5x = value;
+				m_UserParam5.x = value;
 				break;
 			case FFPARAM_PARAM5_Y:
-				m_UserParam5y = value;
+				m_UserParam5.y = value;
 				break;
 			case FFPARAM_PARAM5_Z:
-				m_UserParam5z = value;
+				m_UserParam5.z = value;
 				break;
 			case FFPARAM_PARAM5_W:
-				m_UserParam5w = value;
+				m_UserParam5.w = value;
+				break;
+
+
+
+			case FFPARAM_PARAM6_X:
+				m_UserParam6.x = value;
+				break;
+			case FFPARAM_PARAM6_Y:
+				m_UserParam6.y = value;
+				break;
+			case FFPARAM_PARAM6_Z:
+				m_UserParam6.z = value;
+				break;
+			case FFPARAM_PARAM6_W:
+				m_UserParam6.w = value;
 				break;
 
 
@@ -1118,9 +1179,52 @@ FFResult ShaderMaker::SetFloatParameter(unsigned int index, float value)
 			case FFPARAM_BLUE:
 				m_UserBlue = value;
 				break;
+			case FFPARAM_COLOR1_RED:
+				m_color1.x = value;
+				break;
 
-			case FFPARAM_ALPHA:
-				m_UserAlpha = value;
+			case FFPARAM_COLOR1_GREEN:
+				m_color1.y = value;
+				break;
+
+			case FFPARAM_COLOR1_BLUE:
+				m_color1.z = value;
+				break;
+
+			case FFPARAM_COLOR1_ALPHA:
+				m_color1.w = value;
+				break;
+
+			case FFPARAM_COLOR2_RED:
+				m_color2.x = value;
+				break;
+
+			case FFPARAM_COLOR2_GREEN:
+				m_color2.y = value;
+				break;
+
+			case FFPARAM_COLOR2_BLUE:
+				m_color2.z = value;
+				break;
+
+			case FFPARAM_COLOR2_ALPHA:
+				m_color2.w = value;
+				break;
+
+			case FFPARAM_COLOR3_RED:
+				m_color3.x = value;
+				break;
+
+			case FFPARAM_COLOR3_GREEN:
+				m_color3.y = value;
+				break;
+
+			case FFPARAM_COLOR3_BLUE:
+				m_color3.z = value;
+				break;
+
+			case FFPARAM_COLOR3_ALPHA:
+				m_color3.w = value;
 				break;
 
 			default:
@@ -1244,6 +1348,7 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 									  "uniform vec4 iParam3;\n"
 									  "uniform vec4 iParam4;\n"
 									  "uniform vec4 iParam5;\n"
+									  "uniform vec4 iParam6;\n"
 									  "uniform vec3 iCamera;\n"
 									  "uniform vec3 iCameraTarget;\n"
 			
@@ -1306,6 +1411,7 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 				m_iParam3Location = -1;
 				m_iParam4Location = -1;
 				m_iParam5Location = -1;
+				m_iParam6Location = -1;
 				m_screenLocation			 = -1;
 				m_surfaceSizeLocation		 = -1; 
 				// m_surfacePositionLocation	= -1; // TODO
@@ -1375,8 +1481,22 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 				if(m_iParam4Location< 0)
 					m_iParam4Location = m_shader.FindUniform("iParam4");
 
-				if(m_iParam5Location< 0)
+				if (m_iParam5Location< 0)
 					m_iParam5Location = m_shader.FindUniform("iParam5");
+
+				if (m_iParam6Location< 0)
+					m_iParam6Location = m_shader.FindUniform("iParam6");
+
+				if (m_inputColor1Location < 0)
+					m_inputColor1Location = m_shader.FindUniform("inputColor1");
+
+
+				if (m_inputColor2Location < 0)
+					m_inputColor2Location = m_shader.FindUniform("inputColor2");
+
+
+				if (m_inputColor3Location < 0)
+					m_inputColor3Location = m_shader.FindUniform("inputColor3");
 
 				// Mouse move
 				if(m_mouseLocation < 0)

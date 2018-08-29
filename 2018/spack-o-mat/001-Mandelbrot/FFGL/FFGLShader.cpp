@@ -186,7 +186,7 @@ int FFGLShader::Compile(const char *vtxProgram, const char *fragProgram)
         sizeof(log)-1,
         &returnedLength,
         log);
-
+	  printf(log);
       log[returnedLength] = 0;
       int a;
       a=0;

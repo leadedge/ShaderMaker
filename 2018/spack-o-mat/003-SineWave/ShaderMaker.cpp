@@ -290,6 +290,7 @@ FFResult ShaderMaker::InitGL(const FFGLViewportStruct *vp)
 	return FF_SUCCESS;
 }
 
+
 ShaderMaker::~ShaderMaker()
 {
 	// Not using this but it is here just in case

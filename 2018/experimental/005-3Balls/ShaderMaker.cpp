@@ -354,13 +354,13 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	SetParamInfo(FFPARAM_VECTOR2_X, "Radius 2", FF_TYPE_STANDARD, 0.15f); 
 	SetParamInfo(FFPARAM_VECTOR2_Y, "Shape 2", FF_TYPE_STANDARD, 0.5f);
 	SetParamInfo(FFPARAM_VECTOR2_Z, "Pos X 2", FF_TYPE_STANDARD, 0.75f);
-	SetParamInfo(FFPARAM_VECTOR2_W, "Pos Y 2", FF_TYPE_STANDARD, 0.50f);
+	SetParamInfo(FFPARAM_VECTOR2_W, "Pos Y 2", FF_TYPE_STANDARD, 0.30f);
 
 
 	SetParamInfo(FFPARAM_VECTOR3_X, "Radius 3", FF_TYPE_STANDARD, 0.1f); 
 	SetParamInfo(FFPARAM_VECTOR3_Y, "Shape 3", FF_TYPE_STANDARD, 0.5f);
 	SetParamInfo(FFPARAM_VECTOR3_Z, "Pos X 3", FF_TYPE_STANDARD, 0.25f);
-	SetParamInfo(FFPARAM_VECTOR3_W, "Pos Y 3", FF_TYPE_STANDARD, 0.50f);
+	SetParamInfo(FFPARAM_VECTOR3_W, "Pos Y 3", FF_TYPE_STANDARD, 0.60f);
 	// SetParamInfo(FFPARAM_JULIA, "yyy", FF_TYPE_BOOLEAN, 0.00f);
 //. SetParamInfo(FFPARAM_SHOW_KNOBS, "xxx", FF_TYPE_BOOLEAN, 1.00f);
 
@@ -370,7 +370,7 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	SetParamInfo(FFPARAM_COLOR1_RED, "Color 1 Red", FF_TYPE_RED, 1.0f);
 	SetParamInfo(FFPARAM_COLOR1_GREEN, "Color 1 Green", FF_TYPE_GREEN, 1.0f);
 	SetParamInfo(FFPARAM_COLOR1_BLUE, "Color 1 Blue", FF_TYPE_BLUE, 1.0f);
-	SetParamInfo(FFPARAM_COLOR1_ALPHA, "Color 1 Alpha", FF_TYPE_STANDARD, 0.50f);
+	SetParamInfo(FFPARAM_COLOR1_ALPHA, "Color 1 Alpha", FF_TYPE_STANDARD, 1.0f);
 
 	SetParamInfo(FFPARAM_COLOR2_RED, "Color 2 Red", FF_TYPE_RED, 1.0f);
 	SetParamInfo(FFPARAM_COLOR2_GREEN, "Color 2 Green", FF_TYPE_GREEN, 1.0f);
@@ -378,9 +378,9 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	SetParamInfo(FFPARAM_COLOR2_ALPHA, "Color 2 Alpha", FF_TYPE_STANDARD, 0.50f);
 
 	SetParamInfo(FFPARAM_COLOR3_RED, "Color 3 Red", FF_TYPE_RED, 1.0f);
-	SetParamInfo(FFPARAM_COLOR3_GREEN, "Color 3 Green", FF_TYPE_GREEN, 1.0f);
-	SetParamInfo(FFPARAM_COLOR3_BLUE, "Color 3 Blue", FF_TYPE_BLUE, 1.0f);
-	SetParamInfo(FFPARAM_COLOR3_ALPHA, "Color 3 Alpha", FF_TYPE_STANDARD, 0.50f);
+	SetParamInfo(FFPARAM_COLOR3_GREEN, "Color 3 Green", FF_TYPE_GREEN, 0.0f);
+	SetParamInfo(FFPARAM_COLOR3_BLUE, "Color 3 Blue", FF_TYPE_BLUE, 0.0f);
+	SetParamInfo(FFPARAM_COLOR3_ALPHA, "Color 3 Alpha", FF_TYPE_STANDARD,1.0f);
 
 	// Set defaults
 	SetDefaults();
@@ -1459,6 +1459,10 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 				m_inputVector2Location = -1;
 				m_inputVector3Location = -1;
 				m_inputVector4Location = -1;
+
+				m_inputColor1Location = -1;
+				m_inputColor2Location = -1;
+				m_inputColor3Location = -1;
 
 				// ===========================================================
 				// ShaderToy new uniforms

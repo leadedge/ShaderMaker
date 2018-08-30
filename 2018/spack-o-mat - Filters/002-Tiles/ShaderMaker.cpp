@@ -66,18 +66,18 @@ int (*cross_secure_sprintf)(char *, size_t, const char *,...) = sprintf_s;
 int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #endif
 
-#define FFPARAM_SPEED       (0)
-#define FFPARAM_MOUSEX      (1)
-#define FFPARAM_MOUSEY      (2)
-#define FFPARAM_MOUSELEFTX  (3)
-#define FFPARAM_MOUSELEFTY  (4)
-#define FFPARAM_RED         (5)
-#define FFPARAM_GREEN       (6)
-#define FFPARAM_BLUE        (7)
-#define FFPARAM_ALPHA       (8)
+#define FFPARAM_SPEED       (1000)
+#define FFPARAM_MOUSEX      (1001)
+#define FFPARAM_MOUSEY      (1002)
+#define FFPARAM_MOUSELEFTX  (1003)
+#define FFPARAM_MOUSELEFTY  (1004)
+#define FFPARAM_RED         (1005)
+#define FFPARAM_GREEN       (1006)
+#define FFPARAM_BLUE        (1007)
+#define FFPARAM_ALPHA       (1008)
 
-#define FFPARAM_VECTOR1_X       (9)
-#define FFPARAM_VECTOR1_Y       (10)
+#define FFPARAM_VECTOR1_X       (0)
+#define FFPARAM_VECTOR1_Y       (9)
 #define FFPARAM_VECTOR1_Z       (11)
 #define FFPARAM_VECTOR1_W       (12)
 #define FFPARAM_VECTOR2_X       (13)
@@ -103,14 +103,14 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 static CFFGLPluginInfo PluginInfo ( 
 	ShaderMaker::CreateInstance,		// Create method
 	"SF02",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
-	"SoM iq Random Tiles",						// *** Plugin name - make it different for each plugin 
+	"SoM ST Tile Rand",						// *** Plugin name - make it different for each plugin 
 	1,						   			// API major version number 													
 	006,								// API minor version number	
 	1,									// *** Plugin major version number
 	000,								// *** Plugin minor version number
 	// FF_EFFECT,							// Plugin type can always be an effect
 	FF_EFFECT,						// or change this to FF_SOURCE for shaders that do not use a texture
-	"SoM iq Random Tiling", // *** Plugin description - you can expand on this
+	"SoM Tile Random", // *** Plugin description - you can expand on this
 	"https://www.shadertoy.com/view/lt2GDd"			// *** About - use your own name and details
 );
 
@@ -174,8 +174,42 @@ char *fragmentShaderCode = STRINGIFY (
 // at all like in previous methods)
 //
 // More info here: http://www.iquilezles.org/www/articles/texturerepetition/texturerepetition.htm
+// The MIT License
+// Copyright © 2015 Inigo Quilez
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-float sum(vec3 v) { return v.x + v.y + v.z; }
+
+// One way to avoid texture tile repetition one using one small texture to cover a huge area.
+// Based on Voronoise (https://www.shadertoy.com/view/Xd23Dh), a random offset is applied to
+// the texture UVs per Voronoi cell. Distance to the cell is used to smooth the transitions
+// between cells.
+
+// More info here: http://www.iquilezles.org/www/articles/texturerepetition/texturerepetition.htm
+
+// The MIT License
+// Copyright © 2015 Inigo Quilez
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+// One way to avoid texture tile repetition one using one small texture to cover a huge area.
+// Based on Voronoise (https://www.shadertoy.com/view/Xd23Dh), a random offset is applied to
+// the texture UVs per Voronoi cell. Distance to the cell is used to smooth the transitions
+// between cells.
+
+// More info here: http://www.iquilezles.org/www/articles/texturerepetition/texturerepetition.htm
+
+// The MIT License
+// Copyright © 2015 Inigo Quilez
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+// One way to avoid texture tile repetition one using one small texture to cover a huge area.
+// Based on Voronoise (https://www.shadertoy.com/view/Xd23Dh), a random offset is applied to
+// the texture UVs per Voronoi cell. Distance to the cell is used to smooth the transitions
+// between cells.
+
+// More info here: http://www.iquilezles.org/www/articles/texturerepetition/texturerepetition.htm
+
 
 vec4 hash4(vec2 p) {
 	return fract(sin(vec4(1.0 + dot(p, vec2(37.0, 17.0)),
@@ -184,43 +218,114 @@ vec4 hash4(vec2 p) {
 		4.0 + dot(p, vec2(23.0, 31.0))))*103.0);
 }
 
-vec3 textureNoTile(in vec2 x, float v)
+bool calcHorizForRowAndColumn(int row, int column) {
+
+	float rand = hash4(vec2(row, column)).x;
+
+	return rand>0.5;
+}
+bool calcVertiForRowAndColumn(int row, int column) {
+
+	float rand = hash4(vec2(row, column)).y;
+
+	return rand>0.5;
+}
+
+
+vec3 textureNoTileSimple(sampler2D samp, in vec2 uv)
 {
-	float k = hash4(x).x; // cheap (cache friendly) lookup
+	int row = int(uv.x);
+	int column = int(uv.y);
 
-	vec2 duvdx = dFdx(x);
-	vec2 duvdy = dFdx(x);
+	bool randomX = hash4(vec2(row*10.0, 0)).x>0.5;
+	bool randomY = hash4(vec2(column*10.0)).x>0.5;
 
-	float l = k*8.0;
-	float i = floor(l);
-	float f = fract(l);
 
-	vec2 offa = sin(vec2(3.0, 7.0)*(i + 0.0)); // can replace with any other hash
-	vec2 offb = sin(vec2(3.0, 7.0)*(i + 1.0)); // can replace with any other hash
+	if (randomX&&randomY) {
+		return texture(samp, uv*vec2(1.0, 1.0)).xyz;
+	}
+	else  if (!randomX&&randomY) {
+		return texture(samp, uv*vec2(-1.0, 1.0)).xyz;
+	}
+	else  if (randomX&&!randomY) {
+		return texture(samp, uv*vec2(1.0, -1.0)).xyz;
+	}
+	else  if (!randomX&&!randomY) {
+		return texture(samp, uv*vec2(-1.0, -1.0)).xyz;
+	}
 
-	vec3 cola = textureGrad(iChannel0, x + v*offa, duvdx, duvdy).xyz;
-	vec3 colb = textureGrad(iChannel0, x + v*offb, duvdx, duvdy).xyz;
 
-	return mix(cola, colb, smoothstep(0.2, 0.8, f - 0.1*sum(cola - colb)));
+}
+
+void mainImageSimple(out vec4 fragColor, in vec2 fragCoord)
+{
+	vec2 uv = fragCoord / iResolution.x;
+
+	// float f = smoothstep(0.4, 0.6, sin(iTime));
+	// float s = smoothstep(0.4, 0.6, sin(iTime*0.5));
+
+	vec3 col = textureNoTileSimple(iChannel0,uv*inputVector1.x*inputVector1.x*100).xyz;
+
+	fragColor = vec4(col, 1.0);
+}
+
+vec4 textureNoTile(sampler2D samp, in vec2 uv)
+{
+	vec2 iuv = floor(uv);
+	vec2 fuv = fract(uv);
+
+	// generate per-tile transform
+	vec4 ofa = hash4(iuv + vec2(0.0, 0.0));
+	vec4 ofb = hash4(iuv + vec2(1.0, 0.0));
+	vec4 ofc = hash4(iuv + vec2(0.0, 1.0));
+	vec4 ofd = hash4(iuv + vec2(1.0, 1.0));
+
+
+	vec2 ddx = dFdx(uv);
+	vec2 ddy = dFdy(uv);
+
+	// transform per-tile uvs
+	ofa.zw = sign(ofa.zw - 0.5);
+	ofb.zw = sign(ofb.zw - 0.5);
+	ofc.zw = sign(ofc.zw - 0.5);
+	ofd.zw = sign(ofd.zw - 0.5);
+
+	// uv's, and derivarives (for correct mipmapping)
+	vec2 uva = uv*ofa.zw + ofa.xy; vec2 ddxa = ddx*ofa.zw; vec2 ddya = ddy*ofa.zw;
+	vec2 uvb = uv*ofb.zw + ofb.xy; vec2 ddxb = ddx*ofb.zw; vec2 ddyb = ddy*ofb.zw;
+	vec2 uvc = uv*ofc.zw + ofc.xy; vec2 ddxc = ddx*ofc.zw; vec2 ddyc = ddy*ofc.zw;
+	vec2 uvd = uv*ofd.zw + ofd.xy; vec2 ddxd = ddx*ofd.zw; vec2 ddyd = ddy*ofd.zw;
+
+	// fetch and blend
+	vec2 b = smoothstep(0.25, 0.75, fuv);
+
+	return mix(mix(textureGrad(samp, uva, ddxa, ddya),
+		textureGrad(samp, uvb, ddxb, ddyb), b.x),
+		mix(textureGrad(samp, uvc, ddxc, ddyc),
+			textureGrad(samp, uvd, ddxd, ddyd), b.x), b.y);
 }
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {
-	vec2 uv = fragCoord.xy / iResolution.xx;
+	vec2 uv = (fragCoord / iResolution)*2.0-1.0;
 
-	float f = smoothstep(0.4, 0.6, sin(iTime)*0.25);
+	float f = smoothstep(0.4, 0.6, sin(iTime));
 	float s = smoothstep(0.4, 0.6, sin(iTime*0.5));
 
-	vec3 col = textureNoTile((4.0 + 6.0*s)*uv, f);
+//	uv = (4.0 + 16.0*s)*uv + iTime*0.1;
 
-	fragColor = vec4(col, 1.0);
+	vec3 cola = textureNoTile(iChannel0, uv*inputVector1.x*inputVector1.x*100).xyz; 
+	 
+
+	fragColor = vec4(cola, 1.0);
 }
+
 // ==================== END OF SHADER CODE PASTE =======================
 
 
 );
 
-#define DEBUG
+#define DEBUG_
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //  Constructor and destructor
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -237,11 +342,16 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	printf("GLSL version [%s]\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 #endif 
 
+
+	printf("id: '%s' name: '%s'", PluginInfo.GetPluginInfo()->PluginUniqueID, PluginInfo.GetPluginInfo()->PluginName);
+	printf(" version: '%i.%i'\n", PluginInfo.GetPluginExtendedInfo()->PluginMajorVersion, PluginInfo.GetPluginExtendedInfo()->PluginMinorVersion);
+
 	// Input properties allow for no texture or for four textures
 	SetMinInputs(1);
 	SetMaxInputs(2); // TODO - 4 inputs
 
 	// Parameters
+	/*
 	SetParamInfo(FFPARAM_SPEED,         "Speed",         FF_TYPE_STANDARD, 0.5f); m_UserSpeed = 0.5f;
 	SetParamInfo(FFPARAM_MOUSEX,        "X mouse",       FF_TYPE_STANDARD, 0.5f); m_UserMouseX = 0.5f;
 	SetParamInfo(FFPARAM_MOUSEY,        "Y mouse",       FF_TYPE_STANDARD, 0.5f); m_UserMouseY = 0.5f;
@@ -252,9 +362,11 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	SetParamInfo(FFPARAM_BLUE,          "Blue",          FF_TYPE_STANDARD, 0.5f); m_UserBlue = 0.5f;
 	SetParamInfo(FFPARAM_ALPHA,         "Alpha",         FF_TYPE_STANDARD, 1.0f); m_UserAlpha = 1.0f;
 
+	*/
 
+	SetParamInfo(FFPARAM_VECTOR1_X, "Scale", FF_TYPE_STANDARD, .15f);
 
-	SetParamInfo(FFPARAM_VECTOR1_X, "Vector1X", FF_TYPE_STANDARD, 1.0f);
+/*
 	SetParamInfo(FFPARAM_VECTOR1_Y, "Vector1Y", FF_TYPE_STANDARD, 1.0f);
 	SetParamInfo(FFPARAM_VECTOR1_Z, "Vector1Z", FF_TYPE_STANDARD, 1.0f);
 	SetParamInfo(FFPARAM_VECTOR1_W, "Vector1W", FF_TYPE_STANDARD, 1.0f);
@@ -276,7 +388,7 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	SetParamInfo(FFPARAM_VECTOR4_Y, "Vector4Y", FF_TYPE_STANDARD, 1.0f);
 	SetParamInfo(FFPARAM_VECTOR4_Z, "Vector4Z", FF_TYPE_STANDARD, 1.0f);
 	SetParamInfo(FFPARAM_VECTOR4_W, "Vector4W", FF_TYPE_STANDARD, 1.0f);
-
+	*/
 	// Set defaults
 	SetDefaults();
 

@@ -124,6 +124,11 @@ protected:
 	float m_julia;
     float m_showKnobs;
 
+	Vector decays1[1000];
+	Vector decays2[1000];
+	Vector decays3[1000];
+
+
 	Vector m_color1;
 	Vector m_color2;
 	Vector m_speeds;

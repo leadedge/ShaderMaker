@@ -61,6 +61,7 @@
 #include <windows.h>
 #include <gl\GLU.h> 
 #include "color_hsv_rgb.h"
+#include "FFGLExtensions.h"
 
 
 #if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__))
@@ -126,7 +127,7 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 static CFFGLPluginInfo PluginInfo ( 
 	ShaderMaker::CreateInstance,		// Create method
-	"SM05",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
+	"SM06",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
 	"SoM Starfield",						// *** Plugin name - make it different for each plugin 
 	1,						   			// API major version number 													
 	006,								// API minor version number	
@@ -142,15 +143,52 @@ static CFFGLPluginInfo PluginInfo (
 
 // Common vertex shader code as per FreeFrame examples
 char *vertexShaderCode = STRINGIFY(
-	uniform vec4 inputVector1; 
+	uniform vec4 inputVector1;
+uniform vec4 inputVector2;
 uniform vec4 inputTimes;
+ const float PI = 3.1415926535897932384626433832795; 
+mat3 rotateZ(float rad) {
+	float c = cos(rad);
+	float s = sin(rad);
+	return mat3(
+		c, s, 0.0,
+		-s, c, 0.0,
+		0.0, 0.0, 1.0
+		);
+}
+
+mat3 rotateY(float rad) {
+	float c = cos(rad);
+	float s = sin(rad);
+	return mat3(
+		c, 0.0, -s,
+		0.0, 1.0, 0.0,
+		s, 0.0, c
+		);
+}
+
+mat3 rotateX(float rad) {
+	float c = cos(rad);
+	float s = sin(rad);
+	return mat3(
+		1.0, 0.0, 0.0,
+		0.0, c, s,
+		0.0, -s, c
+		);
+}
 void main()
 {
-	vec3 tempPos = 10.0*mod(gl_Vertex.xyz + inputTimes.xyz, vec3(1.0, 1.0, 1.0)) - 5.0;;
-	gl_Position = gl_ModelViewProjectionMatrix * vec4(tempPos.xyz, gl_Vertex.w);
+	vec3 tempPos = 1000.0*fract(gl_Vertex.xyz + inputTimes.xyz/100.0 ) - 500.0;
+
+
+	tempPos.xyz = rotateX(inputVector2.x*2.0*PI)*tempPos.xyz;
+	tempPos.xyz = rotateY(inputVector2.y*2.0*PI)*tempPos.xyz;
+	tempPos.xyz = rotateZ(inputVector2.z*2.0*PI)*tempPos.xyz;
+	gl_Position = gl_ModelViewProjectionMatrix * vec4(tempPos.xyz,gl_Vertex.w);
 	//gl_TexCoord[0] = gl_MultiTexCoord0;
-	gl_FrontColor = vec4(1.0,0.0,0.0,1.0);
-	 gl_PointSize = 10.0 / gl_Position.w;
+	gl_FrontColor = vec4(1.0,1.0,0.0,1.0) ;
+
+	  gl_PointSize = (inputVector2.w*inputVector2.w*100)*( 500.0 / gl_Position.w) ;
 
 } );
 
@@ -185,145 +223,24 @@ void main()
 char *fragmentShaderCode = STRINGIFY (
 // ==================== PASTE WITHIN THESE LINES =======================
 
+ 
+float lengthSpecial(vec2 point, float exponent) {
 
-float triangulate(float x) {
-	// creates a triangular function that maps 0..1 to 0..1..0 
-	// helper method used to create properties that are loopable
-	return 1.0-abs((mod(x, 1.0) - 0.5)) * 2.0;
-}
-vec2 triangulate(vec2 x) {
-	// creates a triangular function that maps 0..1 to 0..1..0 
-	// helper method used to create properties that are loopable
-	return 1.0 - abs((mod(x, 1.0) - 0.5)) * 2.0;;
-}
-vec2 expandNormalizedToNegative1(vec2 x) {
-	// creates a triangular function that maps 0..1 to 0..1..0 
-	// helper method used to create properties that are loopable
-	return x *2.0 - 1.0;
-}
+	return pow(pow(point.x, exponent) + pow(point.y, exponent), 1.0 / exponent);
+ }
 
-vec2 triangulateNormalize(vec2 x) {
-	// creates a triangular function that maps 0..1 to 0..1..0 
-	// helper method used to create properties that are loopable
-	return expandNormalizedToNegative1(x);
+float circle(vec2 p) {
+
+	return lengthSpecial(p, inputVector3.x*inputVector3.x*8.0)>0.5?0.0:1.0;
 }
-vec2 piiate(vec2 x) {
-	// creates a triangular function that maps 0..1 to 0..1..0 
-	// helper method used to create properties that are loopable
-	return vec2(triangulate(x.x), triangulate(x.y));
-}
-vec2 rotate(vec2 v, float a) {
-	float s = sin(a);
-	float c = cos(a);
-	mat2 m = mat2(c, -s, s, c);
-	return m * v;
-}
-
-vec3 hsv2rgb(vec3 c)
-{
-	vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
-	vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
-	return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-}
-
-const vec3 innerColor = vec3(1.0, 0.0, 0.0);
-const vec3 outerColor = vec3(1.0, 1.0, 1.0);
-const float maxIterations = 256;
-const bool showKnobs=false ;
-bool julia =inputJulia>0.5;
-int iterationsCalc = int(maxIterations*inputColour.w);
-int depthNormalized = int(inputColour.y * iterationsCalc);
-
-vec2 c_from_polar(float r, float theta) {
-	return vec2(r * cos(theta), r * sin(theta));
-}
-
-vec2 c_to_polar(vec2 c) {
-	return vec2(length(c), atan(c.y, c.x));
-}
-
-/// Raises `c` to a floating point power `e`.
-vec2 c_pow(vec2 c, float e) {
-	vec2 p = c_to_polar(c);
-	return c_from_polar(pow(p.x, e), p.y*e);
-}
-
-
-
-vec2 seeds[3]=vec2[3](inputVector1.zw, inputVector2.zw, inputVector3.zw);
-float powers[3] = float[3]( (inputVector1.y*16.0 - 8.0) ,  (inputVector2.y*16.0 - 8.0)  , (inputVector3.y*16.0 - 8.0)  );
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {
-	fragColor = vec4(1.0, 0.5, 0.0, 1.0);
-}
-void mainImageOld(out vec4 fragColor, in vec2 fragCoord)
-{
-	float n = 0.0;
-	// important: exponential interpolation is done in c area
-	// float scale = 10.0*(1.0 / exp(inputColour.x*10.0));
+	fragColor = gl_Color; 
+	vec2 uv = gl_PointCoord.xy*2.0-1.0;
+	fragColor *=circle(uv);
 
-//	vec2 seeds[3]; 
-
-//	seeds[0] = inputVector1.zw;
-//	seeds[1] = inputVector2.zw;
-//	seeds[2] = inputVector3.zw;
-	
-		float scale = inputVector4.x;
-	// float scale = inputColour.x*10.0;
-	// vec2 center = (iMouse.xy / iResolution.xy)*4.0 - 2.0;
-	vec2 center = inputVector4.zw;
-	vec2 pixel = center + rotate(scale*((fragCoord / iResolution.xy)*2.0 - 1.0), inputVector4.y);
-	vec2 c = pixel;
-	vec2 z = seeds[0];
-	int i;
-	if (julia) {
-		  z = pixel;
-		  c = seeds[0];
-	}
-	else {
-		  c = pixel;
-		  z = seeds[0];
-	}
-
-	// seeds[3] = vec2(sin(iGlobalTime + inputTimes[3] * 10.0), cos(iGlobalTime + inputTimes[3] * 10.0))*inputVector4.y + triangulateNormalize(inputVector4.zw);
-
-
-	for (i = 0; i <iterationsCalc; i++)
-	{ 
-
-		// z = vec2(z.x*z.x - z.y*z.y, 2.*z.x*z.y) + c;
-
-		
-		if (i > depthNormalized) {
-			z = c_pow(z, powers[i % 3]) +c+  seeds[i % 3];
-		}
-		else {
-
-			z = c_pow(z, powers[0]) + c;
-		}
-
-		// most simple coloring/breaking condition using small bailout of 4
-		if (length(z) >4.0) {
-			break;
-		} 
-
-		n++;
-	}
-	fragColor = mix(inputColor1, inputColor2, n / iterationsCalc);
-
-	if (showKnobs) {
-		// mark the seeds
-		for (float k = 0; k < 3.0; k++) {
-			if (length(pixel - seeds[int(k)]) < 0.05) {
-				fragColor = vec4(0.5 + k / 3.0, 0.5, 0.5 + k / 3.0, 1.0);
-			}
-		}
-	}
-
-
-	// fragColor =  vec4(1.0-i / round(128 * inputColour.w), 1.0 - i / round(128 * inputColour.w), 1.0 - i / round(128 * inputColour.w), 1.0);
-}
+} 
 
 
 // ==================== END OF SHADER CODE PASTE =======================
@@ -391,9 +308,9 @@ SetParamInfo(FFPARAM_VECTOR2_X, "Vector2X", FF_TYPE_STANDARD, 0.0f);
 	SetParamInfo(FFPARAM_COLOR2_BLUE, "Color 2 Blue", FF_TYPE_BLUE, 0.0f);
 	SetParamInfo(FFPARAM_COLOR2_ALPHA, "Color 2 Alpha", FF_TYPE_STANDARD, 1.0f);	
 
-		SetParamInfo(FFPARAM_SPEEDS_X, "Seed 1 Speed", FF_TYPE_STANDARD, 0.0f);
-		SetParamInfo(FFPARAM_SPEEDS_Y, "Seed 2 Speed", FF_TYPE_STANDARD, 0.0f);
-		SetParamInfo(FFPARAM_SPEEDS_Z, "Seed 3 Speed", FF_TYPE_STANDARD, 0.0f);
+		SetParamInfo(FFPARAM_SPEEDS_X, "Seed 1 Speed", FF_TYPE_STANDARD, 0.50f);
+		SetParamInfo(FFPARAM_SPEEDS_Y, "Seed 2 Speed", FF_TYPE_STANDARD, 0.5f);
+		SetParamInfo(FFPARAM_SPEEDS_Z, "Seed 3 Speed", FF_TYPE_STANDARD, 0.50f);
 	// Set defaults
 	SetDefaults();
 
@@ -861,14 +778,13 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 			m_extensions.glActiveTexture(GL_TEXTURE2);
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
-		*/
-
+		*/ 
 		glMatrixMode(GL_PROJECTION); 
 		glLoadIdentity(); 
+		
 
-
-		gluPerspective(65, (float)pGL->inputTextures[0]->Height / (float)pGL->inputTextures[0]->Width, 0.011, 1000.0);
-		gluLookAt(1, 0, 0, 0, 0, 0, 0,  1, 0);
+		gluPerspective(65,800./450.0, 0.011, 500.0);
+		gluLookAt(0, 0, 0, 0, 0, 1, 0,  1, 0);
 
 		 
 	//	gluLookAt(0.0,0.0,1.0, /* look from camera XYZ */ 0, 0, 0, /* look at the origin */ 0, -1, 0);
@@ -882,9 +798,10 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 				
 		//glLoadIdentity();
 
-		glPointSize(5.0); 
-		glEnable(0x8642); // GL_PROGRAM_POINT_SIZE
-
+		glPointSize(25.0); 
+		glEnable(0x8642); // GL_PROGRAM_POINT_SIZE for vertex point size determination
+		glEnable(0x8861); // POINT_SPRITE for fragment point sprite texturing
+		//glEnable(GL_POINT_SIZE_RANGE);
 	 	glCallList(m_displayList);
  
 

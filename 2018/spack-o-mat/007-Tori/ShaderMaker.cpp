@@ -57,8 +57,12 @@
 //		--------------------------------------------------------------
 //
 //
+
 #include "ShaderMaker.h"
 #include <windows.h>
+#include "opengl-utilities.h"
+#include <gl/GLU.h>
+
 #if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__))
 int (*cross_secure_sprintf)(char *, size_t, const char *,...) = sprintf_s;
 #else 
@@ -77,41 +81,41 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #define FFPARAM_BLUE        (5)
 #define FFPARAM_ALPHA       (6)
 
-#define FFPARAM_VECTOR1_X       (109)
+#define FFPARAM_VECTOR1_X       (7)
 #define FFPARAM_SPEEDS_X        (107)
-#define FFPARAM_VECTOR1_Y       (7)
-#define FFPARAM_VECTOR1_Z       (8)
-#define FFPARAM_VECTOR1_W       (9)
+#define FFPARAM_VECTOR1_Y       (8)
+#define FFPARAM_VECTOR1_Z       (9)
+#define FFPARAM_VECTOR1_W       (10)
 
-#define FFPARAM_VECTOR2_X       (1013)
+#define FFPARAM_VECTOR2_X       (11)
 #define FFPARAM_SPEEDS_Y        (1011)
-#define FFPARAM_VECTOR2_Y       (10)
-#define FFPARAM_VECTOR2_Z       (11)
-#define FFPARAM_VECTOR2_W       (12)
+#define FFPARAM_VECTOR2_Y       (12)
+#define FFPARAM_VECTOR2_Z       (13)
+#define FFPARAM_VECTOR2_W       (14)
 
-#define FFPARAM_VECTOR3_X       (1017)
+#define FFPARAM_VECTOR3_X       (15)
 #define FFPARAM_SPEEDS_Z        (1015)
-#define FFPARAM_VECTOR3_Y       (13)
-#define FFPARAM_VECTOR3_Z       (14)
-#define FFPARAM_VECTOR3_W       (15)
+#define FFPARAM_VECTOR3_Y       (16)
+#define FFPARAM_VECTOR3_Z       (17)
+#define FFPARAM_VECTOR3_W       (18)
 
-#define FFPARAM_VECTOR4_X       (2017)
-#define FFPARAM_VECTOR4_Y       (2016)
-#define FFPARAM_VECTOR4_Z       (2011)
-#define FFPARAM_VECTOR4_W       (2012)
+#define FFPARAM_VECTOR4_X       (19)
+#define FFPARAM_VECTOR4_Y       (20)
+#define FFPARAM_VECTOR4_Z       (21)
+#define FFPARAM_VECTOR4_W       (22)
 
 #define FFPARAM_SPEEDS_W        (2015) 
  
 
-#define FFPARAM_COLOR1_RED       (16)  
-#define FFPARAM_COLOR1_GREEN       (17)  
-#define FFPARAM_COLOR1_BLUE       (18)  
-#define FFPARAM_COLOR1_ALPHA       (19)  
+#define FFPARAM_COLOR1_RED       (23)  
+#define FFPARAM_COLOR1_GREEN     (24)  
+#define FFPARAM_COLOR1_BLUE      (25)  
+#define FFPARAM_COLOR1_ALPHA     (26)  
 
-#define FFPARAM_COLOR2_RED       (20)  
-#define FFPARAM_COLOR2_GREEN       (21)  
-#define FFPARAM_COLOR2_BLUE       (22)  
-#define FFPARAM_COLOR2_ALPHA       (23)   
+#define FFPARAM_COLOR2_RED       (27)  
+#define FFPARAM_COLOR2_GREEN     (28)  
+#define FFPARAM_COLOR2_BLUE      (29)  
+#define FFPARAM_COLOR2_ALPHA     (30)   
 
 
 #define STRINGIFY(A) #A
@@ -121,15 +125,15 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 static CFFGLPluginInfo PluginInfo ( 
 	ShaderMaker::CreateInstance,		// Create method
-	"SM01",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
-	"SoM Mandelbrot",						// *** Plugin name - make it different for each plugin 
+	"SM07",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
+	"SoM Tori",						// *** Plugin name - make it different for each plugin 
 	1,						   			// API major version number 													
 	006,								// API minor version number	
 	2,									// *** Plugin major version number
 	002,								// *** Plugin minor version number
 	// FF_EFFECT,							// Plugin type can always be an effect
 	FF_SOURCE,						// or change this to FF_SOURCE for shaders that do not use a texture
-	"SoM Mandelbrot",     // *** Plugin description - you can expand on this
+	"SoM Tori",     // *** Plugin description - you can expand on this
 	"c.Kleinhuis 2018"			// *** About - use your own name and details
 );
 
@@ -323,7 +327,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 {
 
-#ifdef DEBUG_
+#ifdef DEBUG
 	// Debug console window so printf works
 	FILE* pCout; // should really be freed on exit 
 	AllocConsole();
@@ -334,6 +338,7 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 
 	printf("id: %s name: %s", PluginInfo.GetPluginInfo()->PluginUniqueID, PluginInfo.GetPluginInfo()->PluginName);
 	printf(" version: %i.%i\n", PluginInfo.GetPluginExtendedInfo()->PluginMajorVersion, PluginInfo.GetPluginExtendedInfo()->PluginMinorVersion);
+
 	//printf("\n%s \n %s\n", PluginInfo.GetPluginExtendedInfo()->About , PluginInfo.GetPluginExtendedInfo()->Description);
 	// Input properties allow for no texture or for four textures
 	SetMinInputs(0);
@@ -351,23 +356,25 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	SetParamInfo(FFPARAM_BLUE,          "Rotation",          FF_TYPE_STANDARD, 0.0f);  
  	SetParamInfo(FFPARAM_ALPHA,         "MaxIter",         FF_TYPE_STANDARD, 0.25f);  
 
-	//SetParamInfo(FFPARAM_VECTOR1_X, "Vector1X", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_SPEEDS_X, "Seed 1 Speed", FF_TYPE_STANDARD, 0.0f);
-    SetParamInfo(FFPARAM_VECTOR1_Y, "Seed 1 Power", FF_TYPE_STANDARD, 0.625f);
-	SetParamInfo(FFPARAM_VECTOR1_Z, "Seed 1 Real", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR1_W, "Seed 1 Imag", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR1_X, "Vector1X", FF_TYPE_STANDARD, 0.0f); 
+    SetParamInfo(FFPARAM_VECTOR1_Y, "Seed 1 Power", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR1_Z, "Seed 1 Real", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR1_W, "Seed 1 Imag", FF_TYPE_STANDARD, 0.0f);
 
-	//SetParamInfo(FFPARAM_VECTOR2_X, "Vector2X", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_SPEEDS_Y, "Seed 2 Speed", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR2_Y, "Seed 2 Power", FF_TYPE_STANDARD, 0.625f);
-	SetParamInfo(FFPARAM_VECTOR2_Z, "Seed 2 Real", FF_TYPE_STANDARD, 0.50f);
-	SetParamInfo(FFPARAM_VECTOR2_W, "Seed 2 Imag", FF_TYPE_STANDARD, 0.50f);
+	SetParamInfo(FFPARAM_VECTOR2_X, "Vector2X", FF_TYPE_STANDARD, 0.0f); 
+	SetParamInfo(FFPARAM_VECTOR2_Y, "Seed 2 Power", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR2_Z, "Seed 2 Real", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR2_W, "Seed 2 Imag", FF_TYPE_STANDARD, 0.0f);
 
-	//SetParamInfo(FFPARAM_VECTOR3_X, "Vector3X", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_SPEEDS_Z, "Seed 3 Speed", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR3_Y, "Seed 3 Power", FF_TYPE_STANDARD, 0.625f);
-	SetParamInfo(FFPARAM_VECTOR3_Z, "Seed 3 Real", FF_TYPE_STANDARD, 0.50f);
-	SetParamInfo(FFPARAM_VECTOR3_W, "Seed 3 Imag", FF_TYPE_STANDARD, 0.50f);
+	SetParamInfo(FFPARAM_VECTOR3_X, "Vector3X", FF_TYPE_STANDARD, 0.0f); 
+	SetParamInfo(FFPARAM_VECTOR3_Y, "Seed 3 Power", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR3_Z, "Seed 3 Real", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR3_W, "Seed 3 Imag", FF_TYPE_STANDARD, 0.0f);
+
+	SetParamInfo(FFPARAM_VECTOR4_X, "Decay 1", FF_TYPE_STANDARD, 1.0f);
+	SetParamInfo(FFPARAM_VECTOR4_Y, "Decay 2", FF_TYPE_STANDARD, 1.0f);
+	SetParamInfo(FFPARAM_VECTOR4_Z, "Decay 3", FF_TYPE_STANDARD, 1.0f);
+	SetParamInfo(FFPARAM_VECTOR4_W, "Decay 4", FF_TYPE_STANDARD, 1.0f);
 
 	SetParamInfo(FFPARAM_COLOR1_RED, "Color 1 Red", FF_TYPE_RED, 1.0f);
 	SetParamInfo(FFPARAM_COLOR1_GREEN, "Color 1 Green", FF_TYPE_GREEN, 1.0f);
@@ -556,11 +563,48 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		elapsedTime = GetCounter()/1000.0; // In seconds - higher resolution than timeGetTime()
 		m_time = m_time + (float)(elapsedTime - lastTime)*m_UserSpeed*2.0f; // increment scaled by user input 0.0 - 2.0
 
-
+		float intervalTime = (float)(elapsedTime - lastTime);
 		m_times.x = m_times.x + (float)(elapsedTime - lastTime)*m_speeds.x*2.0f; // increment scaled by user input 0.0 - 2.0
 		m_times.y = m_times.y + (float)(elapsedTime - lastTime)*m_speeds.y*2.0f; // increment scaled by user input 0.0 - 2.0
 		m_times.z = m_times.z + (float)(elapsedTime - lastTime)*m_speeds.z*2.0f; // increment scaled by user input 0.0 - 2.0
 		m_times.w = m_times.w + (float)(elapsedTime - lastTime)*m_speeds.w*2.0f; // increment scaled by user input 0.0 - 2.0
+		intervalTime = 1.0;
+		// update decay values
+		for (int kk = 0; kk < 100; kk++) { 
+			if (kk == 0) {
+				decays1[kk].x = lerp(decays1[kk].x, m_vector1.x, m_vector4.x*intervalTime);
+				decays1[kk].y = lerp(decays1[kk].y, m_vector1.y, m_vector4.x*intervalTime);
+				decays1[kk].z = lerp(decays1[kk].z, m_vector1.z, m_vector4.x*intervalTime);
+				decays1[kk].w = lerp(decays1[kk].w, m_vector1.w, m_vector4.x*intervalTime);
+
+				decays2[kk].x = lerp(decays2[kk].x, m_vector2.x, m_vector4.y*intervalTime);
+				decays2[kk].y = lerp(decays2[kk].y, m_vector2.y, m_vector4.y*intervalTime);
+				decays2[kk].z = lerp(decays2[kk].z, m_vector2.z, m_vector4.y*intervalTime);
+				decays2[kk].w = lerp(decays2[kk].w, m_vector2.w, m_vector4.y*intervalTime);
+
+				decays3[kk].x = lerp(decays3[kk].x, m_vector3.x, m_vector4.z*intervalTime);
+				decays3[kk].y = lerp(decays3[kk].y, m_vector3.y, m_vector4.z*intervalTime);
+				decays3[kk].z = lerp(decays3[kk].z, m_vector3.z, m_vector4.z*intervalTime);
+				decays3[kk].w = lerp(decays3[kk].w, m_vector3.w, m_vector4.z*intervalTime);
+			}
+			else {
+				decays1[kk].x = lerp(decays1[kk].x, decays1[kk - 1].x, m_vector4.x*intervalTime);
+				decays1[kk].y = lerp(decays1[kk].y, decays1[kk - 1].y, m_vector4.x*intervalTime);
+				decays1[kk].z = lerp(decays1[kk].z, decays1[kk - 1].z, m_vector4.x*intervalTime);
+				decays1[kk].w = lerp(decays1[kk].w, decays1[kk - 1].w, m_vector4.x*intervalTime);
+
+				decays2[kk].x = lerp(decays2[kk].x, decays2[kk - 1].x, m_vector4.y*intervalTime);
+				decays2[kk].y = lerp(decays2[kk].y, decays2[kk - 1].y, m_vector4.y*intervalTime);
+				decays2[kk].z = lerp(decays2[kk].z, decays2[kk - 1].z, m_vector4.y*intervalTime);
+				decays2[kk].w = lerp(decays2[kk].w, decays2[kk - 1].w, m_vector4.y*intervalTime);
+
+				decays3[kk].x = lerp(decays3[kk].x, decays3[kk - 1].x, m_vector4.z*intervalTime);
+				decays3[kk].y = lerp(decays3[kk].y, decays3[kk - 1].y, m_vector4.z*intervalTime);
+				decays3[kk].z = lerp(decays3[kk].z, decays3[kk - 1].z, m_vector4.z*intervalTime);
+				decays3[kk].w = lerp(decays3[kk].w, decays3[kk - 1].w, m_vector4.z*intervalTime);
+			}
+		}
+	//	printf("Decays updated");
 
 
 		// ShaderToy new uniforms
@@ -775,6 +819,7 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		*/
 
 		// Do the draw for the shader to work
+		/*
 		glEnable(GL_TEXTURE_2D);
 		glBegin(GL_QUADS);
 		glTexCoord2f(0.0, 0.0);	
@@ -787,6 +832,37 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		glVertex2f( 1.0, -1.0);
 		glEnd();
 		glDisable(GL_TEXTURE_2D);
+		*/
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		
+
+		gluPerspective(65, 800./450., 0.011, 1000.0);
+		gluLookAt(2,0, 0, 0, 0, 0, 0, 1, 0);
+
+		glMatrixMode(GL_MODELVIEW);
+		for (int ululu = 0; ululu < 10; ululu++) {
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+	//		glScalef(1.0/ululu, 1.0/ululu, 1.0/ululu);
+		
+		glTranslatef(decays1[ululu].x*2.0-1.0, decays1[ululu].y*2.0 - 1.0, decays1[ululu].z*2.0 - 1.0);
+			//glScalef(ululu, ululu, ululu);
+
+			glRotatef(decays3[ululu].x*360.0, 1.0, 0.0, 0.0);
+			glRotatef(decays3[ululu].y*360.0, 0.0, 1.0, 0.0);
+			glRotatef(decays3[ululu].z*360.0, 0.0, 0.0, 1.0);
+
+			float radius = ululu;
+			float width = 0.2;
+
+		glBegin(GL_LINES);
+		torus(32, 32,radius,width);
+		glEnd();
+		}
+
+
+		//printf("Render updated");
 
 		/*
 		// unbind input texture 3

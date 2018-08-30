@@ -311,23 +311,25 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 
 );
 
-#define DEBUG
+#define DEBUG_
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //  Constructor and destructor
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
+ShaderMaker::ShaderMaker() :CFreeFrameGLPlugin()
 {
 
-	#ifdef DEBUG
+#ifdef DEBUG_
 	// Debug console window so printf works
 	FILE* pCout; // should really be freed on exit 
 	AllocConsole();
 	freopen_s(&pCout, "CONOUT$", "w", stdout);
 	printf("Shader Maker Vers 1.004\n");
-	printf("Spack-O-Mat Shader 3 Balls\n");
 	printf("GLSL version [%s]\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 #endif
 
+	printf("id: '%s' name: '%s'", PluginInfo.GetPluginInfo()->PluginUniqueID, PluginInfo.GetPluginInfo()->PluginName);
+	printf(" version: '%i.%i'\n", PluginInfo.GetPluginExtendedInfo()->PluginMajorVersion, PluginInfo.GetPluginExtendedInfo()->PluginMinorVersion);
 	// Input properties allow for no texture or for four textures
 	SetMinInputs(0);
 	SetMaxInputs(2); // TODO - 4 inputs

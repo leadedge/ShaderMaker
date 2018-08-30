@@ -77,6 +77,9 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>D:\RESOLUME_PLUGINS\</OutDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>D:\RESOLUME_PLUGINS\</OutDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -116,6 +119,9 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <GenerateMapFile>true</GenerateMapFile>
     </Link>
+    <PostBuildEvent>
+      <Command>"C:\Program Files\Resolume Arena 6\Arena.exe"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

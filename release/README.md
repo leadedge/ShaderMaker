@@ -86,14 +86,24 @@ core functionality, no changes planned, inversions and line mode can be achieved
 |  |  |
 | ------------- | ------------- |       
 |![one of i-love-chaos logos print your own more than endless possibilities](media/004-circlesun.png ) |![one of i-love-chaos logos print your own more than endless possibilities](media/004-circlesun-params.png )           |
-          
+                               
+ - shape - controls the 'roundness', its the exponent for length calculation estimation ([modelling with distance functions ](https://iquilezles.org/www/articles/distfunctions/distfunctions.htm))
+ - rotation - the image rotation
+ - pos X/Y - image center x/y 
+ - Divisions - number of divisions breaking the shape
+ - Color 1..3 - the individual color of each part
+ - Radius 1..3 - each shapes starting radius from center of image 
+ - Width 1..3 - each shapes cover of a full circle rotation
+ - Height 1..3 - each shapes height starting from shapes radius
+ - Offset 1..3 - each shapes angle offset 
+                                
 #### Status 
 
                
 ID: SM04
 Version: 2.0
 
-core fun functionality, huge parameter shifts planned, use with caution
+core fun functionality, finished no further additions/changes planned 
 
 ## Effect Plugins
 

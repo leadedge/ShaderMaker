@@ -102,6 +102,21 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #define FFPARAM_VECTOR4_W       (1024)
 
 
+#define FFPARAM_COLOR1_RED       (13)  
+#define FFPARAM_COLOR1_GREEN       (14)  
+#define FFPARAM_COLOR1_BLUE       (15)  
+#define FFPARAM_COLOR1_ALPHA       (16)   
+
+#define FFPARAM_COLOR2_RED       (17)  
+#define FFPARAM_COLOR2_GREEN     (18)  
+#define FFPARAM_COLOR2_BLUE      (19)  
+#define FFPARAM_COLOR2_ALPHA     (20)   
+
+#define FFPARAM_COLOR3_RED       (21)  
+#define FFPARAM_COLOR3_GREEN     (22)  
+#define FFPARAM_COLOR3_BLUE      (23)  
+#define FFPARAM_COLOR3_ALPHA     (24)   
+
 #define STRINGIFY(A) #A
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -114,7 +129,7 @@ static CFFGLPluginInfo PluginInfo (
 	1,						   			// API major version number 													
 	006,								// API minor version number	
 	2,									// *** Plugin major version number
-	001,								// *** Plugin minor version number
+	003,								// *** Plugin minor version number
 	// FF_EFFECT,							// Plugin type can always be an effect
 	FF_SOURCE,						// or change this to FF_SOURCE for shaders that do not use a texture
 	"SoM SineWave 1D", // *** Plugin description - you can expand on this
@@ -185,7 +200,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 	      val += sin( iGlobalTime + inputVector3.x  +uv.x * inputVector3.y )*inputVector3.z;
 	 //     val += sin( iGlobalTime + inputVector4.x * 10.0 + uv.x  *inputVector4.y*100.0*PI)*inputVector4.z;
 	    
-	fragColor = color*(val>uv.y ? 1. : 0.);
+	fragColor = mix(inputColor1,inputColor2,(val>uv.y ? 1. : 0.));
 }
 
 // ==================== END OF SHADER CODE PASTE =======================
@@ -194,20 +209,25 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 );
 
 
+#define DEBUG 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //  Constructor and destructor
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
+ShaderMaker::ShaderMaker() :CFreeFrameGLPlugin()
 {
-	 
-	/*
+
+#ifdef DEBUG_
 	// Debug console window so printf works
 	FILE* pCout; // should really be freed on exit 
 	AllocConsole();
-	freopen_s(&pCout, "CONOUT$", "w", stdout); 
+	freopen_s(&pCout, "CONOUT$", "w", stdout);
 	printf("Shader Maker Vers 1.004\n");
 	printf("GLSL version [%s]\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-	 */
+#endif
+
+	printf("id: '%s' name: '%s'", PluginInfo.GetPluginInfo()->PluginUniqueID, PluginInfo.GetPluginInfo()->PluginName);
+	printf(" version: '%i.%i'\n", PluginInfo.GetPluginExtendedInfo()->PluginMajorVersion, PluginInfo.GetPluginExtendedInfo()->PluginMinorVersion);
 
 	// Input properties allow for no texture or for four textures
 	SetMinInputs(0);
@@ -245,14 +265,24 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	SetParamInfo(FFPARAM_VECTOR3_Z, "Amplitude 3", FF_TYPE_STANDARD, 0.30f);
 //	SetParamInfo(FFPARAM_VECTOR3_W, "Vector3W", FF_TYPE_STANDARD, 0.0f);
 
-/* three shall they be, not 2 nor 4
-//	SetParamInfo(FFPARAM_VECTOR4_X, "Frequency 4", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_SPEEDS_W, "Frequency 4", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_VECTOR4_Y, "Wavelength 4", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_VECTOR4_Z, "Amplitude 4", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_VECTOR4_W, "Vector4W", FF_TYPE_STANDARD, 0.0f);
-*/
+	SetParamInfo(FFPARAM_COLOR1_RED, "Color 1 Red", FF_TYPE_RED, 1.0f);
+		SetParamInfo(FFPARAM_COLOR1_GREEN, "Color 1 Green", FF_TYPE_GREEN, 1.0f);
+		SetParamInfo(FFPARAM_COLOR1_BLUE, "Color 1 Blue", FF_TYPE_BLUE, 1.0f);
+	SetParamInfo(FFPARAM_COLOR1_ALPHA, "Color 1 Alpha", FF_TYPE_STANDARD, 1.0f);
 
+	// hmm strange bug, need to set it twice to appear correctly :/
+
+	SetParamInfo(FFPARAM_COLOR2_RED, "Color 2 Red", FF_TYPE_RED, 1.0f);
+	SetParamInfo(FFPARAM_COLOR2_GREEN, "Color 2 Green", FF_TYPE_GREEN, 0.0f);
+	SetParamInfo(FFPARAM_COLOR2_BLUE, "Color 2 Blue", FF_TYPE_BLUE, 0.0f);
+	SetParamInfo(FFPARAM_COLOR2_ALPHA, "Color 2 Alpha", FF_TYPE_STANDARD, 1.0f);
+
+	SetParamInfo(FFPARAM_COLOR2_RED, "Color 2 Red", FF_TYPE_RED, 1.0f);
+	SetParamInfo(FFPARAM_COLOR2_GREEN, "Color 2 Green", FF_TYPE_GREEN, 0.0f);
+	SetParamInfo(FFPARAM_COLOR2_BLUE, "Color 2 Blue", FF_TYPE_BLUE, 0.0f);
+	SetParamInfo(FFPARAM_COLOR2_ALPHA, "Color 2 Alpha", FF_TYPE_STANDARD, 1.0f);
+
+	 
 
 	// Set defaults
 	SetDefaults();
@@ -597,6 +627,13 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 			m_extensions.glUniform4fARB(m_inputVector3Location, m_times.z*SCALE_FREQUENCY, m_vector3.y*m_vector3.y*SCALE_WAVELENGTH, m_vector3.z*SCALE_AMPLITUDE, m_vector3.w);
 		if (m_inputVector4Location >= 0)
 			m_extensions.glUniform4fARB(m_inputVector4Location, m_times.w*SCALE_FREQUENCY, m_vector4.y*m_vector4.y*SCALE_WAVELENGTH, m_vector4.z*SCALE_AMPLITUDE, m_vector4.w);
+	
+		if (m_inputColor1Location >= 0)
+			m_extensions.glUniform4fARB(m_inputColor1Location, m_color1.x, m_color1.y, m_color1.z, m_color1.w);
+		if (m_inputColor2Location >= 0)
+			m_extensions.glUniform4fARB(m_inputColor2Location, m_color2.x, m_color2.y, m_color2.z, m_color2.w);
+		if (m_inputColor3Location >= 0)
+			m_extensions.glUniform4fARB(m_inputColor3Location, m_color3.x, m_color3.y, m_color3.z, m_color3.w);
 
 		if (m_inputTimesLocation >= 0) {
 			//printf("Times [%f,%f,%f,%f]\n", m_times.x, m_times.y, m_times.z, m_times.w);
@@ -865,7 +902,43 @@ float ShaderMaker::GetFloatParameter(unsigned int index)
 			return m_speeds.z;
 		case FFPARAM_SPEEDS_W:
 			return m_speeds.w;
+
+		case FFPARAM_COLOR1_RED:
+			return m_color1.x;
+		case FFPARAM_COLOR1_GREEN:
+			return m_color1.y;
+		case FFPARAM_COLOR1_BLUE:
+			return m_color1.z;
+
+		case FFPARAM_COLOR1_ALPHA:
+			return m_color1.w;
+
+		case FFPARAM_COLOR2_RED:
+			return m_color2.x;
+		case FFPARAM_COLOR2_GREEN:
+			return m_color2.y;
+		case FFPARAM_COLOR2_BLUE:
+			return m_color2.z; 
+
+		case FFPARAM_COLOR2_ALPHA:
+			return m_color2.w;
+
+		case FFPARAM_COLOR3_RED:
+			return m_color3.x;
+		case FFPARAM_COLOR3_GREEN:
+			return m_color3.y;
+		case FFPARAM_COLOR3_BLUE:
+			return m_color3.z;
+
+		case FFPARAM_COLOR3_ALPHA:
+			return m_color3.w;
+
+
+
+
+
 		default:
+			printf("Failed for %i ", index);
 			return FF_FAIL;
 	}
 }
@@ -995,7 +1068,47 @@ FFResult ShaderMaker::SetFloatParameter(unsigned int index, float value)
 				m_speeds.w = value;
 				break; 
 
+			case FFPARAM_COLOR1_RED:
+				// printf("Color 1 red %f\n", value);
+				m_color1.x = value;
+				break;
+			case FFPARAM_COLOR1_GREEN:
+				m_color1.y = value;
+				break;
+			case FFPARAM_COLOR1_BLUE:
+				m_color1.z = value;
+				break;
+
+			case FFPARAM_COLOR1_ALPHA:
+				m_color1.w = value;
+				break;
+
+			case FFPARAM_COLOR2_RED:
+				m_color2.x = value;
+				break;
+			case FFPARAM_COLOR2_GREEN:
+				m_color2.y = value;
+				break;
+			case FFPARAM_COLOR2_BLUE:
+				m_color2.z = value;
+				break;
+			case FFPARAM_COLOR2_ALPHA:
+				m_color2.w = value;
+				break;
+			case FFPARAM_COLOR3_RED:
+				m_color3.x = value;
+				break;
+			case FFPARAM_COLOR3_GREEN:
+				m_color3.y = value;
+				break;
+			case FFPARAM_COLOR3_BLUE:
+				m_color3.z = value;
+				break;
+			case FFPARAM_COLOR3_ALPHA:
+				m_color3.w = value;
+				break;
 			default:
+				printf("Failed for %i %f", index, value);
 				return FF_FAIL;
 		}
 		return FF_SUCCESS;
@@ -1106,7 +1219,7 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 		// Extra uniforms specific to ShaderMaker for buth GLSL Sandbox and ShaderToy
 		// For GLSL Sandbox, the extra "inputColour" uniform has to be typed into the shader
 		//		uniform vec4 inputColour
-		static char *extraUniforms = { "uniform vec4 inputColour;\nuniform vec4 inputVector1; \nuniform vec4 inputVector2; \nuniform vec4 inputVector3; \nuniform vec4 inputVector4; \n" };
+		static char *extraUniforms = { "uniform vec4 inputColour;\nuniform vec4 inputVector1; \nuniform vec4 inputVector2; \nuniform vec4 inputVector3; \nuniform vec4 inputVector4; \n\nuniform vec4 inputColor1;\nuniform vec4 inputColor2;\nuniform vec4 inputColor3; \n" };
 		
 		// Is it a GLSL Sandbox file?
 		// look for "uniform float time;". If it does not exist it is a ShaderToy file
@@ -1232,6 +1345,11 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 				m_inputVector2Location = -1;
 				m_inputVector3Location = -1;
 				m_inputVector4Location = -1;
+				m_inputColor1Location = -1;
+
+				m_inputColor2Location = -1;
+
+				m_inputColor3Location = -1;
 
 				// ===========================================================
 				// ShaderToy new uniforms
@@ -1412,6 +1530,16 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 
 				if (m_inputVector4Location  < 0)
 					m_inputVector4Location = m_shader.FindUniform("inputVector4"); 
+
+
+				if (m_inputColor1Location  < 0)
+					m_inputColor1Location = m_shader.FindUniform("inputColor1");
+
+				if (m_inputColor2Location  < 0)
+					m_inputColor2Location = m_shader.FindUniform("inputColor2");
+
+				if (m_inputColor3Location  < 0)
+					m_inputColor3Location = m_shader.FindUniform("inputColor3");
 
 				if (m_inputTimesLocation  < 0)
 					m_inputTimesLocation = m_shader.FindUniform("inputTimes");

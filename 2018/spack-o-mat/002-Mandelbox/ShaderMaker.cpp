@@ -340,8 +340,8 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	printf("GLSL version [%s]\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 #endif
 
-	printf("id: %s name: %s", PluginInfo.GetPluginInfo()->PluginUniqueID, PluginInfo.GetPluginInfo()->PluginName);
-	printf(" version: %i.%i\n", PluginInfo.GetPluginExtendedInfo()->PluginMajorVersion, PluginInfo.GetPluginExtendedInfo()->PluginMinorVersion);
+	printf("id: '%s' name: '%s'", PluginInfo.GetPluginInfo()->PluginUniqueID, PluginInfo.GetPluginInfo()->PluginName);
+	printf(" version: '%i.%i'\n", PluginInfo.GetPluginExtendedInfo()->PluginMajorVersion, PluginInfo.GetPluginExtendedInfo()->PluginMinorVersion);
 
 	// Input properties allow for no texture or for four textures
 	SetMinInputs(0);
@@ -735,16 +735,18 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		if (m_inputVector3Location >= 0)
 			m_extensions.glUniform4fARB(m_inputVector3Location, m_vector3.x, m_vector3.y, m_vector3.z*SCALE_SEED + SHIFT_SEED, m_vector3.w*SCALE_SEED + SHIFT_SEED);
 		if (m_inputVector4Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector4Location, m_UserRed*m_UserRed*10.0f, m_UserBlue*PI_2, m_UserMouseX*SCALE_SEED + SHIFT_SEED, m_UserMouseY*SCALE_SEED + SHIFT_SEED);
-		
+			m_extensions.glUniform4fARB(m_inputVector4Location, m_UserRed*m_UserRed*10.0f, m_UserBlue*PI_2, m_UserMouseX*SCALE_SEED + SHIFT_SEED, m_UserMouseY*SCALE_SEED + SHIFT_SEED);		
 		if (m_inputVector5Location >= 0)
 			m_extensions.glUniform4fARB(m_inputVector5Location, m_vector4.x, m_vector4.y, m_vector4.z, m_vector4.w );
+
 		if (m_inputColor1Location >= 0)
 			m_extensions.glUniform4fARB(m_inputColor1Location, m_color1.x, m_color1.y, m_color1.z, m_color1.w);
 
-		if (m_inputColor2Location >= 0)
-			m_extensions.glUniform4fARB(m_inputColor2Location, m_color2.x, m_color2.y, m_color2.z, m_color2.w);
+		if (m_inputColor2Location >= 0) {
 
+			// printf("Input Color 2 Location is %i %f %f %f %f\n", m_inputColor2Location, m_color2.x, m_color2.y, m_color2.z, m_color2.w);
+			m_extensions.glUniform4fARB(m_inputColor2Location, m_color2.x, m_color2.y, m_color2.z, m_color2.w); 
+		}
 		if (m_inputTimesLocation >= 0)
 			m_extensions.glUniform4fARB(m_inputTimesLocation, m_times.x, m_times.y, m_times.z, m_times.w);
 
@@ -1260,6 +1262,24 @@ void ShaderMaker::SetDefaults() {
 	m_vector4.z = 0.0;
 	m_vector4.w = 0.0;
 
+
+	m_vector5.x = 0.0;
+	m_vector5.y = 0.0;
+	m_vector5.z = 0.0;
+	m_vector5.w = 0.0;
+
+
+	m_color1.x = 0.0;
+	m_color1.y = 0.0;
+	m_color1.z = 0.0;
+	m_color1.w = 0.0;
+
+	m_color2.x = 0.0;
+	m_color2.y = 0.0;
+	m_color2.z = 0.0;
+	m_color2.w = 0.0;
+
+
 	m_speeds.x = 0.0;
 	m_speeds.y = 0.0;
 	m_speeds.z = 0.0;
@@ -1316,7 +1336,7 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 		// Extra uniforms specific to ShaderMaker for buth GLSL Sandbox and ShaderToy
 		// For GLSL Sandbox, the extra "inputColour" uniform has to be typed into the shader
 		//		uniform vec4 inputColour
-		static char *extraUniforms = { "uniform vec4 inputTimes;\n uniform vec4 inputColor1; \n uniform vec4 inputColor2; \n uniform vec4 inputColour;\nuniform vec4 inputVector1; \nuniform vec4 inputVector2; \nuniform vec4 inputVector3; \nuniform vec4 inputVector4;\nuniform vec4 inputVector5; \n" };
+		static char *extraUniforms = { "uniform vec4 inputTimes; \n uniform vec4 inputColour;\nuniform vec4 inputVector1; \nuniform vec4 inputVector2; \nuniform vec4 inputVector3; \nuniform vec4 inputVector4;\nuniform vec4 inputVector5; \n" };
 		
 		// Is it a GLSL Sandbox file?
 		// look for "uniform float time;". If it does not exist it is a ShaderToy file
@@ -1360,7 +1380,11 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 									  "uniform sampler2D iChannel0;\n"
 									  "uniform sampler2D iChannel1;\n"
 									  "uniform sampler2D iChannel2;\n"
-									  "uniform sampler2D iChannel3;\n" };
+									  "uniform sampler2D iChannel3;\n"
+				"uniform vec4 inputColor1; \n"
+				"uniform vec4 inputColor2;\n"
+			
+			};
 			
 			stoyUniforms = uniforms;
 			stoyUniforms += extraUniforms;
@@ -1416,16 +1440,10 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 				m_inputTextureLocation3		 = -1;
 				m_screenLocation			 = -1;
 				m_surfaceSizeLocation = -1;
-				m_inputVector1Location = -1;
-				m_inputVector2Location = -1;
-				m_inputVector3Location = -1;
-				m_inputVector4Location = -1; 
-				m_inputVector5Location = -1;
+		 
 
 				m_inputShowKnobsLocation   = -1;
 
-				m_inputColor1Location = -1;
-				m_inputColor2Location = -1;
 				// m_surfacePositionLocation	= -1; // TODO
 				// m_vertexPositionLocation    = -1; // TODO
 
@@ -1448,6 +1466,9 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 				m_inputVector3Location = -1;
 				m_inputVector4Location = -1;
 				m_inputVector5Location = -1;
+
+				m_inputColor1Location = -1;
+				m_inputColor2Location = -1;
 
 				// ===========================================================
 				// ShaderToy new uniforms
@@ -1636,7 +1657,7 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 
 				if (m_inputColor2Location  < 0)
 					m_inputColor2Location = m_shader.FindUniform("inputColor2");
-
+				printf("Input Color 2 Location is %i", m_inputColor2Location);
 
 				if (m_inputTimesLocation  < 0)
 					m_inputTimesLocation = m_shader.FindUniform("inputTimes");

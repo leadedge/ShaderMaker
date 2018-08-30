@@ -121,6 +121,7 @@ protected:
 	float vector2_W;
 	Vector m_vector3;
 	Vector m_vector4;
+	Vector m_vector5;
 	float m_julia;
     float m_showKnobs;
 

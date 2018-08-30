@@ -111,6 +111,9 @@ protected:
 	Vector m_vector2;
 	Vector m_vector3;
 	Vector m_vector4;
+	Vector m_color1;
+	Vector m_color2;
+	Vector m_color3;
 
 	Vector m_speeds;
 
@@ -214,6 +217,9 @@ protected:
 	GLint m_inputVector2Location;
 	GLint m_inputVector3Location;
 	GLint m_inputVector4Location;
+	GLint m_inputColor1Location;
+	GLint m_inputColor2Location;
+	GLint m_inputColor3Location;
 	GLint m_inputTimesLocation;
 	
 	void SetDefaults();

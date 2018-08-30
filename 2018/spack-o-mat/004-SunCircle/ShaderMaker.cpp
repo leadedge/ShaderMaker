@@ -62,25 +62,45 @@ int(*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #define FFPARAM_MOUSELEFTX  (9996)
 #define FFPARAM_MOUSELEFTY  (7999)
 
-#define FFPARAM_PARAM2_X       (0)
-#define FFPARAM_PARAM2_Y       (1)
-#define FFPARAM_PARAM2_Z       (2)
-#define FFPARAM_PARAM2_W       (3)
+#define FFPARAM_PARAM4_X       (0)
+#define FFPARAM_PARAM4_Y       (100021)
+#define FFPARAM_PARAM4_Z       (100022)
+#define FFPARAM_PARAM4_W       (100023)
 
-#define FFPARAM_PARAM3_X       (4)
-#define FFPARAM_PARAM3_Y       (5)
-#define FFPARAM_PARAM3_Z       (6)
-#define FFPARAM_PARAM3_W       (7)
+#define FFPARAM_PARAM2_X       (1)
+#define FFPARAM_PARAM2_Y       (2)
+#define FFPARAM_PARAM2_Z       (3)
+#define FFPARAM_PARAM2_W       (4)
 
-#define FFPARAM_PARAM5_X       (8)
-#define FFPARAM_PARAM5_Y       (9)
-#define FFPARAM_PARAM5_Z       (10)
-#define FFPARAM_PARAM5_W       (11)
 
-#define FFPARAM_PARAM6_X       (12)
-#define FFPARAM_PARAM6_Y       (13)
-#define FFPARAM_PARAM6_Z       (14)
-#define FFPARAM_PARAM6_W       (15)
+#define FFPARAM_COLOR1_RED         (5)
+#define FFPARAM_COLOR1_GREEN       (6)
+#define FFPARAM_COLOR1_BLUE        (7)
+#define FFPARAM_COLOR1_ALPHA       (8)
+
+#define FFPARAM_PARAM3_X       (9)
+#define FFPARAM_PARAM3_Y       (10)
+#define FFPARAM_PARAM3_Z       (11)
+#define FFPARAM_PARAM3_W       (12)
+
+#define FFPARAM_COLOR2_RED         (13)
+#define FFPARAM_COLOR2_GREEN       (14)
+#define FFPARAM_COLOR2_BLUE        (15)
+#define FFPARAM_COLOR2_ALPHA       (16)
+
+#define FFPARAM_PARAM5_X       (17)
+#define FFPARAM_PARAM5_Y       (18)
+#define FFPARAM_PARAM5_Z       (19)
+#define FFPARAM_PARAM5_W       (20)
+
+#define FFPARAM_COLOR3_RED         (21)
+#define FFPARAM_COLOR3_GREEN       (22)
+#define FFPARAM_COLOR3_BLUE        (23)
+#define FFPARAM_COLOR3_ALPHA       (24)
+#define FFPARAM_PARAM6_X       (25)
+#define FFPARAM_PARAM6_Y       (26)
+#define FFPARAM_PARAM6_Z       (27)
+#define FFPARAM_PARAM6_W       (28)
 
 
 #define FFPARAM_PARAM3_CAMERA_X       (516)
@@ -97,27 +117,7 @@ int(*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #define FFPARAM_BLUE        (100018)
 #define FFPARAM_ALPHA       (100019)
 
-#define FFPARAM_PARAM4_X       (100020)
-#define FFPARAM_PARAM4_Y       (100021)
-#define FFPARAM_PARAM4_Z       (100022)
-#define FFPARAM_PARAM4_W       (100023)
 
-
-
-#define FFPARAM_COLOR1_RED         (16)
-#define FFPARAM_COLOR1_GREEN       (17)
-#define FFPARAM_COLOR1_BLUE        (18)
-#define FFPARAM_COLOR1_ALPHA       (19)
-
-#define FFPARAM_COLOR2_RED         (20)
-#define FFPARAM_COLOR2_GREEN       (21)
-#define FFPARAM_COLOR2_BLUE        (22)
-#define FFPARAM_COLOR2_ALPHA       (23)
-
-#define FFPARAM_COLOR3_RED         (24)
-#define FFPARAM_COLOR3_GREEN       (25)
-#define FFPARAM_COLOR3_BLUE        (26)
-#define FFPARAM_COLOR3_ALPHA       (27)
 
 
 
@@ -185,13 +185,21 @@ char *fragmentShaderCode = STRINGIFY(
 
 // Returns 1 if inside circle
 // returns 0 if outside
+
+
+float circleLength(vec2 x, float power) {
+
+	return pow(pow(x.x, power) + pow(x.y, power), 1.0 / power);
+}
+
+
 float circle(vec2 center, float radius, float width)
 {
 	float result = 1.0;
 	float angle = atan(center.x, center.y);
 
 
-	float l = length(center);
+	float l = circleLength(center, iParam4.x*iParam4.x*8);
 
 	l -= radius;
 
@@ -219,11 +227,11 @@ vec2 rotate2d(vec2 coord, float angle) {
 
 float circleSegmentModulus(float rot, vec2 center, float radius, float width, float height, float dist)
 {
-	center = rotate2d(center, rot);
+	// center = rotate2d(center, rot);
 	float val = circle(center, radius, height);
 
 
-	float angle = atan(center.x, center.y) + PI;
+	float angle = atan(center.x, center.y) + PI+rot;
 	float modulu = mod(angle, dist);
 
 	//		if(modulu>dist/2){
@@ -260,23 +268,28 @@ void mainImage(out vec4 color, in vec2 pos)
 	float val = 0;
 
 
-	uv = rotate2d(uv + (iParam2.yz*2.0 - 1.0)*aspect, iParam2.x * 2 * PI);
+	uv = rotate2d(uv - (iParam2.yz*2.0 - 1.0)*aspect, iParam2.x * 2 * PI);
 
 
 	vec2 uv1 = rotate2d(uv, iParam3.w*PI*2.0);
 	vec2 uv2 = rotate2d(uv, iParam5.w*PI*2.0);
 	vec2 uv3 = rotate2d(uv, iParam6.w*PI*2.0);
 
+	uv1 = uv;
+	uv2 = uv;
+	uv3 = uv;
+
+
 	float step = 2 * PI / floor((iParam2.w)*64.0);
-	float height1 = iParam3.z*iParam3.z*4.0;
-	float height2 = iParam5.z*iParam5.z*4.0;
-	float height3 = iParam6.z*iParam6.z*4.0;
+	float height1 = iParam3.z*iParam3.z*8.0;
+	float height2 = iParam5.z*iParam5.z*8.0;
+	float height3 = iParam6.z*iParam6.z*8.0;
 
-	color = wheel(0.0, uv1, iParam3.x*iParam3.x, iParam3.y, height1, step)*inputColor1;
+	color = wheel(iParam3.w*PI*2.0, uv1, iParam3.x*iParam3.x, iParam3.y, height1, step)*inputColor1;
 
-	color += wheel(step / 3.0, uv2, iParam5.x*iParam5.x, iParam5.y, height2, step)*inputColor2;
+	color += wheel(iParam5.w*PI*2.0+(step/3.0), uv2, iParam5.x*iParam5.x, iParam5.y, height2, step)*inputColor2;
 
-	color += wheel((step / 3.0)*2.0, uv3, iParam6.x*iParam6.x, iParam6.y, height3, step)*inputColor3;
+	color += wheel(iParam6.w*PI*2.0 + (step/3.0)*2.0, uv3, iParam6.x*iParam6.x, iParam6.y, height3, step)*inputColor3;
  
 	//vec4 inputColor=texture2D(iChannel0,pos.xy / iChannelResolution[0].xy);
 	//color.xyz=color.xyz*color.w; 
@@ -319,41 +332,12 @@ ShaderMaker::ShaderMaker() :CFreeFrameGLPlugin()
 
 	/*
 	*/
+
+	SetParamInfo(FFPARAM_PARAM4_X, "Shape", FF_TYPE_STANDARD, 0.5f);
 	SetParamInfo(FFPARAM_PARAM2_X, "Rotation", FF_TYPE_STANDARD, 0.0f);
 	SetParamInfo(FFPARAM_PARAM2_Y, "Pos X", FF_TYPE_STANDARD, 0.5f);
 	SetParamInfo(FFPARAM_PARAM2_Z, "Pos Y", FF_TYPE_STANDARD, 0.5f);
 	SetParamInfo(FFPARAM_PARAM2_W, "Divisions", FF_TYPE_STANDARD, 0.1f);
-
-
-	SetParamInfo(FFPARAM_PARAM3_X, "Radius 1", FF_TYPE_STANDARD, 0.3f);
-	SetParamInfo(FFPARAM_PARAM3_Y, "Width 1", FF_TYPE_STANDARD, .3333333f);
-	SetParamInfo(FFPARAM_PARAM3_Z, "Height 1", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_PARAM3_W, "Rotation 1", FF_TYPE_STANDARD, 0.0f);
-
-	SetParamInfo(FFPARAM_PARAM5_X, "Radius 2", FF_TYPE_STANDARD, 0.4f);
-	SetParamInfo(FFPARAM_PARAM5_Y, "Width 2", FF_TYPE_STANDARD, .333333f);
-	SetParamInfo(FFPARAM_PARAM5_Z, "Height 2", FF_TYPE_STANDARD, 0.25f);
-	SetParamInfo(FFPARAM_PARAM5_W, "Rotation 2", FF_TYPE_STANDARD, 0.0f);
-
-
-	SetParamInfo(FFPARAM_PARAM6_X, "Radius 3", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_PARAM6_Y, "Width 3", FF_TYPE_STANDARD, .333333f);
-	SetParamInfo(FFPARAM_PARAM6_Z, "Height 3", FF_TYPE_STANDARD, 1.0f);
-	SetParamInfo(FFPARAM_PARAM6_W, "Rotation 3", FF_TYPE_STANDARD, 0.0f);
-
-	/*
-	SetParamInfo(FFPARAM_RED, "Color 1 Red", FF_TYPE_RED, 1.0f);
-	SetParamInfo(FFPARAM_GREEN, "Color 1 Green", FF_TYPE_GREEN, 1.0f);
-	SetParamInfo(FFPARAM_BLUE, "Color 1 Blue", FF_TYPE_BLUE, 1.0f);
-	SetParamInfo(FFPARAM_ALPHA, "Color 1 Alpha", FF_TYPE_STANDARD, 1.0f);
-
-
-	SetParamInfo(FFPARAM_PARAM4_X, "Color 2  Red", FF_TYPE_RED, 1.0f);
-	SetParamInfo(FFPARAM_PARAM4_Y, "Color 2  Green", FF_TYPE_GREEN, 1.0f);
-	SetParamInfo(FFPARAM_PARAM4_Z, "Color 2  Blue", FF_TYPE_BLUE, 1.0f);
-	SetParamInfo(FFPARAM_PARAM4_W, "Color 2  Alpha", FF_TYPE_STANDARD, 1.0f);
-
-	*/
 
 
 	SetParamInfo(FFPARAM_COLOR1_RED, "Color 1 Red", FF_TYPE_RED, 1.0f);
@@ -361,16 +345,43 @@ ShaderMaker::ShaderMaker() :CFreeFrameGLPlugin()
 	SetParamInfo(FFPARAM_COLOR1_BLUE, "Color 1 Blue", FF_TYPE_BLUE, 1.0f);
 	SetParamInfo(FFPARAM_COLOR1_ALPHA, "Color 1 Alpha", FF_TYPE_STANDARD, 1.0f);
 
+	SetParamInfo(FFPARAM_PARAM3_X, "Radius 1", FF_TYPE_STANDARD, 0.3f);
+	SetParamInfo(FFPARAM_PARAM3_Y, "Width 1", FF_TYPE_STANDARD, .3333333f);
+	SetParamInfo(FFPARAM_PARAM3_Z, "Height 1", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_PARAM3_W, "Offset 1", FF_TYPE_STANDARD, 0.0f);
+
 	SetParamInfo(FFPARAM_COLOR2_RED, "Color 2 Red", FF_TYPE_RED, 1.0f);
 	SetParamInfo(FFPARAM_COLOR2_GREEN, "Color 2 Green", FF_TYPE_GREEN, 0.0f);
 	SetParamInfo(FFPARAM_COLOR2_BLUE, "Color 2 Blue", FF_TYPE_BLUE, 0.0f);
 	SetParamInfo(FFPARAM_COLOR2_ALPHA, "Color 2 Alpha", FF_TYPE_STANDARD, 1.0f);
+
+	SetParamInfo(FFPARAM_PARAM5_X, "Radius 2", FF_TYPE_STANDARD, 0.4f);
+	SetParamInfo(FFPARAM_PARAM5_Y, "Width 2", FF_TYPE_STANDARD, .333333f);
+	SetParamInfo(FFPARAM_PARAM5_Z, "Height 2", FF_TYPE_STANDARD, 0.25f);
+	SetParamInfo(FFPARAM_PARAM5_W, "Offset 2", FF_TYPE_STANDARD, 0.0f); 
 
 	SetParamInfo(FFPARAM_COLOR3_RED, "Color 3 Red", FF_TYPE_RED, 1.0f);
 	SetParamInfo(FFPARAM_COLOR3_GREEN, "Color 3 Green", FF_TYPE_GREEN, 1.0f);
 	SetParamInfo(FFPARAM_COLOR3_BLUE, "Color 3 Blue", FF_TYPE_BLUE, 1.0f);
 	SetParamInfo(FFPARAM_COLOR3_ALPHA, "Color 3 Alpha", FF_TYPE_STANDARD, .50f);
 
+	SetParamInfo(FFPARAM_PARAM6_X, "Radius 3", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_PARAM6_Y, "Width 3", FF_TYPE_STANDARD, .333333f);
+	SetParamInfo(FFPARAM_PARAM6_Z, "Height 3", FF_TYPE_STANDARD, 1.0f);
+	SetParamInfo(FFPARAM_PARAM6_W, "Offset 3", FF_TYPE_STANDARD, 0.0f);
+
+
+	//SetParamInfo(FFPARAM_PARAM4_Y, "xxColor 2  Green", FF_TYPE_GREEN, 1.0f);
+	//SetParamInfo(FFPARAM_PARAM4_Z, "xxColor 2  Blue", FF_TYPE_BLUE, 1.0f);
+	//SetParamInfo(FFPARAM_PARAM4_W, "Color 2  Alpha", FF_TYPE_STANDARD, 1.0f);
+	/*
+	SetParamInfo(FFPARAM_RED, "Color 1 Red", FF_TYPE_RED, 1.0f);
+	SetParamInfo(FFPARAM_GREEN, "Color 1 Green", FF_TYPE_GREEN, 1.0f);
+	SetParamInfo(FFPARAM_BLUE, "Color 1 Blue", FF_TYPE_BLUE, 1.0f);
+	SetParamInfo(FFPARAM_ALPHA, "Color 1 Alpha", FF_TYPE_STANDARD, 1.0f);
+
+
+	*/
 
 	/*SetParamInfo(FFPARAM_PARAM3_CAMERA_X,"Camera X",         FF_TYPE_STANDARD, 0.750f); m_Camera_x = .75f;
 	SetParamInfo(FFPARAM_PARAM3_CAMERA_Y,"Camera Y",         FF_TYPE_STANDARD, 0.50f); m_Camera_y= 0.5f;

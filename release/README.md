@@ -12,6 +12,11 @@
 | ![Mandelbrot S01 Example](media/001-mandelbrot.png )  | ![Mandelbrot Params](media/001-mandelbrot-params.png ) |
 
  [Hybrid](https://www.youtube.com/watch?v=L-YTY014Zqo) [Mandelbrot](https://www.wikiwand.com/en/Mandelbrot_set) with 3 seeds.
+ The must have with many possibilities, zoom in and vary parameters jut slightly to achieve interesting effects. The seeds should be mapped into ranges. Be careful with the power parameter because it is exponential, and scaled as well so very hard to achieve integer exponents (sigh, this is due to ffgl mapping of params and stuff)
+          
+ coloring uses simplest escape time coloring
+           
+
            
 #### Parameters 
 - Julia - switches julia/mandelbrot mode
@@ -37,7 +42,8 @@ Version: 2.0
 | ------------- | ------------- |
 | ![Mandelbox Example](media/002-mandelbox.png )  |  ![Mandelbox Params](media/002-mandelbox-params.png )  |
  
- 2d alternating Hybrid [Mandelbox](https://www.wikiwand.com/en/Mandelbox) with 3 alternating seeds.
+ 2d alternating Hybrid [Mandelbox](https://www.wikiwand.com/en/Mandelbox) with 3 alternating seeds. The mandelbox is
+ interesting enough to provide as plugin
          
 #### Parameters 
           
@@ -63,8 +69,9 @@ core functionality, perhaps make scale parameter a alternation option
 | ------------- | ------------- |                
 | ![Sinewave Example](media/003-sinewave.png )   | ![Sinewave Params](media/003-sinewave-params.png )       |
 
-Renders 3 [Sinewaves](https://www.wikiwand.com/en/Sine_wave) defined by frequency, wavelength and amplitude added together
+Renders 3 [Sinewaves](https://www.wikiwand.com/en/Sine_wave) defined by frequency, wavelength and amplitude added together.
 
+This is very basic, but the 3 waves provide enough possibilities, most valuable change is the exponentiation of input parameter for wavelength, which makes it more smooth to change
 #### Parameters
 
 - Frequency 1..3 - the speed of the particular sine wave
@@ -87,15 +94,25 @@ core functionality, no changes planned, inversions and line mode can be achieved
 | Render | Parameters |
 | ------------- | ------------- |       
 |![one of i-love-chaos logos print your own more than endless possibilities](media/004-circlesun.png ) |![one of i-love-chaos logos print your own more than endless possibilities](media/004-circlesun-params.png )           |
-                               
+            
+ the famous suncircle plugin got 3arised providing 3 changeable parts of the circle
+ 
+ the height only goes into one direction
+ 
+ the height and radius parameters are exponential now (making them smooth)
+  
+            
+            
+#### Parameters 
+                             
  - shape - controls the 'roundness', its the exponent for length calculation estimation ([modelling with distance functions ](https://iquilezles.org/www/articles/distfunctions/distfunctions.htm))
  - rotation - the image rotation
  - pos X/Y - image center x/y 
  - Divisions - number of divisions breaking the shape
  - Color 1..3 - the individual color of each part
- - Radius 1..3 - each shapes starting radius from center of image 
+ - Radius 1..3 ![Generic badge](https://img.shields.io/badge/EXPONENTIAL-YES-green.svg) - each shapes starting radius from center of image 
  - Width 1..3 - each shapes cover of a full circle rotation
- - Height 1..3 - each shapes height starting from shapes radius
+ - Height 1..3 ![Generic badge](https://img.shields.io/badge/EXPONENTIAL-YES-green.svg) - each shapes height starting from shapes radius
  - Offset 1..3 - each shapes angle offset 
                                 
 #### Status 
@@ -142,8 +159,10 @@ nice core functionality, not using a pre render step, might receive a gaussian b
 | ------------- | ------------- |   
 |![kali seacreature](media/st-001-kaliseacreature.png )   |  ![kali seacreature](media/st-001-kaliseacreature-params.png ) 
 
+the shadertoy https://www.shadertoy.com/view/Mtf3Rr script by kali is the source for this, it is stripped from its background and parametrisedk, no further changes to code
            
-           
+## Parameters
+       
 - Speed - shadertoy speed value, this is a continous value and will ever increase
 - kaliscale - the scale value used in iteration
 - kaliSpeed - kalis speed value for inner animation 
@@ -160,8 +179,11 @@ nice core functionality, not using a pre render step, might receive a gaussian b
 | Render | Parameters |
 | ------------- | ------------- |   
 |![kali extended render](media/sx-001-kali-creature-render.png )   |   ![kali extended params](media/sx-001-kali-creature-params.png ) 
-           
-           
+   
+the shadertoy https://www.shadertoy.com/view/Mtf3Rr script by kali is the source for this the intrinsic animation is stripped and the shape is 3-ary parametrised using alternation hybridisation in distance estimation method     
+                       
+## Parameters
+       
 - kaliScale - kali scale parameter used for all iterations no hybridisation here
 - Object Pos X/Y/Z - Object center
 - Object Scale - the scale of the object

@@ -85,30 +85,30 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #define FFPARAM_VECTOR2_Z       (6)
 #define FFPARAM_VECTOR2_W       (7)
 
-#define FFPARAM_VECTOR3_X       (8)
-#define FFPARAM_VECTOR3_Y       (9)
-#define FFPARAM_VECTOR3_Z       (10)
-#define FFPARAM_VECTOR3_W       (11)
-
-#define FFPARAM_VECTOR4_X       (12)
-#define FFPARAM_VECTOR4_Y       (13)
-#define FFPARAM_VECTOR4_Z       (14)
-#define FFPARAM_VECTOR4_W       (15)
-
-
-#define FFPARAM_VECTOR5_X       (16)
-#define FFPARAM_VECTOR5_Y       (17)
-#define FFPARAM_VECTOR5_Z       (18)
+#define FFPARAM_VECTOR5_X       (8)
+#define FFPARAM_VECTOR5_Y       (9)
+#define FFPARAM_VECTOR5_Z       (10)
 #define FFPARAM_VECTOR5_W       (100028)
 
-#define FFPARAM_COLOR1_RED       (19)  
-#define FFPARAM_COLOR1_GREEN       (20)  
-#define FFPARAM_COLOR1_BLUE       (21)  
+#define FFPARAM_VECTOR3_X       (11)
+#define FFPARAM_VECTOR3_Y       (12)
+#define FFPARAM_VECTOR3_Z       (13)
+#define FFPARAM_VECTOR3_W       (100011)
+
+#define FFPARAM_VECTOR4_X       (14)
+#define FFPARAM_VECTOR4_Y       (15)
+#define FFPARAM_VECTOR4_Z       (16)
+#define FFPARAM_VECTOR4_W       (10000015)
+
+
+#define FFPARAM_COLOR1_RED       (17)  
+#define FFPARAM_COLOR1_GREEN       (18)  
+#define FFPARAM_COLOR1_BLUE       (19)  
 #define FFPARAM_COLOR1_ALPHA       (115)  
 
-#define FFPARAM_COLOR2_RED       (22)  
-#define FFPARAM_COLOR2_GREEN       (23)  
-#define FFPARAM_COLOR2_BLUE       (24)  
+#define FFPARAM_COLOR2_RED       (20)  
+#define FFPARAM_COLOR2_GREEN       (21)  
+#define FFPARAM_COLOR2_BLUE       (22)  
 #define FFPARAM_COLOR2_ALPHA       (1110)   
 #define STRINGIFY(A) #A
 
@@ -118,15 +118,15 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 static CFFGLPluginInfo PluginInfo ( 
 	ShaderMaker::CreateInstance,		// Create method
 	"ST01",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
-	"Shadertoy Kali Underwater",						// *** Plugin name - make it different for each plugin 
+	"SoM ST Living",						// *** Plugin name - make it different for each plugin 
 	1,						   			// API major version number 													
 	006,								// API minor version number	
 	1,									// *** Plugin major version number
 	000,								// *** Plugin minor version number
 	// FF_EFFECT,							// Plugin type can always be an effect
 	FF_SOURCE,						// or change this to FF_SOURCE for shaders that do not use a texture
-	"SoM Base Shader - extended from", // *** Plugin description - you can expand on this
-	"https://github.com/leadedge/ShaderMaker"			// *** About - use your own name and details
+	"SoM Kali Living Creature", // *** Plugin description - you can expand on this
+	"https://www.shadertoy.com/view/Mtf3Rr"			// *** About - use your own name and details
 );
 
 
@@ -437,20 +437,24 @@ float de(vec3 p) {
 );
 
 #define DEBUG_
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //  Constructor and destructor
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
+ShaderMaker::ShaderMaker() :CFreeFrameGLPlugin()
 {
 
+#ifdef DEBUG
 	// Debug console window so printf works
 	FILE* pCout; // should really be freed on exit 
 	AllocConsole();
-	freopen_s(&pCout, "CONOUT$", "w", stdout); 
+	freopen_s(&pCout, "CONOUT$", "w", stdout);
 	printf("Shader Maker Vers 1.004\n");
-	printf("Spack-O-Mat Shadertoy Kali Underwater Creature \n");
 	printf("GLSL version [%s]\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-	
+#endif
+
+	printf("id: '%s' name: '%s'", PluginInfo.GetPluginInfo()->PluginUniqueID, PluginInfo.GetPluginInfo()->PluginName);
+	printf(" version: '%i.%i'\n", PluginInfo.GetPluginExtendedInfo()->PluginMajorVersion, PluginInfo.GetPluginExtendedInfo()->PluginMinorVersion);
 
 	// Input properties allow for no texture or for four textures
 	SetMinInputs(0);
@@ -477,25 +481,25 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 
 
 	SetParamInfo(FFPARAM_VECTOR2_X, "Julia X", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR2_Y, "Julia Y", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR2_Y, "Julia Y", FF_TYPE_STANDARD, 1.0f);
 	SetParamInfo(FFPARAM_VECTOR2_Z, "Julia Z", FF_TYPE_STANDARD, 0.5f);
 	SetParamInfo(FFPARAM_VECTOR2_W, "Rotangle 1", FF_TYPE_STANDARD, 0.5f);
 
 
 	SetParamInfo(FFPARAM_VECTOR3_X, "Object Inclination", FF_TYPE_STANDARD, 0.5f);
 	SetParamInfo(FFPARAM_VECTOR3_Y, "Object Elevation", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR3_Z, "Object Scale", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR3_W, "Rotangle 2", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR3_Z, "Object Scale", FF_TYPE_STANDARD, 0.75f);
+//	SetParamInfo(FFPARAM_VECTOR3_W, "Rotangle 2", FF_TYPE_STANDARD, 0.5f);
 
 
 	SetParamInfo(FFPARAM_VECTOR4_X, "Oject SHift x", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR4_Y, "Oject SHift x", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR4_Y, "Oject SHift y", FF_TYPE_STANDARD, 0.5f);
 	SetParamInfo(FFPARAM_VECTOR4_Z, "Oject SHift z", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR4_W, "Rotangle 3", FF_TYPE_STANDARD, 0.5f);
+//	SetParamInfo(FFPARAM_VECTOR4_W, "Rotangle 3", FF_TYPE_STANDARD, 0.5f);
 
 
-	SetParamInfo(FFPARAM_VECTOR5_X, "Azimuth", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR5_Y, "Latitude", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR5_X, "Azimuth", FF_TYPE_STANDARD, 0.75f);
+	SetParamInfo(FFPARAM_VECTOR5_Y, "Latitude", FF_TYPE_STANDARD, 0.2f);
  //	SetParamInfo(FFPARAM_VECTOR5_Z, "Unused", FF_TYPE_STANDARD, 0.5f);
 //	SetParamInfo(FFPARAM_VECTOR5_W, "unusedVector5W", FF_TYPE_STANDARD, 0.5f);
 

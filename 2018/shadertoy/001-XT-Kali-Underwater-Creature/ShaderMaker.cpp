@@ -139,15 +139,15 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 static CFFGLPluginInfo PluginInfo ( 
 	ShaderMaker::CreateInstance,		// Create method
 	"SX01",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
-	"SoM XT Kali Underwater",						// *** Plugin name - make it different for each plugin 
+	"SoM ST Living XT",						// *** Plugin name - make it different for each plugin 
 	1,						   			// API major version number 													
 	006,								// API minor version number	
 	1,									// *** Plugin major version number
 	001,								// *** Plugin minor version number
 	// FF_EFFECT,							// Plugin type can always be an effect
 	FF_SOURCE,						// or change this to FF_SOURCE for shaders that do not use a texture
-	"SoM Kali Underwater Extended", // *** Plugin description - you can expand on this
-	"https://www.shadertoy.com/view/Mtf3Rr https://github.com/leadedge/ShaderMaker"			// *** About - use your own name and details
+	"SoM Kali Living Creature Extended", // *** Plugin description - you can expand on this
+	"https://www.shadertoy.com/view/Mtf3Rr"			// *** About - use your own name and details
 );
 
 
@@ -402,21 +402,26 @@ float de(vec3 p) {
 
 );
 
-#define DEBUG
+
+#define DEBUG_
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //  Constructor and destructor
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
+ShaderMaker::ShaderMaker() :CFreeFrameGLPlugin()
 {
 
+#ifdef DEBUG
 	// Debug console window so printf works
 	FILE* pCout; // should really be freed on exit 
 	AllocConsole();
-	freopen_s(&pCout, "CONOUT$", "w", stdout); 
+	freopen_s(&pCout, "CONOUT$", "w", stdout);
 	printf("Shader Maker Vers 1.004\n");
-	printf("Spack-O-Mat Shadertoy Kali Underwater Creature \n");
 	printf("GLSL version [%s]\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-	
+#endif
+
+	printf("id: '%s' name: '%s'", PluginInfo.GetPluginInfo()->PluginUniqueID, PluginInfo.GetPluginInfo()->PluginName);
+	printf(" version: '%i.%i'\n", PluginInfo.GetPluginExtendedInfo()->PluginMajorVersion, PluginInfo.GetPluginExtendedInfo()->PluginMinorVersion);
 
 	// Input properties allow for no texture or for four textures
 	SetMinInputs(0);

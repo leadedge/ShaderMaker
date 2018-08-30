@@ -140,9 +140,21 @@ nice core functionality, not using a pre render step, might receive a gaussian b
                                     
 | Render | Parameters |
 | ------------- | ------------- |   
-|![one of i-love-chaos logos print your own more than endless possibilities](media/st-001-kaliseacreature.png )   |
-           
+|![kali seacreature](media/st-001-kaliseacreature.png )   |  ![kali seacreature](media/st-001-kaliseacreature-params.png ) 
 
+           
+           
+- Speed - shadertoy speed value, this is a continous value and will ever increase
+- kaliscale - the scale value used in iteration
+- kaliSpeed - kalis speed value for inner animation 
+- Amplitude - the overall amplitude applied to kalispeed anims
+- Julia X/Y/Z - the julia add value 
+- Rotangle - the rotation defined by axis (see next)
+- Azimuth/Latitude - polar angle axis definition both values range 2PI (repeable)
+- Object Inclination/Elevation - object rotation using polar coordinate
+- Ojbect Shift X/Y/Z - object translation
+- Color 1/2 - the color gradient is applied to the surface of the object
+            
 ### 001 Kali Sea Creature Extended
                                     
 | Render | Parameters |

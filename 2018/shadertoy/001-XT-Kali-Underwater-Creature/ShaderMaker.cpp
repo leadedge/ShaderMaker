@@ -88,29 +88,32 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #define FFPARAM_VECTOR5_Y       (5)
 #define FFPARAM_VECTOR5_Z       (6)
 
+
 #define FFPARAM_VECTOR2_X       (7)
 #define FFPARAM_VECTOR2_Y       (8)
 #define FFPARAM_VECTOR2_Z       (9)
 #define FFPARAM_VECTOR2_W       (10)
 
-#define FFPARAM_VECTOR3_X       (11)
-#define FFPARAM_VECTOR3_Y       (12)
-#define FFPARAM_VECTOR3_Z       (13)
-#define FFPARAM_VECTOR3_W       (14)
+#define FFPARAM_VECTOR6_X       (11)
+#define FFPARAM_VECTOR6_Y       (12)
 
-#define FFPARAM_VECTOR4_X       (15)
-#define FFPARAM_VECTOR4_Y       (16)
-#define FFPARAM_VECTOR4_Z       (17)
-#define FFPARAM_VECTOR4_W       (18)
+#define FFPARAM_VECTOR3_X       (13)
+#define FFPARAM_VECTOR3_Y       (14)
+#define FFPARAM_VECTOR3_Z       (15)
+#define FFPARAM_VECTOR3_W       (16)
+
+#define FFPARAM_VECTOR6_Z       (17)
+#define FFPARAM_VECTOR6_W       (18)
+
+#define FFPARAM_VECTOR4_X       (19)
+#define FFPARAM_VECTOR4_Y       (20)
+#define FFPARAM_VECTOR4_Z       (21)
+#define FFPARAM_VECTOR4_W       (22)
 
 
 
 #define FFPARAM_VECTOR5_W       (100020)
 
-#define FFPARAM_VECTOR6_X       (19)
-#define FFPARAM_VECTOR6_Y       (20)
-#define FFPARAM_VECTOR6_Z       (21)
-#define FFPARAM_VECTOR6_W       (22)
 
 
 #define FFPARAM_VECTOR7_X       (23)
@@ -122,12 +125,12 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #define FFPARAM_COLOR1_RED       (25)  
 #define FFPARAM_COLOR1_GREEN     (26)  
 #define FFPARAM_COLOR1_BLUE      (27)  
-#define FFPARAM_COLOR1_ALPHA     (1118)  
+#define FFPARAM_COLOR1_ALPHA     (10028)  
 
 #define FFPARAM_COLOR2_RED       (28)  
 #define FFPARAM_COLOR2_GREEN     (29)  
 #define FFPARAM_COLOR2_BLUE      (30)  
-#define FFPARAM_COLOR2_ALPHA     (1110)   
+#define FFPARAM_COLOR2_ALPHA     (10032)   
 #define STRINGIFY(A) #A
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -439,38 +442,39 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	SetParamInfo(FFPARAM_VECTOR1_W, "Object Z", FF_TYPE_STANDARD, 0.5f);
 
 
-	SetParamInfo(FFPARAM_VECTOR5_X, "Object Scale ", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR5_Y, "Object Inclination", FF_TYPE_STANDARD, 0.f);
-	SetParamInfo(FFPARAM_VECTOR5_Z, "Object Elevation", FF_TYPE_STANDARD, 0.f);
+	SetParamInfo(FFPARAM_VECTOR5_X, "Object Scale ", FF_TYPE_STANDARD, 0.45f);
+	SetParamInfo(FFPARAM_VECTOR5_Y, "Object Inclination", FF_TYPE_STANDARD, 0.2f);
+	SetParamInfo(FFPARAM_VECTOR5_Z, "Object Elevation", FF_TYPE_STANDARD, 0.1f);
 
 
 	SetParamInfo(FFPARAM_VECTOR2_X, "Julia1 X", FF_TYPE_STANDARD, 0.65f);
 	SetParamInfo(FFPARAM_VECTOR2_Y, "Julia1 Y", FF_TYPE_STANDARD, 0.65f);
 	SetParamInfo(FFPARAM_VECTOR2_Z, "Julia1 Z", FF_TYPE_STANDARD, 0.65f);
-	SetParamInfo(FFPARAM_VECTOR2_W, "Angle 1", FF_TYPE_STANDARD, 0.00f);
+	SetParamInfo(FFPARAM_VECTOR2_W, "Angle 1", FF_TYPE_STANDARD, 0.86f);
+
+	SetParamInfo(FFPARAM_VECTOR6_X, "Azimut 1", FF_TYPE_STANDARD, 0.1f);
+	SetParamInfo(FFPARAM_VECTOR6_Y, "Latitude 1", FF_TYPE_STANDARD, 0.1f);
 
 
 	SetParamInfo(FFPARAM_VECTOR3_X, "Julia2 X", FF_TYPE_STANDARD, 0.65f);
 	SetParamInfo(FFPARAM_VECTOR3_Y, "Julia2 Y", FF_TYPE_STANDARD, 0.65f); 
 	SetParamInfo(FFPARAM_VECTOR3_Z, "Julia2 Z", FF_TYPE_STANDARD, 0.65f);
-	SetParamInfo(FFPARAM_VECTOR3_W, "Angle 2", FF_TYPE_STANDARD, 0.25f);
+	SetParamInfo(FFPARAM_VECTOR3_W, "Angle 2", FF_TYPE_STANDARD, 0.3f);
 
 
 	SetParamInfo(FFPARAM_VECTOR4_X, "Julia 3 X", FF_TYPE_STANDARD, 0.65f);
 	SetParamInfo(FFPARAM_VECTOR4_Y, "Julia 3 Y", FF_TYPE_STANDARD, 0.65f);
 	SetParamInfo(FFPARAM_VECTOR4_Z, "Julia 3 Z", FF_TYPE_STANDARD, 0.65f);
-	SetParamInfo(FFPARAM_VECTOR4_W, "Angle 3", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR4_W, "Angle 3", FF_TYPE_STANDARD, 0.26f);
 
 
 	//SetParamInfo(FFPARAM_VECTOR5_W, "-------------", FF_TYPE_STANDARD, 0.5f);
 
 
-	SetParamInfo(FFPARAM_VECTOR6_X, "Azimut 1", FF_TYPE_STANDARD, 0.1f);
-	SetParamInfo(FFPARAM_VECTOR6_Y, "Latitude 1", FF_TYPE_STANDARD, 0.1f);
 	SetParamInfo(FFPARAM_VECTOR6_Z, "Azimut 2", FF_TYPE_STANDARD, 0.2f);
 	SetParamInfo(FFPARAM_VECTOR6_W, "Latitude 2", FF_TYPE_STANDARD, 0.2f);
 
-	SetParamInfo(FFPARAM_VECTOR7_X, "Azimut 3", FF_TYPE_STANDARD, 0.4f);
+	SetParamInfo(FFPARAM_VECTOR7_X, "Azimut 3", FF_TYPE_STANDARD, 0.86f);
 	SetParamInfo(FFPARAM_VECTOR7_Y, "Latitude 3", FF_TYPE_STANDARD, 0.4f);
 	//SetParamInfo(FFPARAM_VECTOR7_Z, "------------ 7 Z", FF_TYPE_STANDARD, 0.5f);
 	//SetParamInfo(FFPARAM_VECTOR7_W, "------------ 7", FF_TYPE_STANDARD, 0.5f);
@@ -478,11 +482,13 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	SetParamInfo(FFPARAM_COLOR1_RED, "Color 1 Red", FF_TYPE_RED, 1.0f);
 	SetParamInfo(FFPARAM_COLOR1_GREEN, "Color 1 Green", FF_TYPE_GREEN, 1.0f);
 	SetParamInfo(FFPARAM_COLOR1_BLUE, "Color 1 Blue", FF_TYPE_BLUE, 1.0f);
-	// SetParamInfo(FFPARAM_COLOR1_ALPHA, "Color 1 Alpha", FF_TYPE_RED, 0.50f);
+ // SetParamInfo(FFPARAM_COLOR1_ALPHA, "Color 1 Alpha", FF_TYPE_STANDARD, 0.50f);
 
 	SetParamInfo(FFPARAM_COLOR2_RED, "Color 2 Red", FF_TYPE_RED, 1.0f);
 	SetParamInfo(FFPARAM_COLOR2_GREEN, "Color 2 Green", FF_TYPE_GREEN, 0.0f);
 	SetParamInfo(FFPARAM_COLOR2_BLUE, "Color 2 Blue", FF_TYPE_BLUE, 0.0f);
+//	SetParamInfo(FFPARAM_COLOR2_ALPHA, "Color 1 Alpha", FF_TYPE_STANDARD, 0.50f);
+
 
 	// Set defaults
 	SetDefaults();
@@ -823,9 +829,9 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		if (m_inputVector7Location >= 0)
 			m_extensions.glUniform4fARB(m_inputVector7Location, m_vector7.x, m_vector7.y, m_vector7.z, m_vector7.w);
 		if (m_inputColor1Location >= 0)
-			m_extensions.glUniform4fARB(m_inputColor1Location, m_color1.x, m_color1.y, m_color1.z, 0.0f);
+			m_extensions.glUniform4fARB(m_inputColor1Location, m_color1.x, m_color1.y, m_color1.z, m_color1.w );
 		if (m_inputColor2Location >= 0)
-			m_extensions.glUniform4fARB(m_inputColor2Location, m_color2.x, m_color2.y, m_color2.z, 0.0f);
+			m_extensions.glUniform4fARB(m_inputColor2Location, m_color2.x, m_color2.y, m_color2.z, m_color2.w );
 
 
 		// Bind a texture if the shader needs one
@@ -1121,6 +1127,8 @@ float ShaderMaker::GetFloatParameter(unsigned int index)
 			return m_color1.y;
 		case FFPARAM_COLOR1_BLUE:
 			return m_color1.z;
+		case FFPARAM_COLOR1_ALPHA:
+			return m_color1.w;
 
 		case FFPARAM_COLOR2_RED:
 			return m_color2.x;
@@ -1128,6 +1136,8 @@ float ShaderMaker::GetFloatParameter(unsigned int index)
 			return m_color2.y;
 		case FFPARAM_COLOR2_BLUE:
 			return m_color2.z;
+		case FFPARAM_COLOR2_ALPHA:
+			return m_color2.w;
 
 
 		default:
@@ -1302,6 +1312,10 @@ FFResult ShaderMaker::SetFloatParameter(unsigned int index, float value)
 				m_color1.z = value;
 				break;
 
+			case FFPARAM_COLOR1_ALPHA:
+				m_color1.w = value;
+				break;
+
 			case FFPARAM_COLOR2_RED:
 				m_color2.x = value;
 				break;
@@ -1310,6 +1324,9 @@ FFResult ShaderMaker::SetFloatParameter(unsigned int index, float value)
 				break;
 			case FFPARAM_COLOR2_BLUE:
 				m_color2.z = value;
+				break;
+			case FFPARAM_COLOR2_ALPHA:
+				m_color2.w = value;
 				break;
 
 			default:

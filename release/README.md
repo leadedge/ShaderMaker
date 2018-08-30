@@ -7,10 +7,11 @@
 
 ### 001 Mandelbrot   ![Generic badge](https://img.shields.io/badge/HYBRID-ALTERNATE-green.svg) [![Generic badge](https://img.shields.io/badge/3ARY-YES-green.svg)](https://shields.io/)
        
-|  |  |
+| Render | Parameters |
 | ------------- | ------------- |
-| ![Mandelbrot S01 Exampole](media/001-mandelbrot.png )  | ![Mandelbrot Params](media/001-mandelbrot-params.png ) |
- id [Mandelbrot](https://www.wikiwand.com/en/Mandelbrot_set) with 3 seeds.
+| ![Mandelbrot S01 Example](media/001-mandelbrot.png )  | ![Mandelbrot Params](media/001-mandelbrot-params.png ) |
+
+ [Hybrid](https://www.youtube.com/watch?v=L-YTY014Zqo) [Mandelbrot](https://www.wikiwand.com/en/Mandelbrot_set) with 3 seeds.
            
 #### Parameters 
 - Julia - switches julia/mandelbrot mode
@@ -20,7 +21,7 @@
 - Start of Alternation - iteration when alternation kicks in after this iteration the seeds are alternated                                
 - Max Iterations - the maximum number of iterations to use
 - Seed 1..3 Real/Imaginary	- the seeds to be used in alternation, the first is pertubation
-- Power 1..3 The power used in the mandelbrot equation 0.3125=1, 0.625=2.0, ... stepp is 0.0625 -8..8 
+- Power 1..3 ![Generic badge](https://img.shields.io/badge/EXPONENTIAL-YES-green.svg) -The power used in the mandelbrot equation 0.3125=1, 0.625=2.0, ... stepp is 0.0625 -8..8 
 - Color1/2 - the inner and outer colors as RGB
      
 
@@ -32,7 +33,7 @@ Version: 2.0
  
 
 ### 002 Mandelbox ![Generic badge](https://img.shields.io/badge/HYBRID-ALTERNATE-green.svg) [![Generic badge](https://img.shields.io/badge/3ARY-YES-green.svg)](https://shields.io/)
-|  |  |
+| Render | Parameters |
 | ------------- | ------------- |
 | ![Mandelbox Example](media/002-mandelbox.png )  |  ![Mandelbox Params](media/002-mandelbox-params.png )  |
  
@@ -58,7 +59,7 @@ core functionality, perhaps make scale parameter a alternation option
 
 ### 003 Sinewave 1D  [![Generic badge](https://img.shields.io/badge/3ARY-YES-green.svg)](https://shields.io/)
        
-|  |  |
+| Render | Parameters |
 | ------------- | ------------- |                
 | ![Sinewave Example](media/003-sinewave.png )   | ![Sinewave Params](media/003-sinewave-params.png )       |
 
@@ -83,7 +84,7 @@ core functionality, no changes planned, inversions and line mode can be achieved
 
 ### 004 Circle Sun      [![Generic badge](https://img.shields.io/badge/3ARY-YES-green.svg)](https://shields.io/)
          
-|  |  |
+| Render | Parameters |
 | ------------- | ------------- |       
 |![one of i-love-chaos logos print your own more than endless possibilities](media/004-circlesun.png ) |![one of i-love-chaos logos print your own more than endless possibilities](media/004-circlesun-params.png )           |
                                
@@ -108,7 +109,7 @@ core fun functionality, finished no further additions/changes planned
 ## Effect Plugins
 
 ### 001 God Rays        
-|  |  |
+| Render | Parameters |
 | ------------- | ------------- |                      
 |![GodRays Example](media/sf-001-godrays.png )  | ![GodRays Params](media/sf-001-godrays-params.png)   |
 
@@ -137,25 +138,29 @@ nice core functionality, not using a pre render step, might receive a gaussian b
 
 ### 001 Kali Sea Creature
                                     
-|  |  |
+| Render | Parameters |
 | ------------- | ------------- |   
 |![one of i-love-chaos logos print your own more than endless possibilities](media/st-001-kaliseacreature.png )   |
            
 
 ### 001 Kali Sea Creature Extended
                                     
-|  |  |
+| Render | Parameters |
 | ------------- | ------------- |   
-|![one of i-love-chaos logos print your own more than endless possibilities](media/st-001-kaliseacreature.png )   |
+|![kali extended render](media/sx-001-kali-creature-render.png )   |   ![kali extended params](media/sx-001-kali-creature-params.png ) 
+           
+           
+- kaliScale - kali scale parameter used for all iterations no hybridisation here
+- Object Pos X/Y/Z - Object center
+- Object Scale - the scale of the object
+- Object Inclination/Elevation - the rotation of the object using polar coordinates
+- Julia X/Y/Z 1..3 - hybrid each seeds julia value
+- Azimuth/Latitude 1..3 - hybrid each seed has a rotation axis that is defined by polar coordinates longitude/latitude both in full 2PI range, for repetition
+- Color 1/2 - interpolation between these 2 colors is used to color the surface of the object
            
 #### Status 
 
-ID: ST01
+ID: SX01		
 Version 1.0
 
-phew, this is a resolume variant of one of the greatest shader writers in the world - and a pretty good friend of mine - kali. He constructs
-the most fantastic structures out of the code, the shader used here is famous for its lifelike own animations controlled by the shadertoy time
-parameter
-
-additionally christian packed in a bunch of alternating parameters, namely the rotationAngle this is heavy uncertain if it will stay this way
- so no further parameter explanation for now here
+christian created the highly alternating hybrid and is happy with it, no further changes planned here

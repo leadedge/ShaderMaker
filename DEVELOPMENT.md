@@ -8,6 +8,15 @@ the build process is - as of now - only manual 64Bit build in [https://visualstu
 - in VisualStudio add Post-Build-Event start Resolume
 
 
+## Prefixes
+
+the plugins use a id mechanism of prefix and running number 
+
+- SM - Spack-o-Mat default prefix
+- SF - Spack-o-mat Filter prefix
+- ST - Spack-o-mat shaderToy prefix
+- SX - Spack-o-mat eXtended plugin prefix 
+
 ## Quickstart (only dll copy)
 
 the precompiled 64 bit windows .dll files can be found in the release folder of this repository, just copy them to your resolume plugin folder to check them out

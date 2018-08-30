@@ -168,7 +168,7 @@ protected:
 	float m_dateMonth;
 	float m_dateDay;
 	float m_dateTime;
-
+	float m_dotcount;
 	// Channel playback time (in seconds)
 	// iChannelTime components are always equal to iGlobalTime
 	float m_channelTime[4];
@@ -201,8 +201,9 @@ protected:
 	GLint m_inputTextureLocation1;
 	GLint m_inputTextureLocation2;
 	GLint m_inputTextureLocation3;
-	
-	GLint m_timeLocation;
+	int lastDotcount;
+	GLint  m_displayList;
+		GLint m_timeLocation; 
 	GLint m_dateLocation;
 	GLint m_channeltimeLocation;
 	GLint m_channelresolutionLocation;
@@ -236,6 +237,7 @@ protected:
 
 	GLint m_inputShowKnobsLocation;
 
+	void createDisplayList();
 	void SetDefaults();
 	void StartCounter();
 	double GetCounter();

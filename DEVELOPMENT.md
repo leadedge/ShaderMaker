@@ -73,12 +73,22 @@ is so utterly important for working with the provided effects by this repository
 
 - there may be more than 1 time variable : some effects introduce own time variables with their own, either by extended mode or by definition (example: sinus) 
 
-## Hybridisation -> Alternation
+### Hybridisation -> Alternation
 
 [![Generic badge](https://img.shields.io/badge/HYBRID-YES-green.svg)](https://shields.io/) the method used in all of the plugins that deal with chaotic image creation (fractals) use a simple hybridisation approach, it is always using 3-alternate-hybrids, meaning that when alternation starts, three sets of parameters are cycled through ind subsequent iterations
 
-## Exponentional Parameters
+### Exponentional Parameters
 
 [![Generic badge](https://img.shields.io/badge/EXPONENTIAL-YES-green.svg)](https://shields.io/) some parameters use exponential scaling by nature, and are marked with the  badge - the input value x in {0..1} is exponentiated (x*x)
 
+
+           
+### Tileable
+
+  
+  
+### Polar Coordinates
+
+In 3d space it is tedious to have many input parameters, in most of the cases where a normalized value is required, the direction is inputed using
+polar coordinates, azimuth/elevation
 

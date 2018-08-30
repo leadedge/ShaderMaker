@@ -59,6 +59,10 @@
 //
 #include "ShaderMaker.h"
 #include <windows.h>
+#include <gl\GLU.h> 
+#include "color_hsv_rgb.h"
+
+
 #if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__))
 int (*cross_secure_sprintf)(char *, size_t, const char *,...) = sprintf_s;
 #else 
@@ -77,44 +81,45 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #define FFPARAM_BLUE        (5)
 #define FFPARAM_ALPHA       (6)
 
-#define FFPARAM_VECTOR1_X       (109)
-#define FFPARAM_SPEEDS_X        (107)
-#define FFPARAM_VECTOR1_Y       (7)
-#define FFPARAM_VECTOR1_Z       (8)
-#define FFPARAM_VECTOR1_W       (9)
+#define FFPARAM_VECTOR1_X       (7)
+#define FFPARAM_VECTOR1_Y       (8)
+#define FFPARAM_VECTOR1_Z       (9)
+#define FFPARAM_VECTOR1_W       (10)
 
-#define FFPARAM_VECTOR2_X       (1013)
-#define FFPARAM_SPEEDS_Y        (1011)
-#define FFPARAM_VECTOR2_Y       (10)
-#define FFPARAM_VECTOR2_Z       (11)
-#define FFPARAM_VECTOR2_W       (12)
+#define FFPARAM_VECTOR2_X       (11)
+#define FFPARAM_VECTOR2_Y       (12)
+#define FFPARAM_VECTOR2_Z       (13)
+#define FFPARAM_VECTOR2_W       (14)
 
-#define FFPARAM_VECTOR3_X       (1017)
-#define FFPARAM_SPEEDS_Z        (1015)
-#define FFPARAM_VECTOR3_Y       (13)
-#define FFPARAM_VECTOR3_Z       (14)
-#define FFPARAM_VECTOR3_W       (15)
+#define FFPARAM_VECTOR3_X       (15)
+#define FFPARAM_VECTOR3_Y       (16)
+#define FFPARAM_VECTOR3_Z       (17)
+#define FFPARAM_VECTOR3_W       (18)
 
 #define FFPARAM_VECTOR4_X       (2017)
 #define FFPARAM_VECTOR4_Y       (2016)
 #define FFPARAM_VECTOR4_Z       (2011)
 #define FFPARAM_VECTOR4_W       (2012)
 
-#define FFPARAM_SPEEDS_W        (2015) 
  
 
-#define FFPARAM_COLOR1_RED       (16)  
-#define FFPARAM_COLOR1_GREEN       (17)  
-#define FFPARAM_COLOR1_BLUE       (18)  
-#define FFPARAM_COLOR1_ALPHA       (19)  
+#define FFPARAM_COLOR1_RED       (19)  
+#define FFPARAM_COLOR1_GREEN     (20)  
+#define FFPARAM_COLOR1_BLUE      (21)  
+#define FFPARAM_COLOR1_ALPHA     (22)  
 
-#define FFPARAM_COLOR2_RED       (20)  
-#define FFPARAM_COLOR2_GREEN       (21)  
-#define FFPARAM_COLOR2_BLUE       (22)  
-#define FFPARAM_COLOR2_ALPHA       (23)   
+#define FFPARAM_COLOR2_RED       (23)  
+#define FFPARAM_COLOR2_GREEN     (24)  
+#define FFPARAM_COLOR2_BLUE      (25)  
+#define FFPARAM_COLOR2_ALPHA     (26)   
 
+#define FFPARAM_SPEEDS_X        (27)
+#define FFPARAM_SPEEDS_Y        (28)
+#define FFPARAM_SPEEDS_Z        (29)
+#define FFPARAM_SPEEDS_W        (2015) 
 
 #define STRINGIFY(A) #A
+
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // +++++++++++ IMPORTANT : DEFINE YOUR PLUGIN INFORMATION HERE +++++++++++
@@ -122,25 +127,30 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 static CFFGLPluginInfo PluginInfo ( 
 	ShaderMaker::CreateInstance,		// Create method
 	"SM05",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
-	"SoM Startfield",						// *** Plugin name - make it different for each plugin 
+	"SoM Starfield",						// *** Plugin name - make it different for each plugin 
 	1,						   			// API major version number 													
 	006,								// API minor version number	
 	2,									// *** Plugin major version number
 	002,								// *** Plugin minor version number
 	// FF_EFFECT,							// Plugin type can always be an effect
 	FF_SOURCE,						// or change this to FF_SOURCE for shaders that do not use a texture
-	"SoM Startfield",     // *** Plugin description - you can expand on this
+	"SoM Starfield",     // *** Plugin description - you can expand on this
 	"c.Kleinhuis 2018"			// *** About - use your own name and details
+
 );
 
 
 // Common vertex shader code as per FreeFrame examples
-char *vertexShaderCode = STRINGIFY (
+char *vertexShaderCode = STRINGIFY(
+	uniform vec4 inputVector1; 
+uniform vec4 inputTimes;
 void main()
 {
-	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
-	gl_TexCoord[0] = gl_MultiTexCoord0;
-	gl_FrontColor = gl_Color;
+	vec3 tempPos = 10.0*mod(gl_Vertex.xyz + inputTimes.xyz, vec3(1.0, 1.0, 1.0)) - 5.0;;
+	gl_Position = gl_ModelViewProjectionMatrix * vec4(tempPos.xyz, gl_Vertex.w);
+	//gl_TexCoord[0] = gl_MultiTexCoord0;
+	gl_FrontColor = vec4(1.0,0.0,0.0,1.0);
+	 gl_PointSize = 10.0 / gl_Position.w;
 
 } );
 
@@ -242,7 +252,12 @@ vec2 c_pow(vec2 c, float e) {
 
 vec2 seeds[3]=vec2[3](inputVector1.zw, inputVector2.zw, inputVector3.zw);
 float powers[3] = float[3]( (inputVector1.y*16.0 - 8.0) ,  (inputVector2.y*16.0 - 8.0)  , (inputVector3.y*16.0 - 8.0)  );
+
 void mainImage(out vec4 fragColor, in vec2 fragCoord)
+{
+	fragColor = vec4(1.0, 0.5, 0.0, 1.0);
+}
+void mainImageOld(out vec4 fragColor, in vec2 fragCoord)
 {
 	float n = 0.0;
 	// important: exponential interpolation is done in c area
@@ -323,7 +338,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 {
 
-#ifdef DEBUG_
+#ifdef DEBUG
 	// Debug console window so printf works
 	FILE* pCout; // should really be freed on exit 
 	AllocConsole();
@@ -337,12 +352,12 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	//printf("\n%s \n %s\n", PluginInfo.GetPluginExtendedInfo()->About , PluginInfo.GetPluginExtendedInfo()->Description);
 	// Input properties allow for no texture or for four textures
 	SetMinInputs(0);
-	SetMaxInputs(0); // TODO - 4 inputs
+	SetMaxInputs(2); // TODO - 4 inputs
 
 	SetParamInfo(FFPARAM_JULIA, "Julia", FF_TYPE_BOOLEAN, 0.0f);
 	// Parameters
 	// SetParamInfo(FFPARAM_SPEED,         "Speed",         FF_TYPE_STANDARD, 0.5f); 
- 	SetParamInfo(FFPARAM_MOUSEX,        "Center X",       FF_TYPE_STANDARD, 0.5f);  
+ 	SetParamInfo(FFPARAM_MOUSEX,        "Dotcount",       FF_TYPE_STANDARD, 0.5f);  
 	 SetParamInfo(FFPARAM_MOUSEY,        "Center Y",       FF_TYPE_STANDARD, 0.5f); 
 	//SetParamInfo(FFPARAM_MOUSELEFTX,    "X mouse left",  FF_TYPE_STANDARD, 0.5f); 
 	//SetParamInfo(FFPARAM_MOUSELEFTY,    "Y mouse left",  FF_TYPE_STANDARD, 0.5f);  
@@ -351,20 +366,17 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	SetParamInfo(FFPARAM_BLUE,          "Rotation",          FF_TYPE_STANDARD, 0.0f);  
  	SetParamInfo(FFPARAM_ALPHA,         "MaxIter",         FF_TYPE_STANDARD, 0.25f);  
 
-	//SetParamInfo(FFPARAM_VECTOR1_X, "Vector1X", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_SPEEDS_X, "Seed 1 Speed", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR1_X, "Vector1X", FF_TYPE_STANDARD, 0.0f);
     SetParamInfo(FFPARAM_VECTOR1_Y, "Seed 1 Power", FF_TYPE_STANDARD, 0.625f);
 	SetParamInfo(FFPARAM_VECTOR1_Z, "Seed 1 Real", FF_TYPE_STANDARD, 0.5f);
 	SetParamInfo(FFPARAM_VECTOR1_W, "Seed 1 Imag", FF_TYPE_STANDARD, 0.5f);
 
-	//SetParamInfo(FFPARAM_VECTOR2_X, "Vector2X", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_SPEEDS_Y, "Seed 2 Speed", FF_TYPE_STANDARD, 0.0f);
+SetParamInfo(FFPARAM_VECTOR2_X, "Vector2X", FF_TYPE_STANDARD, 0.0f);
 	SetParamInfo(FFPARAM_VECTOR2_Y, "Seed 2 Power", FF_TYPE_STANDARD, 0.625f);
 	SetParamInfo(FFPARAM_VECTOR2_Z, "Seed 2 Real", FF_TYPE_STANDARD, 0.50f);
 	SetParamInfo(FFPARAM_VECTOR2_W, "Seed 2 Imag", FF_TYPE_STANDARD, 0.50f);
 
-	//SetParamInfo(FFPARAM_VECTOR3_X, "Vector3X", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_SPEEDS_Z, "Seed 3 Speed", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR3_X, "Vector3X", FF_TYPE_STANDARD, 0.0f);
 	SetParamInfo(FFPARAM_VECTOR3_Y, "Seed 3 Power", FF_TYPE_STANDARD, 0.625f);
 	SetParamInfo(FFPARAM_VECTOR3_Z, "Seed 3 Real", FF_TYPE_STANDARD, 0.50f);
 	SetParamInfo(FFPARAM_VECTOR3_W, "Seed 3 Imag", FF_TYPE_STANDARD, 0.50f);
@@ -379,6 +391,9 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	SetParamInfo(FFPARAM_COLOR2_BLUE, "Color 2 Blue", FF_TYPE_BLUE, 0.0f);
 	SetParamInfo(FFPARAM_COLOR2_ALPHA, "Color 2 Alpha", FF_TYPE_STANDARD, 1.0f);	
 
+		SetParamInfo(FFPARAM_SPEEDS_X, "Seed 1 Speed", FF_TYPE_STANDARD, 0.0f);
+		SetParamInfo(FFPARAM_SPEEDS_Y, "Seed 2 Speed", FF_TYPE_STANDARD, 0.0f);
+		SetParamInfo(FFPARAM_SPEEDS_Z, "Seed 3 Speed", FF_TYPE_STANDARD, 0.0f);
 	// Set defaults
 	SetDefaults();
 
@@ -411,6 +426,7 @@ FFResult ShaderMaker::InitGL(const FFGLViewportStruct *vp)
 	// Load the shader
 	std::string shaderString = fragmentShaderCode;
 	bInitialized = LoadShader(shaderString);
+	 
 
 	return FF_SUCCESS;
 }
@@ -420,6 +436,43 @@ ShaderMaker::~ShaderMaker()
 	// Not using this but it is here just in case
 }
 
+float myRandom(float min, float max) {
+
+	return min + ((float)rand() / (float)RAND_MAX)*(max - min);
+}
+void ShaderMaker::createDisplayList() { 
+	// create one display list
+	m_displayList = glGenLists(1);
+
+	// fill displaylist
+	glNewList(m_displayList, GL_COMPILE);
+	glBegin(GL_POINTS); 
+	float width =  m_dotcount; 
+	Vector current;
+	Vector current2;
+
+	for (int i = 0; i<m_dotcount; i++) {
+			//  m_extensions.glMultiTexCoord2f(GL_TEXTURE1, 0,0);
+
+			// Calc Color
+			 
+
+			 
+
+			current.x = myRandom(0.0, 1.0);
+			current.y = myRandom(0.0, 1.0);
+			current.z = myRandom(0.0, 1.0);
+	 
+			glVertex3f(current.x, current.y, current.z);
+				
+	  //printf("Creating %f %f %f", current.x, current.y, current.z);
+		} 
+	glEnd();
+
+	glEndList();
+	printf("Display List created %i count %f\n", m_displayList, m_dotcount);
+
+}
 
 FFResult ShaderMaker::DeInitGL()
 {
@@ -440,6 +493,9 @@ FFResult ShaderMaker::DeInitGL()
 	m_fbo = 0;
 	bInitialized = false;
 
+
+	if (m_displayList) glDeleteLists(m_displayList, 1);
+
 	return FF_SUCCESS;
 }
 
@@ -452,9 +508,14 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 	// FFGLTextureStruct Texture3;
 	FFGLTexCoords maxCoords;
 	time_t datime;
-	struct tm tmbuff;
-
+	struct tm tmbuff; 
 	if(bInitialized) {
+		if (int(m_dotcount)!= int(m_UserMouseX*m_UserMouseX*1000000.0)) {
+			//rebuild display list
+			// deleted in method glDeleteLists(m_displayList, 1);
+			m_dotcount = int(m_UserMouseX*m_UserMouseX*1000000.0);
+			createDisplayList(); 
+		}
 
 		// To the host this is an effect plugin, but it can be either a source or an effect
 		// and will work without any input, so we still start up if even there is no input texture
@@ -554,13 +615,13 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		// Calculate elapsed time
 		lastTime = elapsedTime;
 		elapsedTime = GetCounter()/1000.0; // In seconds - higher resolution than timeGetTime()
-		m_time = m_time + (float)(elapsedTime - lastTime)*m_UserSpeed*2.0f; // increment scaled by user input 0.0 - 2.0
+		m_time = m_time + (float)(elapsedTime - lastTime)*(m_UserSpeed*2.0f-1.0f); // increment scaled by user input 0.0 - 2.0
 
 
-		m_times.x = m_times.x + (float)(elapsedTime - lastTime)*m_speeds.x*2.0f; // increment scaled by user input 0.0 - 2.0
-		m_times.y = m_times.y + (float)(elapsedTime - lastTime)*m_speeds.y*2.0f; // increment scaled by user input 0.0 - 2.0
-		m_times.z = m_times.z + (float)(elapsedTime - lastTime)*m_speeds.z*2.0f; // increment scaled by user input 0.0 - 2.0
-		m_times.w = m_times.w + (float)(elapsedTime - lastTime)*m_speeds.w*2.0f; // increment scaled by user input 0.0 - 2.0
+		m_times.x = m_times.x + (float)(elapsedTime - lastTime)*(m_speeds.x*2.0f-1.0f); // increment scaled by user input 0.0 - 2.0
+		m_times.y = m_times.y + (float)(elapsedTime - lastTime)*(m_speeds.y*2.0f - 1.0f); // increment scaled by user input 0.0 - 2.0
+		m_times.z = m_times.z + (float)(elapsedTime - lastTime)*(m_speeds.z*2.0f - 1.0f); // increment scaled by user input 0.0 - 2.0
+		m_times.w = m_times.w + (float)(elapsedTime - lastTime)*(m_speeds.w*2.0f - 1.0); // increment scaled by user input 0.0 - 2.0
 
 
 		// ShaderToy new uniforms
@@ -775,7 +836,7 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		*/
 
 		// Do the draw for the shader to work
-		glEnable(GL_TEXTURE_2D);
+	/*	glEnable(GL_TEXTURE_2D);
 		glBegin(GL_QUADS);
 		glTexCoord2f(0.0, 0.0);	
 		glVertex2f(-1.0, -1.0);
@@ -787,7 +848,7 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		glVertex2f( 1.0, -1.0);
 		glEnd();
 		glDisable(GL_TEXTURE_2D);
-
+	*/	
 		/*
 		// unbind input texture 3
 		if(m_inputTextureLocation3 >= 0 && Texture3.Handle > 0) {
@@ -802,24 +863,49 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		}
 		*/
 
+		glMatrixMode(GL_PROJECTION); 
+		glLoadIdentity(); 
+
+
+		gluPerspective(65, (float)pGL->inputTextures[0]->Height / (float)pGL->inputTextures[0]->Width, 0.011, 1000.0);
+		gluLookAt(1, 0, 0, 0, 0, 0, 0,  1, 0);
+
+		 
+	//	gluLookAt(0.0,0.0,1.0, /* look from camera XYZ */ 0, 0, 0, /* look at the origin */ 0, -1, 0);
+	//	glClearColor(0.0, 1.0, 0.0, 0.0);
+	//		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//glBegin(GL_POINTS);
+	//	glTexEnvi(GL_POINT_SPRITE, GL_COORD_REPLACE, GL_TRUE);
+	//	gluLookAt(100.0, 100.0, 100.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+
+				glMatrixMode(GL_MODELVIEW);                     // Select The Modelview Matrix
+				
+		//glLoadIdentity();
+
+		glPointSize(5.0); 
+		glEnable(0x8642); // GL_PROGRAM_POINT_SIZE
+
+	 	glCallList(m_displayList);
+ 
+
 		// unbind input texture 1
-		if(m_inputTextureLocation1 >= 0 && Texture1.Handle > 0) {
+		if (m_inputTextureLocation1 >= 0 && Texture1.Handle > 0) {
 			m_extensions.glActiveTexture(GL_TEXTURE1);
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 
 		// unbind input texture 0
 		m_extensions.glActiveTexture(GL_TEXTURE0); // default
-		if(m_inputTextureLocation >= 0 && Texture0.Handle > 0)
+		if (m_inputTextureLocation >= 0 && Texture0.Handle > 0)
 			glBindTexture(GL_TEXTURE_2D, 0);
 
 		// unbind the shader
 		m_shader.UnbindShader();
-
 	} // endif bInitialized
 
 	return FF_SUCCESS;
 }
+
 
 char * ShaderMaker::GetParameterDisplay(DWORD dwIndex) {
 
@@ -1201,7 +1287,7 @@ FFResult ShaderMaker::SetFloatParameter(unsigned int index, float value)
 }
 
 void ShaderMaker::SetDefaults() {
-
+	lastDotcount = 0.0;
     elapsedTime            = 0.0;
     lastTime               = 0.0;
 #if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__))
@@ -1226,7 +1312,8 @@ void ShaderMaker::SetDefaults() {
 	m_dateMonth            = 0.0;
 	m_dateDay              = 0.0;
 	m_dateTime             = 0.0;
-
+	m_dotcount = 10.0; 
+	lastDotcount = 0.0;
 	m_vector1.x = 0.0;
 	m_vector1.y = 0.0;
 	m_vector1.z = 0.0;
@@ -1295,6 +1382,7 @@ void ShaderMaker::SetDefaults() {
 	m_glTexture3              = 0;
 	m_fbo                     = 0;
 
+	m_displayList = -1;
 }
 
 bool ShaderMaker::LoadShader(std::string shaderString) {
@@ -1433,7 +1521,7 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 
 				m_inputColor1Location = -1;
 				m_inputColor2Location = -1;
-
+				m_inputTimesLocation = -1;
 				m_inputJuliaLocation = -1;
 
 				// ===========================================================

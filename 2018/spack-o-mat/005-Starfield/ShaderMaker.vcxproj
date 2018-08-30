@@ -158,7 +158,7 @@
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>OpenGL32.lib</AdditionalDependencies>
+      <AdditionalDependencies>OpenGL32.lib;glu32.lib</AdditionalDependencies>
       <ModuleDefinitionFile>FFGLPlugins.def</ModuleDefinitionFile>
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
@@ -170,6 +170,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\effectCollection\016_Starfield\trunk\Source\FFGLPlugins\FFGLHeat\color_hsv_rgb.h" />
     <ClInclude Include="ShaderMaker.h" />
     <ClInclude Include="FFGL\FFGL.h" />
     <ClInclude Include="FFGL\FFGLExtensions.h" />

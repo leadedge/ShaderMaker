@@ -190,6 +190,7 @@ int FFGLShader::Compile(const char *vtxProgram, const char *fragProgram)
       log[returnedLength] = 0;
       int a;
       a=0;
+
     }     
   }
   

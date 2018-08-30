@@ -77,31 +77,32 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #define FFPARAM_ALPHA       (5)
 
 #define FFPARAM_VECTOR1_X       (6)
-#define FFPARAM_SPEEDS_X        (107)
 #define FFPARAM_VECTOR1_Y       (7)
 #define FFPARAM_VECTOR1_Z       (8)
 #define FFPARAM_VECTOR1_W       (9)
 
 #define FFPARAM_VECTOR2_X       (10)
-#define FFPARAM_SPEEDS_Y        (1011)
-#define FFPARAM_VECTOR2_Y       (1012)
-#define FFPARAM_VECTOR2_Z       (11)
-#define FFPARAM_VECTOR2_W       (12)
+#define FFPARAM_VECTOR2_Y       (11)
+#define FFPARAM_VECTOR2_Z       (12)
+#define FFPARAM_VECTOR2_W       (13)
 
-#define FFPARAM_VECTOR3_X       (13)
-#define FFPARAM_SPEEDS_Z        (1015)
-#define FFPARAM_VECTOR3_Y       (1016)
-#define FFPARAM_VECTOR3_Z       (14)
-#define FFPARAM_VECTOR3_W       (15)
+#define FFPARAM_VECTOR3_X       (14)
+#define FFPARAM_VECTOR3_Y       (15)
+#define FFPARAM_VECTOR3_Z       (16)
+#define FFPARAM_VECTOR3_W       (17)
 
 #define FFPARAM_VECTOR4_X       (2016)
 #define FFPARAM_VECTOR4_Y       (2017)
 #define FFPARAM_VECTOR4_Z       (2011)
 #define FFPARAM_VECTOR4_W       (2012)
 
+#define FFPARAM_SPEEDS_X        (107)
+#define FFPARAM_SPEEDS_Z        (1015)
 #define FFPARAM_SPEEDS_W        (2015)
-#define FFPARAM_SHOW_KNOBS        (16)
-#define FFPARAM_JULIA        (17)
+#define FFPARAM_SPEEDS_Y        (1011)
+
+#define FFPARAM_SHOW_KNOBS        (10018)
+#define FFPARAM_JULIA        (10019)
 
 
 #define FFPARAM_COLOR1_RED       (18)  
@@ -110,14 +111,14 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #define FFPARAM_COLOR1_ALPHA       (21)   
 
 #define FFPARAM_COLOR2_RED       (22)  
-#define FFPARAM_COLOR2_GREEN       (23)  
-#define FFPARAM_COLOR2_BLUE       (24)  
-#define FFPARAM_COLOR2_ALPHA       (25)   
+#define FFPARAM_COLOR2_GREEN     (23)  
+#define FFPARAM_COLOR2_BLUE      (24)  
+#define FFPARAM_COLOR2_ALPHA     (25)   
 
 #define FFPARAM_COLOR3_RED       (26)  
-#define FFPARAM_COLOR3_GREEN       (27)  
-#define FFPARAM_COLOR3_BLUE       (28)  
-#define FFPARAM_COLOR3_ALPHA       (29)   
+#define FFPARAM_COLOR3_GREEN     (27)  
+#define FFPARAM_COLOR3_BLUE      (28)  
+#define FFPARAM_COLOR3_ALPHA     (29)   
 
  
 
@@ -128,7 +129,7 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 static CFFGLPluginInfo PluginInfo(
 	ShaderMaker::CreateInstance,		// Create method
-	"SM05",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
+	"EX05",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
 	"SoM 3-Balls",						// *** Plugin name - make it different for each plugin 
 	1,						   			// API major version number 													
 	006,								// API minor version number	
@@ -147,7 +148,7 @@ void main()
 {
 	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
 	gl_TexCoord[0] = gl_MultiTexCoord0;
-	gl_FrontColor = gl_Color;
+	gl_FrontColor = gl_Color;  
 
 } );
 
@@ -222,9 +223,14 @@ vec2 fold(vec2 x) {
 	return vec2(fold(x.x), fold(x.y));
 }
 
-float distCircle1(vec2 pos,vec2 circleCenter,float radius){
+float circleLength(vec2 x,float power) {
+	 
+	return pow(pow(x.x, power) + pow(x.y, power),1.0/power);
+}
 
-	float dist = length(circleCenter - pos);
+float distCircle1(vec2 pos,vec2 circleCenter,float radius,float power){
+
+	float dist = circleLength(circleCenter - pos, power);
 
 	if (dist < radius) {
 		return 1.0;
@@ -238,19 +244,19 @@ float distCircle1(vec2 pos,vec2 circleCenter,float radius){
 
 
 }
-float distCircle(vec2 pos, vec2 circleCenter, float radius) {
+float distCircle(vec2 pos, vec2 circleCenter, float radius, float power) {
 
 	float dist = 0.0;
-	 dist = max(dist, distCircle1(pos, circleCenter, radius));
-	 dist = max(dist, distCircle1(pos, circleCenter + vec2(1.0, 0.0), radius));
-	 dist = max(dist, distCircle1(pos, circleCenter + vec2(-1.0, 0.0), radius));
-	 dist = max(dist, distCircle1(pos, circleCenter + vec2(0.0, 1.0), radius));
-	 dist = max(dist, distCircle1(pos, circleCenter + vec2(0.0, -1.0), radius));
+	 dist = max(dist, distCircle1(pos, circleCenter, radius, power));
+	 dist = max(dist, distCircle1(pos, circleCenter + vec2(1.0, 0.0), radius, power));
+	 dist = max(dist, distCircle1(pos, circleCenter + vec2(-1.0, 0.0), radius, power));
+	 dist = max(dist, distCircle1(pos, circleCenter + vec2(0.0, 1.0), radius, power));
+	 dist = max(dist, distCircle1(pos, circleCenter + vec2(0.0, -1.0), radius, power));
 
-	 dist = max(dist, distCircle1(pos, circleCenter + vec2(-1.0, -1.0), radius));
-	 dist = max(dist, distCircle1(pos, circleCenter + vec2(1.0, 1.0), radius));
-	 dist = max(dist, distCircle1(pos, circleCenter + vec2(1.0, -1.0), radius));
-	 dist = max(dist, distCircle1(pos, circleCenter + vec2(-1.0, 1.0), radius));
+	 dist = max(dist, distCircle1(pos, circleCenter + vec2(-1.0, -1.0), radius, power));
+	 dist = max(dist, distCircle1(pos, circleCenter + vec2(1.0, 1.0), radius, power));
+	 dist = max(dist, distCircle1(pos, circleCenter + vec2(1.0, -1.0), radius, power));
+	 dist = max(dist, distCircle1(pos, circleCenter + vec2(-1.0, 1.0), radius, power));
 	  
 	
 	return dist;
@@ -270,24 +276,25 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 	seeds[1] = inputVector2;
 	seeds[2] = inputVector3;
 	
-		float scale = inputVector4.x;
+	//	float scale = inputVector4.x;
 	// float scale = inputColour.x*10.0;
 	// vec2 center = (iMouse.xy / iResolution.xy)*4.0 - 2.0;
-	 
+	float aspect = iResolution.x / iResolution.y;
 	vec2 pixel = (fragCoord / iResolution.xy) ; // +rotate(scale*((fragCoord / iResolution.xy)*2.0 - 1.0), inputVector4.y);
+ 
 	fragColor = vec4(0.0, 0.0, 0.0, 0.0);
 
 	pixel = mod(pixel, vec3(2.0, 2.0, 2.0));
 	float dist = 10000;
 		// mark the seeds
 
-	float distC = distCircle(pixel, seeds[0].zw, seeds[0].x);
+	float distC = distCircle(pixel, seeds[0].zw, seeds[0].x,seeds[0].y*seeds[0].y*10.0);
 	fragColor += inputColor1*distC; 
 
-	  distC = distCircle(pixel, seeds[1].zw, seeds[1].x);
+	  distC = distCircle(pixel, seeds[1].zw, seeds[1].x, seeds[1].y*seeds[1].y*10.0);
 	fragColor += inputColor2*distC; 
 
-	  distC = distCircle(pixel, seeds[2].zw, seeds[2].x);
+	  distC = distCircle(pixel, seeds[2].zw, seeds[2].x, seeds[2].y*seeds[2].y*10.0);
 	fragColor += inputColor3*distC; 
 
 		 
@@ -338,27 +345,24 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 
 
 
-	SetParamInfo(FFPARAM_VECTOR1_X, "Vector1X", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_SPEEDS_X, "Seed 1 Speed", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR1_Y, "Seed 1 Radius", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR1_Z, "Seed 1 Real", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR1_W, "Seed 1 Imag", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR1_X, "Radius 1", FF_TYPE_STANDARD, 0.2f); 
+	SetParamInfo(FFPARAM_VECTOR1_Y, "Shape 1", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR1_Z, "Pos X 1", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR1_W, "Pos Y 1" , FF_TYPE_STANDARD, 0.5f);
 
 
-	SetParamInfo(FFPARAM_VECTOR2_X, "Vector2X", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_SPEEDS_Y, "Seed 2 Speed", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_VECTOR2_Y, "Seed 2 Radius", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR2_Z, "Seed 2 Real", FF_TYPE_STANDARD, 0.50f);
-	SetParamInfo(FFPARAM_VECTOR2_W, "Seed 2 Imag", FF_TYPE_STANDARD, 0.50f);
+	SetParamInfo(FFPARAM_VECTOR2_X, "Radius 2", FF_TYPE_STANDARD, 0.15f); 
+	SetParamInfo(FFPARAM_VECTOR2_Y, "Shape 2", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR2_Z, "Pos X 2", FF_TYPE_STANDARD, 0.75f);
+	SetParamInfo(FFPARAM_VECTOR2_W, "Pos Y 2", FF_TYPE_STANDARD, 0.50f);
 
 
-	SetParamInfo(FFPARAM_VECTOR3_X, "Vector3X", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_SPEEDS_Z, "Seed 3 Speed", FF_TYPE_STANDARD, 0.0f);
-//	SetParamInfo(FFPARAM_VECTOR3_Y, "Seed 3 Radius", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR3_Z, "Seed 3 Real", FF_TYPE_STANDARD, 0.50f);
-	SetParamInfo(FFPARAM_VECTOR3_W, "Seed 3 Imag", FF_TYPE_STANDARD, 0.50f);
-	SetParamInfo(FFPARAM_JULIA, "yyy", FF_TYPE_BOOLEAN, 0.00f);
-	SetParamInfo(FFPARAM_SHOW_KNOBS, "xxx", FF_TYPE_BOOLEAN, 1.00f);
+	SetParamInfo(FFPARAM_VECTOR3_X, "Radius 3", FF_TYPE_STANDARD, 0.1f); 
+	SetParamInfo(FFPARAM_VECTOR3_Y, "Shape 3", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR3_Z, "Pos X 3", FF_TYPE_STANDARD, 0.25f);
+	SetParamInfo(FFPARAM_VECTOR3_W, "Pos Y 3", FF_TYPE_STANDARD, 0.50f);
+	// SetParamInfo(FFPARAM_JULIA, "yyy", FF_TYPE_BOOLEAN, 0.00f);
+//. SetParamInfo(FFPARAM_SHOW_KNOBS, "xxx", FF_TYPE_BOOLEAN, 1.00f);
 
 
 
@@ -453,7 +457,7 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 	time_t datime;
 	struct tm tmbuff;
 
-	if(bInitialized) {
+	if (bInitialized) {
 
 		// To the host this is an effect plugin, but it can be either a source or an effect
 		// and will work without any input, so we still start up if even there is no input texture
@@ -462,22 +466,22 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		// It could be different to that receieved by InitGL
 		float vpdim[4];
 		glGetFloatv(GL_VIEWPORT, vpdim);
-		m_vpWidth  = vpdim[2];
+		m_vpWidth = vpdim[2];
 		m_vpHeight = vpdim[3];
 
 		// Is there is texture needed by the shader ?
-		if(m_inputTextureLocation >= 0 || m_inputTextureLocation1 >= 0) {
+		if (m_inputTextureLocation >= 0 || m_inputTextureLocation1 >= 0) {
 
 			// Is there a texture available ?
-			if(m_inputTextureLocation >= 0 && pGL->numInputTextures > 0 && pGL->inputTextures[0] != NULL) {
+			if (m_inputTextureLocation >= 0 && pGL->numInputTextures > 0 && pGL->inputTextures[0] != NULL) {
 
 				Texture0 = *(pGL->inputTextures[0]);
 				maxCoords = GetMaxGLTexCoords(Texture0);
 
 				// Delete the local texture if the incoming size is different
-				if((int)m_channelResolution[0][0] != Texture0.Width 
-				|| (int)m_channelResolution[0][1] != Texture0.Height) {
-					if(m_glTexture0 > 0) {
+				if ((int)m_channelResolution[0][0] != Texture0.Width
+					|| (int)m_channelResolution[0][1] != Texture0.Height) {
+					if (m_glTexture0 > 0) {
 						glDeleteTextures(1, &m_glTexture0);
 						m_glTexture0 = 0; // This is needed or the local texture is not re-created in CreateRectangleTexture (30.03.15)
 					}
@@ -499,12 +503,12 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 			}
 
 			// Repeat if there is a second incoming texture and the shader needs it
-			if(m_inputTextureLocation1 >= 0 && pGL->numInputTextures > 1 && pGL->inputTextures[1] != NULL) {
+			if (m_inputTextureLocation1 >= 0 && pGL->numInputTextures > 1 && pGL->inputTextures[1] != NULL) {
 				Texture1 = *(pGL->inputTextures[1]);
 				maxCoords = GetMaxGLTexCoords(Texture1);
-				if((int)m_channelResolution[1][0] != Texture1.Width 
-				|| (int)m_channelResolution[1][1] != Texture1.Height) {
-					if(m_glTexture1 > 0) {
+				if ((int)m_channelResolution[1][0] != Texture1.Width
+					|| (int)m_channelResolution[1][1] != Texture1.Height) {
+					if (m_glTexture1 > 0) {
 						glDeleteTextures(1, &m_glTexture1);
 						m_glTexture1 = 0;
 					}
@@ -520,13 +524,13 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 			if(m_inputTextureLocation2 >= 0 && pGL->numInputTextures > 2 && pGL->inputTextures[2] != NULL) {
 				Texture2 = *(pGL->inputTextures[2]);
 				maxCoords = GetMaxGLTexCoords(Texture2);
-				if((int)m_channelResolution[2][0] != Texture2.Width 
+				if((int)m_channelResolution[2][0] != Texture2.Width
 				|| (int)m_channelResolution[2][1] != Texture2.Height) {
 					if(m_glTexture2 > 0) {
 						glDeleteTextures(1, &m_glTexture2);
 						m_glTexture2 = 0;
 					}
-				}				
+				}
 				m_channelResolution[2][0] = (float)Texture2.Width;
 				m_channelResolution[2][1] = (float)Texture2.Height;
 				CreateRectangleTexture(Texture2, maxCoords, m_glTexture2, GL_TEXTURE1, m_fbo, pGL->HostFBO);
@@ -535,7 +539,7 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 			if(m_inputTextureLocation3 >= 0 && pGL->numInputTextures > 3 && pGL->inputTextures[3] != NULL) {
 				Texture3 = *(pGL->inputTextures[3]);
 				maxCoords = GetMaxGLTexCoords(Texture3);
-				if((int)m_channelResolution[3][0] != Texture3.Width 
+				if((int)m_channelResolution[3][0] != Texture3.Width
 				|| (int)m_channelResolution[3][1] != Texture3.Height) {
 					if(m_glTexture3 > 0) {
 						glDeleteTextures(1, &m_glTexture3);
@@ -552,7 +556,7 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 
 		// Calculate elapsed time
 		lastTime = elapsedTime;
-		elapsedTime = GetCounter()/1000.0; // In seconds - higher resolution than timeGetTime()
+		elapsedTime = GetCounter() / 1000.0; // In seconds - higher resolution than timeGetTime()
 		m_time = m_time + (float)(elapsedTime - lastTime)*m_UserSpeed*2.0f; // increment scaled by user input 0.0 - 2.0
 
 
@@ -579,12 +583,12 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 #if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__))
 		localtime_s(&tmbuff, &datime);
 #else
-        localtime_r(&datime, &tmbuff);
+		localtime_r(&datime, &tmbuff);
 #endif
 		m_dateYear = (float)tmbuff.tm_year;
-		m_dateMonth = (float)tmbuff.tm_mon+1;
+		m_dateMonth = (float)tmbuff.tm_mon + 1;
 		m_dateDay = (float)tmbuff.tm_mday;
-		m_dateTime = (float)(tmbuff.tm_hour*3600 + tmbuff.tm_min*60 + tmbuff.tm_sec);
+		m_dateTime = (float)(tmbuff.tm_hour * 3600 + tmbuff.tm_min * 60 + tmbuff.tm_sec);
 
 		// activate our shader
 		m_shader.BindShader();
@@ -599,13 +603,13 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 
 		// First input texture
 		// The shader will use the first texture bound to GL texture unit 0
-		if(m_inputTextureLocation >= 0 && Texture0.Handle > 0) {
+		if (m_inputTextureLocation >= 0 && Texture0.Handle > 0) {
 			m_extensions.glUniform1iARB(m_inputTextureLocation, 0);
 		}
 
 		// Second input texture
 		// The shader will use the texture bound to GL texture unit 1
-		if(m_inputTextureLocation1 >= 0 && Texture1.Handle > 0)
+		if (m_inputTextureLocation1 >= 0 && Texture1.Handle > 0)
 			m_extensions.glUniform1iARB(m_inputTextureLocation1, 1);
 
 		/*
@@ -618,9 +622,9 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		*/
 
 		// Elapsed time
-		if(m_timeLocation >= 0) 
+		if (m_timeLocation >= 0)
 			m_extensions.glUniform1fARB(m_timeLocation, m_time);
-	
+
 		// ===========================================================
 		// ShaderToy new uniforms
 		// iTime - iGlobalTime
@@ -643,18 +647,18 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		// GLSL sandbox
 		//
 		// resolution (viewport size)
-		if(m_screenLocation >= 0) 
-			m_extensions.glUniform2fARB(m_screenLocation, m_vpWidth, m_vpHeight); 
+		if (m_screenLocation >= 0)
+			m_extensions.glUniform2fARB(m_screenLocation, m_vpWidth, m_vpHeight);
 
 		// mouse - Mouse position
-		if(m_mouseLocation >= 0) { // Vec2 - normalized
+		if (m_mouseLocation >= 0) { // Vec2 - normalized
 			m_mouseX = m_UserMouseX;
 			m_mouseY = m_UserMouseY;
-			m_extensions.glUniform2fARB(m_mouseLocation, m_mouseX, m_mouseY); 
+			m_extensions.glUniform2fARB(m_mouseLocation, m_mouseX, m_mouseY);
 		}
 
 		// surfaceSize - Mouse left drag position - in pixel coordinates
-		if(m_surfaceSizeLocation >= 0) {
+		if (m_surfaceSizeLocation >= 0) {
 			m_mouseLeftX = m_UserMouseLeftX*m_vpWidth;
 			m_mouseLeftY = m_UserMouseLeftY*m_vpHeight;
 			m_extensions.glUniform2fARB(m_surfaceSizeLocation, m_mouseLeftX, m_mouseLeftY);
@@ -668,23 +672,23 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		// zw contain the click pixel.
 		// Modified here equivalent to mouse unclicked or left button dragged
 		// The mouse is not being simulated, they are just inputs that can be used within the shader.
-		if(m_mouseLocationVec4 >= 0) {
+		if (m_mouseLocationVec4 >= 0) {
 			// Convert from 0-1 to pixel coordinates for ShaderToy
 			// Here we use the resolution rather than the screen
-			m_mouseX     = m_UserMouseX*m_vpWidth;
-			m_mouseY     = m_UserMouseY*m_vpHeight;
+			m_mouseX = m_UserMouseX*m_vpWidth;
+			m_mouseY = m_UserMouseY*m_vpHeight;
 			m_mouseLeftX = m_UserMouseLeftX*m_vpWidth;
 			m_mouseLeftY = m_UserMouseLeftY*m_vpHeight;
-			m_extensions.glUniform4fARB(m_mouseLocationVec4, m_mouseX, m_mouseY, m_mouseLeftX, m_mouseLeftY); 
+			m_extensions.glUniform4fARB(m_mouseLocationVec4, m_mouseX, m_mouseY, m_mouseLeftX, m_mouseLeftY);
 		}
 
 		// iResolution - viewport resolution
-		if(m_resolutionLocation >= 0) // Vec3
-			m_extensions.glUniform3fARB(m_resolutionLocation, m_vpWidth, m_vpHeight, 1.0); 
+		if (m_resolutionLocation >= 0) // Vec3
+			m_extensions.glUniform3fARB(m_resolutionLocation, m_vpWidth, m_vpHeight, 1.0);
 
 		// Channel resolutions are linked to the actual texture resolutions - the size is set in ProcessOpenGL
 		// Global resolution is the viewport
-		if(m_channelresolutionLocation >= 0) {
+		if (m_channelresolutionLocation >= 0) {
 			// uniform vec3	iChannelResolution[4]
 			// 4 channels Vec3. Float array is 4 rows, 3 cols
 			// TODO - 4 channels - 2 & 3 are unused so will not have a texture anyway
@@ -698,11 +702,11 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		}
 
 		// iDate - vec4
-		if(m_dateLocation >= 0) 
+		if (m_dateLocation >= 0)
 			m_extensions.glUniform4fARB(m_dateLocation, m_dateYear, m_dateMonth, m_dateDay, m_dateTime);
 
 		// Channel elapsed time - vec4
-		if(m_channeltimeLocation >= 0)
+		if (m_channeltimeLocation >= 0)
 			m_extensions.glUniform1fvARB(m_channeltimeLocation, 4, m_channelTime);
 
 		// Extras - input colour is linked to the user controls Red, Green, Blue, Alpha
@@ -716,7 +720,7 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		if (m_inputVector3Location >= 0)
 			m_extensions.glUniform4fARB(m_inputVector3Location, m_vector3.x, m_vector3.y, m_vector3.z, m_vector3.w);
 		if (m_inputVector4Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector4Location,10.0f*(1.0f/exp( m_UserRed*50.0f)) , m_UserBlue*PI_2, m_UserMouseX, m_UserMouseY);
+			m_extensions.glUniform4fARB(m_inputVector4Location, m_UserRed, m_UserBlue, m_UserMouseX, m_UserMouseY);
 
 		if (m_inputTimesLocation >= 0)
 			m_extensions.glUniform4fARB(m_inputTimesLocation, m_times.x, m_times.y, m_times.z, m_times.w);
@@ -730,20 +734,20 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 
 
 		// Bind a texture if the shader needs one
-		if(m_inputTextureLocation >= 0 && Texture0.Handle > 0) {
+		if (m_inputTextureLocation >= 0 && Texture0.Handle > 0) {
 			m_extensions.glActiveTexture(GL_TEXTURE0);
 			// Has the local texture been created
 			// TODO - it should have been always created so this logic can be changed
-			if(m_glTexture0 > 0) 
+			if (m_glTexture0 > 0)
 				glBindTexture(GL_TEXTURE_2D, m_glTexture0);
-			else 
+			else
 				glBindTexture(GL_TEXTURE_2D, Texture0.Handle);
 		}
 
 		// If there is a second texture, bind it to texture unit 1
-		if(m_inputTextureLocation1 >= 0 && Texture1.Handle > 0) {
+		if (m_inputTextureLocation1 >= 0 && Texture1.Handle > 0) {
 			m_extensions.glActiveTexture(GL_TEXTURE1);
-			if(m_glTexture1 > 0)
+			if (m_glTexture1 > 0)
 				glBindTexture(GL_TEXTURE_2D, m_glTexture1);
 			else
 				glBindTexture(GL_TEXTURE_2D, Texture1.Handle);
@@ -771,14 +775,14 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		// Do the draw for the shader to work
 		glEnable(GL_TEXTURE_2D);
 		glBegin(GL_QUADS);
-		glTexCoord2f(0.0, 0.0);	
+		glTexCoord2f(0.0, 0.0);
 		glVertex2f(-1.0, -1.0);
-		glTexCoord2f(0.0, 1.0);	
-		glVertex2f(-1.0,  1.0);
-		glTexCoord2f(1.0, 1.0);	
-		glVertex2f( 1.0,  1.0);
-		glTexCoord2f(1.0, 0.0);	
-		glVertex2f( 1.0, -1.0);
+		glTexCoord2f(0.0, 1.0);
+		glVertex2f(-1.0, 1.0);
+		glTexCoord2f(1.0, 1.0);
+		glVertex2f(1.0, 1.0);
+		glTexCoord2f(1.0, 0.0);
+		glVertex2f(1.0, -1.0);
 		glEnd();
 		glDisable(GL_TEXTURE_2D);
 
@@ -808,7 +812,9 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 			glBindTexture(GL_TEXTURE_2D, 0);
 
 		// unbind the shader
-		m_shader.UnbindShader();
+		m_shader.UnbindShader(); 
+	
+
 
 	} // endif bInitialized
 

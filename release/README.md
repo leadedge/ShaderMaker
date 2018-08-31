@@ -18,21 +18,21 @@
     - [Parameters](#parameters-3)
     - [Status](#status-3)
   - [006 Starfield](#006-starfield)
-- [Parameters](#parameters-4)
-  - [Status](#status-4)
+    - [Parameters](#parameters-4)
+    - [Status](#status-4)
   - [007 Tori](#007-tori)
-- [Parameters](#parameters-5)
-  - [Status](#status-5)
+    - [Parameters](#parameters-5)
+    - [Status](#status-5)
 - [Effect Plugins](#effect-plugins)
   - [001 God Rays](#001-god-rays)
     - [Parameters](#parameters-6)
     - [Status](#status-6)
 - [Shadertoy Conversions](#shadertoy-conversions)
   - [001 Kali Sea Creature](#001-kali-sea-creature)
-- [Parameters](#parameters-7)
+    - [Parameters](#parameters-7)
   - [001 Kali Sea Creature Extended](#001-kali-sea-creature-extended)
-- [Parameters](#parameters-8)
-  - [Status](#status-7)
+    - [Parameters](#parameters-8)
+    - [Status](#status-7)
 
 <!-- TOC END -->
 
@@ -163,7 +163,7 @@ core fun functionality, finished no further additions/changes planned
 |![kali extended render](media/sm-006-starfield-render.png )   |   ![kali extended params](media/sm-006-starfield-params.png ) 
    
                 
-## Parameters         
+#### Parameters         
 #### Status 
                      
 ### 007 Tori
@@ -173,7 +173,7 @@ core fun functionality, finished no further additions/changes planned
 |![kali extended render](media/007-tori-render.png )   |   ![kali extended params](media/007-tori-params.png ) 
    
               
-## Parameters            
+#### Parameters            
 #### Status 
 ## Effect Plugins
 
@@ -213,7 +213,7 @@ nice core functionality, not using a pre render step, might receive a gaussian b
 
 the shadertoy https://www.shadertoy.com/view/Mtf3Rr script by kali is the source for this, it is stripped from its background and parametrisedk, no further changes to code
            
-## Parameters
+#### Parameters
        
 - Speed - shadertoy speed value, this is a continous value and will ever increase
 - kaliscale - the scale value used in iteration
@@ -234,7 +234,7 @@ the shadertoy https://www.shadertoy.com/view/Mtf3Rr script by kali is the source
    
 the shadertoy https://www.shadertoy.com/view/Mtf3Rr script by kali is the source for this the intrinsic animation is stripped and the shape is 3-ary parametrised using alternation hybridisation in distance estimation method     
                        
-## Parameters
+#### Parameters
        
 - kaliScale - kali scale parameter used for all iterations no hybridisation here
 - Object Pos X/Y/Z - Object center

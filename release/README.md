@@ -122,7 +122,22 @@ ID: SM04
 Version: 2.0
 
 core fun functionality, finished no further additions/changes planned 
-
+              
+### 006 Starfield Kali Sea Creature Extended
+                                    
+| Render | Parameters |
+| ------------- | ------------- |   
+|![kali extended render](media/sm-006-starfield-render.png )   |   ![kali extended params](media/sm-006-starfield-params.png ) 
+   
+        
+                     
+### 007 Tori
+                                    
+| Render | Parameters |
+| ------------- | ------------- |   
+|![kali extended render](media/007-tori-render.png )   |   ![kali extended params](media/007-tori-params.png ) 
+   
+                
 ## Effect Plugins
 
 ### 001 God Rays        

@@ -30,6 +30,8 @@ Global
 		{87E03FBB-1636-46CB-9206-6A9B3DF4CDA6}.Debug|Default.Build.0 = Debug|Win32
 		{87E03FBB-1636-46CB-9206-6A9B3DF4CDA6}.Release|Default.ActiveCfg = Release|Win32
 		{87E03FBB-1636-46CB-9206-6A9B3DF4CDA6}.Release|Default.Build.0 = Release|Win32
+		{7BD8A62A-5D7E-45E2-B19F-A9F19AEF0586}.Debug|Default.ActiveCfg = Debug|Win32
+		{7BD8A62A-5D7E-45E2-B19F-A9F19AEF0586}.Release|Default.ActiveCfg = Release|Win32
 		{87E93FBB-1636-46CB-9206-6A9B3DF4CDA6}.Debug|Default.ActiveCfg = Debug|Win32
 		{87E93FBB-1636-46CB-9206-6A9B3DF4CDA6}.Debug|Default.Build.0 = Debug|Win32
 		{87E93FBB-1636-46CB-9206-6A9B3DF4CDA6}.Release|Default.ActiveCfg = Release|Win32

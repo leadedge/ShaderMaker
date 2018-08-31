@@ -58,10 +58,13 @@
 //
 //
 
+
+#include <vector> 
 #include "ShaderMaker.h"
 #include <windows.h>
 #include "opengl-utilities.h"
 #include <gl/GLU.h>
+#include "glext.h"
 
 #if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__))
 int (*cross_secure_sprintf)(char *, size_t, const char *,...) = sprintf_s;
@@ -140,12 +143,17 @@ static CFFGLPluginInfo PluginInfo (
 
 // Common vertex shader code as per FreeFrame examples
 char *vertexShaderCode = STRINGIFY (
+	varying vec3 N;
 void main()
 {
-	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
-	gl_TexCoord[0] = gl_MultiTexCoord0;
-	gl_FrontColor = gl_Color;
 
+	N = normalize(gl_NormalMatrix * gl_Normal);
+	gl_Position = gl_ModelViewProjectionMatrix*vec4(gl_Vertex.xyz, 1);
+	gl_FrontColor = gl_Color;
+	gl_PointSize = 2.0;
+	gl_TexCoord[1].xy = gl_MultiTexCoord1.xy;
+ 
+	 
 } );
 
 
@@ -179,6 +187,7 @@ void main()
 char *fragmentShaderCode = STRINGIFY (
 // ==================== PASTE WITHIN THESE LINES =======================
 
+varying vec3 N;
 
 float triangulate(float x) {
 	// creates a triangular function that maps 0..1 to 0..1..0 
@@ -220,6 +229,7 @@ vec3 hsv2rgb(vec3 c)
 	return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
 
+vec3 lightDir = vec3(1, 1, 1);
 const vec3 innerColor = vec3(1.0, 0.0, 0.0);
 const vec3 outerColor = vec3(1.0, 1.0, 1.0);
 const float maxIterations = 256;
@@ -242,11 +252,28 @@ vec2 c_pow(vec2 c, float e) {
 	return c_from_polar(pow(p.x, e), p.y*e);
 }
 
+void mainImage(out vec4 fragColor, in vec2 fragCoord)
+{
+	 
 
+	vec2 uv = fragCoord / iResolution.x;
+	vec2 texCoord = gl_TexCoord[1].st ;
+	vec3 color = texture(iChannel0, texCoord).rgb;
+	vec3 color2 = texture(iChannel1, texCoord).rgb;
+		vec3 col_out = gl_Color.xyz;
+		// lighting
+		float light = clamp(dot(N, lightDir), 0, 1);
+		float ambient = .50;
+		//   gl_FragColor = vec4(N.x,N.y,N.z,1);
+		fragColor = vec4(col_out*ambient + col_out*light + color + color2, 1);
+	
+		 
+
+}
 
 vec2 seeds[3]=vec2[3](inputVector1.zw, inputVector2.zw, inputVector3.zw);
 float powers[3] = float[3]( (inputVector1.y*16.0 - 8.0) ,  (inputVector2.y*16.0 - 8.0)  , (inputVector3.y*16.0 - 8.0)  );
-void mainImage(out vec4 fragColor, in vec2 fragCoord)
+void mainImageOld(out vec4 fragColor, in vec2 fragCoord)
 {
 	float n = 0.0;
 	// important: exponential interpolation is done in c area
@@ -319,6 +346,10 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 
 
 );
+
+
+
+
 #define DEBUG 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -336,8 +367,8 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	printf("GLSL version [%s]\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 #endif
 
-	printf("id: %s name: %s", PluginInfo.GetPluginInfo()->PluginUniqueID, PluginInfo.GetPluginInfo()->PluginName);
-	printf(" version: %i.%i\n", PluginInfo.GetPluginExtendedInfo()->PluginMajorVersion, PluginInfo.GetPluginExtendedInfo()->PluginMinorVersion);
+	printf("id: '%s' name: '%s'", PluginInfo.GetPluginInfo()->PluginUniqueID, PluginInfo.GetPluginInfo()->PluginName);
+	printf(" version: '%i.%i'\n", PluginInfo.GetPluginExtendedInfo()->PluginMajorVersion, PluginInfo.GetPluginExtendedInfo()->PluginMinorVersion);
 
 	//printf("\n%s \n %s\n", PluginInfo.GetPluginExtendedInfo()->About , PluginInfo.GetPluginExtendedInfo()->Description);
 	// Input properties allow for no texture or for four textures
@@ -356,19 +387,19 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	SetParamInfo(FFPARAM_BLUE,          "Rotation",          FF_TYPE_STANDARD, 0.0f);  
  	SetParamInfo(FFPARAM_ALPHA,         "MaxIter",         FF_TYPE_STANDARD, 0.25f);  
 
-	SetParamInfo(FFPARAM_VECTOR1_X, "Vector1X", FF_TYPE_STANDARD, 0.0f); 
-    SetParamInfo(FFPARAM_VECTOR1_Y, "Seed 1 Power", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR1_Z, "Seed 1 Real", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR1_W, "Seed 1 Imag", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR1_X, "Shift beforex", FF_TYPE_STANDARD, 0.5f); 
+    SetParamInfo(FFPARAM_VECTOR1_Y, "Seed 1 Power", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR1_Z, "Seed 1 Real", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR1_W, "Seed 1 Imag", FF_TYPE_STANDARD, 0.5f);
 
-	SetParamInfo(FFPARAM_VECTOR2_X, "Vector2X", FF_TYPE_STANDARD, 0.0f); 
-	SetParamInfo(FFPARAM_VECTOR2_Y, "Seed 2 Power", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR2_Z, "Seed 2 Real", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR2_W, "Seed 2 Imag", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR2_X, "shift afterx", FF_TYPE_STANDARD, 0.5f); 
+	SetParamInfo(FFPARAM_VECTOR2_Y, "Seed 2 Power", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR2_Z, "Seed 2 Real", FF_TYPE_STANDARD, 0.05f);
+	SetParamInfo(FFPARAM_VECTOR2_W, "Seed 2 Imag", FF_TYPE_STANDARD, 0.5f);
 
-	SetParamInfo(FFPARAM_VECTOR3_X, "Vector3X", FF_TYPE_STANDARD, 0.0f); 
-	SetParamInfo(FFPARAM_VECTOR3_Y, "Seed 3 Power", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR3_Z, "Seed 3 Real", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR3_X, "RotX", FF_TYPE_STANDARD, 0.0f); 
+	SetParamInfo(FFPARAM_VECTOR3_Y, "RotY", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR3_Z, "RotZ", FF_TYPE_STANDARD, 0.0f);
 	SetParamInfo(FFPARAM_VECTOR3_W, "Seed 3 Imag", FF_TYPE_STANDARD, 0.0f);
 
 	SetParamInfo(FFPARAM_VECTOR4_X, "Decay 1", FF_TYPE_STANDARD, 1.0f);
@@ -419,6 +450,11 @@ FFResult ShaderMaker::InitGL(const FFGLViewportStruct *vp)
 	std::string shaderString = fragmentShaderCode;
 	bInitialized = LoadShader(shaderString);
 
+	glGenTextures(1, &renderedTexture1);
+	glGenTextures(1, &renderedTexture1Depth);
+
+	m_extensions.glGenFramebuffersEXT(1, &m_FramebufferId); 
+
 	return FF_SUCCESS;
 }
 
@@ -427,6 +463,33 @@ ShaderMaker::~ShaderMaker()
 	// Not using this but it is here just in case
 }
 
+
+
+void ShaderMaker::updateRenderTargets(int newWidth, int newHeight)
+{
+	if ((newWidth != lastWidth) || (newHeight != lastHeight))
+	{
+		printf("Updating render target to %i %i", newWidth, newHeight);
+		// "Bind" the newly created texture : all future texture functions will modify this texture
+		glBindTexture(GL_TEXTURE_2D, renderedTexture1);
+
+		// Give an empty image to OpenGL ( the last "0" )
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, newWidth, newHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+
+		glBindTexture(GL_TEXTURE_2D, renderedTexture1Depth);
+
+		// Give an empty image to OpenGL ( the last "0" )
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, newWidth, newHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+		lastWidth = newWidth;
+		lastHeight = newHeight;
+	}
+}
 
 FFResult ShaderMaker::DeInitGL()
 {
@@ -447,9 +510,61 @@ FFResult ShaderMaker::DeInitGL()
 	m_fbo = 0;
 	bInitialized = false;
 
+	if (renderedTexture1)
+	{
+		glDeleteTextures(1, &renderedTexture1);
+		renderedTexture1 = 0;
+	}
+	if (renderedTexture1Depth)
+	{
+		glDeleteTextures(1, &renderedTexture1Depth);
+		renderedTexture1Depth = 0;
+	}
 	return FF_SUCCESS;
 }
 
+void ShaderMaker::renderQuad2(float texMaxX, float texMaxY)
+{
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_QUADS);
+
+	//lower left
+	m_extensions.glMultiTexCoord2f(GL_TEXTURE1, 0, 0);
+	glVertex2f(-1, -1);
+
+	//upper left
+	m_extensions.glMultiTexCoord2f(GL_TEXTURE1, 0, texMaxY);
+	glVertex2f(-1, 1);
+
+	//upper right
+	m_extensions.glMultiTexCoord2f(GL_TEXTURE1, texMaxX, texMaxY);
+	glVertex2f(1, 1);
+
+	//lower right
+	m_extensions.glMultiTexCoord2f(GL_TEXTURE1, texMaxX, 0);
+	glVertex2f(1, -1);
+
+	glEnd();
+
+}
+void renderQuad(){
+// Do the draw for the shader to work
+
+glEnable(GL_TEXTURE_2D);
+glBegin(GL_QUADS);
+glColor3f(1.0, 0.0, .0);
+glTexCoord2f(0.0, 0.0);
+glVertex2f(0.0, -1.0);
+glTexCoord2f(0.0, 100.0);
+glVertex2f(.0,  1.0);
+glTexCoord2f(1.0, 100.0);
+glVertex2f( 1.0,  100.0);
+glTexCoord2f(1.0, 0.0);
+glVertex2f( 1.0, -100.0);
+glEnd();
+glDisable(GL_TEXTURE_2D);
+
+}
 FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 {
 	FFGLTextureStruct Texture0;
@@ -462,7 +577,10 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 	struct tm tmbuff;
 
 	if(bInitialized) {
-
+	
+		
+	 
+		
 		// To the host this is an effect plugin, but it can be either a source or an effect
 		// and will work without any input, so we still start up if even there is no input texture
 
@@ -473,6 +591,7 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		m_vpWidth  = vpdim[2];
 		m_vpHeight = vpdim[3];
 
+ 	updateRenderTargets(m_vpWidth ,m_vpHeight);
 		// Is there is texture needed by the shader ?
 		if(m_inputTextureLocation >= 0 || m_inputTextureLocation1 >= 0) {
 
@@ -557,6 +676,20 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 			*/
 
 		} // endif shader uses a texture
+		
+		
+		/*
+		set up render targetr
+		*/
+		m_extensions.glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_FramebufferId);
+
+		m_extensions.glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, renderedTexture1, 0);
+
+		m_extensions.glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, renderedTexture1Depth, 0);
+
+		glDepthMask(TRUE);
+
+
 
 		// Calculate elapsed time
 		lastTime = elapsedTime;
@@ -571,37 +704,37 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		intervalTime = 1.0;
 		// update decay values
 		for (int kk = 0; kk < 100; kk++) { 
-			if (kk == 0) {
-				decays1[kk].x = lerp(decays1[kk].x, m_vector1.x, m_vector4.x*intervalTime);
-				decays1[kk].y = lerp(decays1[kk].y, m_vector1.y, m_vector4.x*intervalTime);
-				decays1[kk].z = lerp(decays1[kk].z, m_vector1.z, m_vector4.x*intervalTime);
-				decays1[kk].w = lerp(decays1[kk].w, m_vector1.w, m_vector4.x*intervalTime);
+			if (kk==0) {
+				decays1[kk].x = lerp(decays1[kk].x, m_vector1.x, m_vector4.x*m_vector4.x*intervalTime);
+				decays1[kk].y = lerp(decays1[kk].y, m_vector1.y, m_vector4.x*m_vector4.x*intervalTime);
+				decays1[kk].z = lerp(decays1[kk].z, m_vector1.z, m_vector4.x*m_vector4.x*intervalTime);
+				decays1[kk].w = lerp(decays1[kk].w, m_vector1.w, m_vector4.x*m_vector4.x*intervalTime);
 
-				decays2[kk].x = lerp(decays2[kk].x, m_vector2.x, m_vector4.y*intervalTime);
-				decays2[kk].y = lerp(decays2[kk].y, m_vector2.y, m_vector4.y*intervalTime);
-				decays2[kk].z = lerp(decays2[kk].z, m_vector2.z, m_vector4.y*intervalTime);
-				decays2[kk].w = lerp(decays2[kk].w, m_vector2.w, m_vector4.y*intervalTime);
+				decays2[kk].x = lerp(decays2[kk].x, m_vector2.x, m_vector4.y* m_vector4.y*intervalTime);
+				decays2[kk].y = lerp(decays2[kk].y, m_vector2.y, m_vector4.y* m_vector4.y*intervalTime);
+				decays2[kk].z = lerp(decays2[kk].z, m_vector2.z, m_vector4.y* m_vector4.y*intervalTime);
+				decays2[kk].w = lerp(decays2[kk].w, m_vector2.w, m_vector4.y* m_vector4.y*intervalTime);
 
-				decays3[kk].x = lerp(decays3[kk].x, m_vector3.x, m_vector4.z*intervalTime);
-				decays3[kk].y = lerp(decays3[kk].y, m_vector3.y, m_vector4.z*intervalTime);
-				decays3[kk].z = lerp(decays3[kk].z, m_vector3.z, m_vector4.z*intervalTime);
-				decays3[kk].w = lerp(decays3[kk].w, m_vector3.w, m_vector4.z*intervalTime);
+				decays3[kk].x = lerp(decays3[kk].x, m_vector3.x, m_vector4.z*m_vector4.z*intervalTime);
+				decays3[kk].y = lerp(decays3[kk].y, m_vector3.y, m_vector4.z*m_vector4.z*intervalTime);
+				decays3[kk].z = lerp(decays3[kk].z, m_vector3.z, m_vector4.z*m_vector4.z*intervalTime);
+				decays3[kk].w = lerp(decays3[kk].w, m_vector3.w, m_vector4.z*m_vector4.z*intervalTime);
 			}
 			else {
-				decays1[kk].x = lerp(decays1[kk].x, decays1[kk - 1].x, m_vector4.x*intervalTime);
-				decays1[kk].y = lerp(decays1[kk].y, decays1[kk - 1].y, m_vector4.x*intervalTime);
-				decays1[kk].z = lerp(decays1[kk].z, decays1[kk - 1].z, m_vector4.x*intervalTime);
-				decays1[kk].w = lerp(decays1[kk].w, decays1[kk - 1].w, m_vector4.x*intervalTime);
+				decays1[kk].x = lerp(decays1[kk].x, decays1[kk - 1].x, m_vector4.x*m_vector4.x*intervalTime);
+				decays1[kk].y = lerp(decays1[kk].y, decays1[kk - 1].y, m_vector4.x*m_vector4.x*intervalTime);
+				decays1[kk].z = lerp(decays1[kk].z, decays1[kk - 1].z, m_vector4.x*m_vector4.x*intervalTime);
+				decays1[kk].w = lerp(decays1[kk].w, decays1[kk - 1].w, m_vector4.x*m_vector4.x*intervalTime);
 
-				decays2[kk].x = lerp(decays2[kk].x, decays2[kk - 1].x, m_vector4.y*intervalTime);
-				decays2[kk].y = lerp(decays2[kk].y, decays2[kk - 1].y, m_vector4.y*intervalTime);
-				decays2[kk].z = lerp(decays2[kk].z, decays2[kk - 1].z, m_vector4.y*intervalTime);
-				decays2[kk].w = lerp(decays2[kk].w, decays2[kk - 1].w, m_vector4.y*intervalTime);
+				decays2[kk].x = lerp(decays2[kk].x, decays2[kk - 1].x, m_vector4.y*m_vector4.y*intervalTime);
+				decays2[kk].y = lerp(decays2[kk].y, decays2[kk - 1].y, m_vector4.y*m_vector4.y*intervalTime);
+				decays2[kk].z = lerp(decays2[kk].z, decays2[kk - 1].z, m_vector4.y*m_vector4.y*intervalTime);
+				decays2[kk].w = lerp(decays2[kk].w, decays2[kk - 1].w, m_vector4.y*m_vector4.y*intervalTime);
 
-				decays3[kk].x = lerp(decays3[kk].x, decays3[kk - 1].x, m_vector4.z*intervalTime);
-				decays3[kk].y = lerp(decays3[kk].y, decays3[kk - 1].y, m_vector4.z*intervalTime);
-				decays3[kk].z = lerp(decays3[kk].z, decays3[kk - 1].z, m_vector4.z*intervalTime);
-				decays3[kk].w = lerp(decays3[kk].w, decays3[kk - 1].w, m_vector4.z*intervalTime);
+				decays3[kk].x = lerp(decays3[kk].x, decays3[kk - 1].x, m_vector4.z*m_vector4.z*intervalTime);
+				decays3[kk].y = lerp(decays3[kk].y, decays3[kk - 1].y, m_vector4.z*m_vector4.z*intervalTime);
+				decays3[kk].z = lerp(decays3[kk].z, decays3[kk - 1].z, m_vector4.z*m_vector4.z*intervalTime);
+				decays3[kk].w = lerp(decays3[kk].w, decays3[kk - 1].w, m_vector4.z*m_vector4.z*intervalTime);
 			}
 		}
 	//	printf("Decays updated");
@@ -755,13 +888,13 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 			m_extensions.glUniform4fARB(m_inputColourLocation, m_UserRed, m_UserGreen, m_UserBlue, m_UserAlpha);
 
 		if (m_inputVector1Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector1Location, m_vector1.x, m_vector1.y, m_vector1.z*SCALE_SEED+ SHIFT_SEED, m_vector1.w*SCALE_SEED + SHIFT_SEED);
+			m_extensions.glUniform4fARB(m_inputVector1Location, m_vector1.x, m_vector1.y, m_vector1.z, m_vector1.w);
 		if (m_inputVector2Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector2Location, m_vector2.x, m_vector2.y, m_vector2.z*SCALE_SEED + SHIFT_SEED, m_vector2.w*SCALE_SEED + SHIFT_SEED);
+			m_extensions.glUniform4fARB(m_inputVector2Location, m_vector2.x, m_vector2.y, m_vector2.z, m_vector2.w);
 		if (m_inputVector3Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector3Location, m_vector3.x, m_vector3.y, m_vector3.z*SCALE_SEED + SHIFT_SEED, m_vector3.w*SCALE_SEED + SHIFT_SEED);
+			m_extensions.glUniform4fARB(m_inputVector3Location, m_vector3.x, m_vector3.y, m_vector3.z, m_vector3.w);
 		if (m_inputVector4Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector4Location,  m_UserRed*m_UserRed*10.0f, m_UserBlue*PI_2, m_UserMouseX*SCALE_SEED + SHIFT_SEED, m_UserMouseY*SCALE_SEED + SHIFT_SEED);
+			m_extensions.glUniform4fARB(m_inputVector4Location, m_vector4.x, m_vector4.y, m_vector4.z, m_vector4.w);
 		
 		if (m_inputColor1Location >= 0)
 			m_extensions.glUniform4fARB(m_inputColor1Location, m_color1.x, m_color1.y, m_color1.z, m_color1.w );
@@ -820,48 +953,75 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 
 		// Do the draw for the shader to work
 		/*
-		glEnable(GL_TEXTURE_2D);
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.0, 0.0);	
-		glVertex2f(-1.0, -1.0);
-		glTexCoord2f(0.0, 1.0);	
-		glVertex2f(-1.0,  1.0);
-		glTexCoord2f(1.0, 1.0);	
-		glVertex2f( 1.0,  1.0);
-		glTexCoord2f(1.0, 0.0);	
-		glVertex2f( 1.0, -1.0);
-		glEnd();
-		glDisable(GL_TEXTURE_2D);
+		renderQuat();
 		*/
+
+		 
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		
-
-		gluPerspective(65, 800./450., 0.011, 1000.0);
-		gluLookAt(2,0, 0, 0, 0, 0, 0, 1, 0);
-
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+		glFrontFace(GL_CW);	
+		gluPerspective(65, m_vpWidth / m_vpHeight, 0.011, 1000.0);
+		gluLookAt(25,0, 0, 0, 0, 0, 0, 1, 0);
+		float size = 10.0;
+		int count = 25;
 		glMatrixMode(GL_MODELVIEW);
-		for (int ululu = 0; ululu < 10; ululu++) {
+
+
+		glClearColor(255, 255, 0, 255);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+		for (int ululu = 0; ululu < count; ululu++) {
 			glMatrixMode(GL_MODELVIEW);
 			glLoadIdentity();
 	//		glScalef(1.0/ululu, 1.0/ululu, 1.0/ululu);
-		
-		glTranslatef(decays1[ululu].x*2.0-1.0, decays1[ululu].y*2.0 - 1.0, decays1[ululu].z*2.0 - 1.0);
+
+			float radius = ululu + 1.0;
+			float width = 0.5;
+
+		glTranslatef(decays1[ululu].x*size *2.0 - size, decays1[ululu].y *size *2.0 - size, decays1[ululu].z*size *2.0- size );
 			//glScalef(ululu, ululu, ululu);
+		 
 
-			glRotatef(decays3[ululu].x*360.0, 1.0, 0.0, 0.0);
-			glRotatef(decays3[ululu].y*360.0, 0.0, 1.0, 0.0);
-			glRotatef(decays3[ululu].z*360.0, 0.0, 0.0, 1.0);
+		glRotatef(decays3[ululu].x*360.0, 1.0, 0.0, 0.0);
+		glRotatef(decays3[ululu].y*360.0, 0.0, 1.0, 0.0);
+		glRotatef(decays3[ululu].z*360.0, 0.0, 0.0, 1.0);
+		 
+		// second movement, in direction of 
+		 glTranslatef(decays2[ululu].x * size *2.0-size, decays2[ululu].y *size *2.0- size,  decays2[ululu].z*2.0*size-size);
 
-			float radius = ululu;
-			float width = 0.2;
 
-		glBegin(GL_LINES);
-		torus(32, 32,radius,width);
-		glEnd();
+		//glBegin(GL_LINES);
+		 DrawTorus(radius, width,1.0,0.50,0.0);
+	//	glEnd();
 		}
 
+	 	m_extensions.glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, pGL->HostFBO);
 
+		m_extensions.glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, renderedTexture1);
+		m_extensions.glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, renderedTexture1);
+		glEnable(GL_TEXTURE_2D);
+		 //  glBindTexture(GL_TEXTURE_2D, Texture.Handle);
+
+		glClearColor(0, 2, 0, 0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluOrtho2D(-1, 1, -1, 1);
+		glViewport(0, 0, m_vpWidth ,m_vpHeight);
+
+
+
+	  renderQuad2(1.0,1.0);
+
+		 
 		//printf("Render updated");
 
 		/*
@@ -877,7 +1037,6 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 		*/
-
 		// unbind input texture 1
 		if(m_inputTextureLocation1 >= 0 && Texture1.Handle > 0) {
 			m_extensions.glActiveTexture(GL_TEXTURE1);
@@ -896,6 +1055,9 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 
 	return FF_SUCCESS;
 }
+
+
+
 
 char * ShaderMaker::GetParameterDisplay(DWORD dwIndex) {
 
@@ -1335,6 +1497,24 @@ void ShaderMaker::SetDefaults() {
 	m_times.z = 0.0;
 	m_times.w = 0.0;
 
+
+	for (int k = 0; k < DECAY_COUNT; k++) {
+		decays1[k].x = 0;
+		decays1[k].y = 0;
+		decays1[k].z = 0;
+		decays1[k].w = 0;
+
+		decays2[k].x = 0;
+		decays2[k].y = 0;
+		decays2[k].z = 0;
+		decays2[k].w = 0;
+
+		decays3[k].x = 0;
+		decays3[k].y = 0;
+		decays3[k].z = 0;
+		decays3[k].w = 0;
+
+	}
 
 	m_channelTime[0]       = 0.0;
 	m_channelTime[1]       = 0.0;

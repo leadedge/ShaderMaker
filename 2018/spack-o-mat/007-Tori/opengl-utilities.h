@@ -1,7 +1,6 @@
 /* Draw a torus */
 #include "ShaderMaker.h"
 	
-
 float lerp(float a,float b, float t){
 	
 	return a + (b - a)*t;
@@ -22,7 +21,7 @@ void torus(int numc, int numt,float radius, float width) {
 
 	twopi = 2 * PI;
 	float stepx = numc / twopi;
-	float stepy = numc / twopi;
+	float stepy = numt / twopi;
 	for (i = 0; i < numc; i++) {
 		for (j = 0; j <= numt; j++) {
 
@@ -38,4 +37,43 @@ void torus(int numc, int numt,float radius, float width) {
 void torus(int numc, int numt)
 {
 	return torus(numc, numt, 0.2, 1.0);
+}
+
+void DrawTorus(float radius, float width, float r, float g, float b) {
+	int numc = 8, numt = 32;
+
+	double TWOPI = 2 * PI;
+	for (int i = 0; i < numc; i++) {
+		glBegin(GL_QUAD_STRIP);
+		for (int j = 0; j <= numt; j++) {
+			for (int k = 1; k >= 0; k--) {
+
+				double s = (i + k) % numc + 0.5;
+				double t = j % numt;
+
+				double x = (radius + width * cos(s * TWOPI / numc)) * cos(t * TWOPI / numt);
+				double y = (radius + width * cos(s * TWOPI / numc)) * sin(t * TWOPI / numt);
+				double z = width * sin(s * TWOPI / numc);
+
+				// calculate the normal        
+				double nx = (radius + 0 * cos(s * TWOPI / numc)) * cos(t * TWOPI / numt);
+				double ny = (radius + 0 * cos(s * TWOPI / numc)) * sin(t * TWOPI / numt);
+				double nz = 0 * sin(s * TWOPI / numc);
+
+				double dx = x - nx;
+				double dy = y - ny;
+				double dz = z - nz;
+
+				double l = sqrt(dx*dx + dy*dy + dz*dz);
+
+				glNormal3d(dx / l, dy / l, dz / l);
+				glColor3f(r, g, b);
+				glVertex3d(x, z, y);
+
+
+
+			}
+		}
+		glEnd();
+	}
 }

@@ -705,6 +705,9 @@ glRotatef(rotations[i].y, 0, 1, 0);
 glRotatef(rotations[i].z, 0, 0, 1);
 glCallList(m_displayList[i]);
   } 
+
+
+
  // m_shader.UnbindShader();
     m_extensions.glUniform1fARB(m_useTextureLocation,1.0); 
 

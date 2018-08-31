@@ -180,7 +180,6 @@ void main()
 {
 	vec3 tempPos = 1000.0*fract(gl_Vertex.xyz + inputTimes.xyz/100.0 ) - 500.0;
 
-
 	tempPos.xyz = rotateX(inputVector2.x*2.0*PI)*tempPos.xyz;
 	tempPos.xyz = rotateY(inputVector2.y*2.0*PI)*tempPos.xyz;
 	tempPos.xyz = rotateZ(inputVector2.z*2.0*PI)*tempPos.xyz;

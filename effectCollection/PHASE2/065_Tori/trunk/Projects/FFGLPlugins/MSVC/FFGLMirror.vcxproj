@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{7BD8A62A-5D7E-45E2-B19F-A9F19AEF0586}</ProjectGuid>
+    <ProjectGuid>{87E03FBB-1636-46CB-9206-6A9B3DF4CDA6}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -52,7 +52,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\..\..\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;FFGLHEAT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;FFGLMIRROR_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -62,19 +62,19 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>../../../Binaries/Win32/FFGLHeat_debug.dll</OutputFile>
+      <OutputFile>../../../Binaries/Win32/FFGLMirror_debug.dll</OutputFile>
       <ModuleDefinitionFile>FFGLPlugins.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(OutDir)FFGLHeat.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(OutDir)FFGLMirror.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
-      <ImportLibrary>$(OutDir)FFGLHeat.lib</ImportLibrary>
+      <ImportLibrary>$(OutDir)FFGLMirror.lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <AdditionalIncludeDirectories>..\..\..\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;FFGLHEAT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;FFGLMIRROR_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
@@ -82,21 +82,19 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>../../../Binaries/Win32/FFGLHeat.dll</OutputFile>
+      <OutputFile>../../../Binaries/Win32/FFGLMirror.dll</OutputFile>
       <ModuleDefinitionFile>FFGLPlugins.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <ImportLibrary>$(OutDir)FFGLHeat.lib</ImportLibrary>
+      <ImportLibrary>$(OutDir)FFGLMirror.lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\Source\Common\FFGLExtensions.cpp" />
-    <ClCompile Include="..\..\..\Source\Common\FFGLShader.cpp" />
     <ClCompile Include="..\..\..\Source\FFGLPlugins\FFGL.cpp" />
-    <ClCompile Include="..\..\..\Source\FFGLPlugins\FFGLHeat\FFGLHeat.cpp" />
+    <ClCompile Include="..\..\..\Source\FFGLPlugins\FFGLMirror\FFGLMirror.cpp" />
     <ClCompile Include="..\..\..\Source\FFGLPlugins\FFGLPluginInfo.cpp" />
     <ClCompile Include="..\..\..\Source\FFGLPlugins\FFGLPluginInfoData.cpp" />
     <ClCompile Include="..\..\..\Source\FFGLPlugins\FFGLPluginManager.cpp" />

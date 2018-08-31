@@ -61,6 +61,7 @@ typedef int64_t LARGE_INTEGER;
 
  
 
+const int DECAY_COUNT = 1000;
 struct Vector {
 	float x;
 	float y;
@@ -124,9 +125,9 @@ protected:
 	float m_julia;
     float m_showKnobs;
 
-	Vector decays1[1000];
-	Vector decays2[1000];
-	Vector decays3[1000];
+	Vector decays1[DECAY_COUNT];
+	Vector decays2[DECAY_COUNT];
+	Vector decays3[DECAY_COUNT];
 
 
 	Vector m_color1;
@@ -145,6 +146,12 @@ protected:
 	GLuint m_glTexture3;
 	GLuint m_fbo;
 
+	int lastWidth;
+	int lastHeight;
+	GLuint renderedTexture1;
+	GLuint renderedTexture1Depth;
+
+	GLuint m_FramebufferId;
 	// Viewport
 	float m_vpWidth;
 	float m_vpHeight;
@@ -245,6 +252,9 @@ protected:
 	void StartCounter();
 	double GetCounter();
 	bool LoadShader(std::string shaderString);
+
+	void renderQuad2(float texMaxX, float texMaxY);
+	void updateRenderTargets(int newWidth, int newHeight);
 	void CreateRectangleTexture(FFGLTextureStruct Texture, FFGLTexCoords maxCoords, GLuint &glTexture, GLenum texunit, GLuint &fbo, GLuint hostFbo);
 };
 

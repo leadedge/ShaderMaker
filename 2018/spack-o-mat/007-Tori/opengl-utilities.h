@@ -63,7 +63,7 @@ void torus(int numc, int numt)
 }
 
 void DrawTorus(float radius, float width, float r, float g, float b) {
-	int numc = 16, numt = 36;
+	int numc = 16, numt = 128;
 
 	double TWOPI = 2 * PI;
 	for (int i = 0; i < numc; i++) {
@@ -79,19 +79,13 @@ void DrawTorus(float radius, float width, float r, float g, float b) {
 				double z = width * sin(s * TWOPI / numc);
 
 				// calculate the normal        
-				double nx = (radius + 0 * cos(s * TWOPI / numc)) * cos(t * TWOPI / numt);
-				double ny = (radius + 0 * cos(s * TWOPI / numc)) * sin(t * TWOPI / numt);
-				double nz = 0 * sin(s * TWOPI / numc);
-
-				double dx = x - nx;
-				double dy = y - ny;
-				double dz = z - nz;
-
-				double l = sqrt(dx*dx + dy*dy + dz*dz);
-
-				glNormal3d(dx / l, dy / l, dz / l);
+				double nx = ( width * cos(s * TWOPI / numc)) * cos(t * TWOPI / numt);
+				double ny = ( width * cos(s * TWOPI / numc)) * sin(t * TWOPI / numt);
+				double nz = width * sin(s * TWOPI / numc);
+ 
+				glNormal3d(nx, ny , nz);
 				glColor3f(r, g, b);
-				glVertex3d(x, z, y);
+				glVertex3d(x, y, z);
 
 
 

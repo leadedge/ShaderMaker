@@ -72,53 +72,53 @@ int (*cross_secure_sprintf)(char *, size_t, const char *,...) = sprintf_s;
 // posix
 int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #endif
-#define FFPARAM_JULIA       (0)   
+#define FFPARAM_JULIA       (1110)   
 
-#define FFPARAM_SPEED       (100)
-#define FFPARAM_MOUSEX      (1)
-#define FFPARAM_MOUSEY      (2)
-#define FFPARAM_MOUSELEFTX  (103)
-#define FFPARAM_MOUSELEFTY  (104)
-#define FFPARAM_RED         (3)
-#define FFPARAM_GREEN       (4)
-#define FFPARAM_BLUE        (5)
-#define FFPARAM_ALPHA       (6)
+#define FFPARAM_SPEED       (1100)
+#define FFPARAM_MOUSEX      (111111)
+#define FFPARAM_MOUSEY      (111112)
+#define FFPARAM_MOUSELEFTX  (111103)
+#define FFPARAM_MOUSELEFTY  (11104)
+#define FFPARAM_RED         (0)
+#define FFPARAM_GREEN       (1114)
+#define FFPARAM_BLUE        (1115)
+#define FFPARAM_ALPHA       (1116)
 
-#define FFPARAM_VECTOR1_X       (7)
+#define FFPARAM_VECTOR1_X       (1)
 #define FFPARAM_SPEEDS_X        (107)
-#define FFPARAM_VECTOR1_Y       (8)
-#define FFPARAM_VECTOR1_Z       (9)
-#define FFPARAM_VECTOR1_W       (10)
+#define FFPARAM_VECTOR1_Y       (2)
+#define FFPARAM_VECTOR1_Z       (3)
+#define FFPARAM_VECTOR1_W       (11110)
 
-#define FFPARAM_VECTOR2_X       (11)
-#define FFPARAM_SPEEDS_Y        (1011)
-#define FFPARAM_VECTOR2_Y       (12)
-#define FFPARAM_VECTOR2_Z       (13)
-#define FFPARAM_VECTOR2_W       (14)
+#define FFPARAM_VECTOR2_X       (4)
+#define FFPARAM_SPEEDS_Y        (11011)
+#define FFPARAM_VECTOR2_Y       (5)
+#define FFPARAM_VECTOR2_Z       (6)
+#define FFPARAM_VECTOR2_W       (11114)
 
-#define FFPARAM_VECTOR3_X       (15)
+#define FFPARAM_VECTOR3_X       (7)
 #define FFPARAM_SPEEDS_Z        (1015)
-#define FFPARAM_VECTOR3_Y       (16)
-#define FFPARAM_VECTOR3_Z       (17)
-#define FFPARAM_VECTOR3_W       (18)
+#define FFPARAM_VECTOR3_Y       (8)
+#define FFPARAM_VECTOR3_Z       (9)
+#define FFPARAM_VECTOR3_W       (11118)
 
-#define FFPARAM_VECTOR4_X       (19)
-#define FFPARAM_VECTOR4_Y       (20)
-#define FFPARAM_VECTOR4_Z       (21)
-#define FFPARAM_VECTOR4_W       (22)
+#define FFPARAM_VECTOR4_X       (10)
+#define FFPARAM_VECTOR4_Y       (11)
+#define FFPARAM_VECTOR4_Z       (12)
+#define FFPARAM_VECTOR4_W       (13)
 
-#define FFPARAM_SPEEDS_W        (2015) 
+#define FFPARAM_SPEEDS_W        (21015) 
  
 
-#define FFPARAM_COLOR1_RED       (23)  
-#define FFPARAM_COLOR1_GREEN     (24)  
-#define FFPARAM_COLOR1_BLUE      (25)  
-#define FFPARAM_COLOR1_ALPHA     (26)  
+#define FFPARAM_COLOR1_RED       (14)  
+#define FFPARAM_COLOR1_GREEN     (15)  
+#define FFPARAM_COLOR1_BLUE      (16)  
+#define FFPARAM_COLOR1_ALPHA     (1126)  
 
-#define FFPARAM_COLOR2_RED       (27)  
-#define FFPARAM_COLOR2_GREEN     (28)  
-#define FFPARAM_COLOR2_BLUE      (29)  
-#define FFPARAM_COLOR2_ALPHA     (30)   
+#define FFPARAM_COLOR2_RED       (17)  
+#define FFPARAM_COLOR2_GREEN     (18)  
+#define FFPARAM_COLOR2_BLUE      (19)  
+#define FFPARAM_COLOR2_ALPHA     (1130)   
 
 
 #define STRINGIFY(A) #A
@@ -146,7 +146,7 @@ char *vertexShaderCode = STRINGIFY (
 	varying vec3 N;
 void main()
 {
-
+	//
 	N = normalize(gl_NormalMatrix * gl_Normal);
 	gl_Position = gl_ModelViewProjectionMatrix*vec4(gl_Vertex.xyz, 1);
 	gl_FrontColor = gl_Color;
@@ -188,85 +188,29 @@ char *fragmentShaderCode = STRINGIFY (
 // ==================== PASTE WITHIN THESE LINES =======================
 
 varying vec3 N;
+  
 
-float triangulate(float x) {
-	// creates a triangular function that maps 0..1 to 0..1..0 
-	// helper method used to create properties that are loopable
-	return 1.0-abs((mod(x, 1.0) - 0.5)) * 2.0;
-}
-vec2 triangulate(vec2 x) {
-	// creates a triangular function that maps 0..1 to 0..1..0 
-	// helper method used to create properties that are loopable
-	return 1.0 - abs((mod(x, 1.0) - 0.5)) * 2.0;;
-}
-vec2 expandNormalizedToNegative1(vec2 x) {
-	// creates a triangular function that maps 0..1 to 0..1..0 
-	// helper method used to create properties that are loopable
-	return x *2.0 - 1.0;
-}
-
-vec2 triangulateNormalize(vec2 x) {
-	// creates a triangular function that maps 0..1 to 0..1..0 
-	// helper method used to create properties that are loopable
-	return expandNormalizedToNegative1(x);
-}
-vec2 piiate(vec2 x) {
-	// creates a triangular function that maps 0..1 to 0..1..0 
-	// helper method used to create properties that are loopable
-	return vec2(triangulate(x.x), triangulate(x.y));
-}
-vec2 rotate(vec2 v, float a) {
-	float s = sin(a);
-	float c = cos(a);
-	mat2 m = mat2(c, -s, s, c);
-	return m * v;
-}
-
-vec3 hsv2rgb(vec3 c)
-{
-	vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
-	vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
-	return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-}
-
-vec3 lightDir = vec3(1.0, 1.0, 1.0);
-const vec3 innerColor = vec3(1.0, 0.0, 0.0);
-const vec3 outerColor = vec3(1.0, 1.0, 1.0);
-const float maxIterations = 256;
-const bool showKnobs=false ;
-bool julia =inputJulia>0.5;
-int iterationsCalc = int(maxIterations*inputColour.w);
-int depthNormalized = int(inputColour.y * iterationsCalc);
-
-vec2 c_from_polar(float r, float theta) {
-	return vec2(r * cos(theta), r * sin(theta));
-}
-
-vec2 c_to_polar(vec2 c) {
-	return vec2(length(c), atan(c.y, c.x));
-}
-
-/// Raises `c` to a floating point power `e`.
-vec2 c_pow(vec2 c, float e) {
-	vec2 p = c_to_polar(c);
-	return c_from_polar(pow(p.x, e), p.y*e);
-}
-
+vec3 lightDir = normalize(vec3(0.0,1.0,0.0));
+vec3 lightDir2 = normalize(vec3(0.0,0.0,1.0));
+ 
+ 
 void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {
 	 
 
 	vec2 uv = fragCoord / iResolution.x;
 	vec2 texCoord = gl_TexCoord[1].st ; 
-		vec3 col_out = gl_Color.xyz;
+		vec3 col_out =mix(inputColor1.xzy,inputColor2.xyz, gl_Color.x);
 		//   gl_FragColor = vec4(N.x,N.y,N.z,1);
 
 		if (isPhase2<0.5)
 		{
 			// lighting
 			float light = clamp(dot(N, lightDir), 0.0, 1.0);
+			float light2 = clamp(dot(N, lightDir2), 0.0, 1.0);
 			float ambient = .50;
-			fragColor = vec4(col_out*ambient + col_out*light, 1.0);
+			fragColor = vec4(col_out*ambient + col_out*light + col_out*light2, 1.0);
+		// fragColor = vec4(N, 1.0);
 		}
 		else {
 			fragColor = texture(iChannel0, texCoord).rgba;
@@ -275,77 +219,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 		 
 
 }
-
-vec2 seeds[3]=vec2[3](inputVector1.zw, inputVector2.zw, inputVector3.zw);
-float powers[3] = float[3]( (inputVector1.y*16.0 - 8.0) ,  (inputVector2.y*16.0 - 8.0)  , (inputVector3.y*16.0 - 8.0)  );
-void mainImageOld(out vec4 fragColor, in vec2 fragCoord)
-{
-	float n = 0.0;
-	// important: exponential interpolation is done in c area
-	// float scale = 10.0*(1.0 / exp(inputColour.x*10.0));
-
-//	vec2 seeds[3]; 
-
-//	seeds[0] = inputVector1.zw;
-//	seeds[1] = inputVector2.zw;
-//	seeds[2] = inputVector3.zw;
-	
-		float scale = inputVector4.x;
-	// float scale = inputColour.x*10.0;
-	// vec2 center = (iMouse.xy / iResolution.xy)*4.0 - 2.0;
-	vec2 center = inputVector4.zw;
-	vec2 pixel = center + rotate(scale*((fragCoord / iResolution.xy)*2.0 - 1.0), inputVector4.y);
-	vec2 c = pixel;
-	vec2 z = seeds[0];
-	int i;
-	if (julia) {
-		  z = pixel;
-		  c = seeds[0];
-	}
-	else {
-		  c = pixel;
-		  z = seeds[0];
-	}
-
-	// seeds[3] = vec2(sin(iGlobalTime + inputTimes[3] * 10.0), cos(iGlobalTime + inputTimes[3] * 10.0))*inputVector4.y + triangulateNormalize(inputVector4.zw);
-
-
-	for (i = 0; i <iterationsCalc; i++)
-	{ 
-
-		// z = vec2(z.x*z.x - z.y*z.y, 2.*z.x*z.y) + c;
-
-		
-		if (i > depthNormalized) {
-			z = c_pow(z, powers[i % 3]) +c+  seeds[i % 3];
-		}
-		else {
-
-			z = c_pow(z, powers[0]) + c;
-		}
-
-		// most simple coloring/breaking condition using small bailout of 4
-		if (length(z) >4.0) {
-			break;
-		} 
-
-		n++;
-	}
-	fragColor = mix(inputColor1, inputColor2, n / iterationsCalc);
-
-	if (showKnobs) {
-		// mark the seeds
-		for (float k = 0; k < 3.0; k++) {
-			if (length(pixel - seeds[int(k)]) < 0.05) {
-				fragColor = vec4(0.5 + k / 3.0, 0.5, 0.5 + k / 3.0, 1.0);
-			}
-		}
-	}
-
-
-	// fragColor =  vec4(1.0-i / round(128 * inputColour.w), 1.0 - i / round(128 * inputColour.w), 1.0 - i / round(128 * inputColour.w), 1.0);
-}
-
+  
 
 // ==================== END OF SHADER CODE PASTE =======================
 
@@ -380,47 +254,47 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	SetMinInputs(0);
 	SetMaxInputs(0); // TODO - 4 inputs
 
-	SetParamInfo(FFPARAM_JULIA, "Julia", FF_TYPE_BOOLEAN, 0.0f);
+//	SetParamInfo(FFPARAM_JULIA, "Julia", FF_TYPE_BOOLEAN, 0.0f);
 	// Parameters
 	// SetParamInfo(FFPARAM_SPEED,         "Speed",         FF_TYPE_STANDARD, 0.5f); 
- 	SetParamInfo(FFPARAM_MOUSEX,        "Center X",       FF_TYPE_STANDARD, 0.5f);  
-	 SetParamInfo(FFPARAM_MOUSEY,        "Center Y",       FF_TYPE_STANDARD, 0.5f); 
+ //	SetParamInfo(FFPARAM_MOUSEX,        "Center X",       FF_TYPE_STANDARD, 0.5f);  
+	// SetParamInfo(FFPARAM_MOUSEY,        "Center Y",       FF_TYPE_STANDARD, 0.5f); 
 	//SetParamInfo(FFPARAM_MOUSELEFTX,    "X mouse left",  FF_TYPE_STANDARD, 0.5f); 
 	//SetParamInfo(FFPARAM_MOUSELEFTY,    "Y mouse left",  FF_TYPE_STANDARD, 0.5f);  
-	SetParamInfo(FFPARAM_RED,           "Zoom",           FF_TYPE_STANDARD,0.5f);  
-	SetParamInfo(FFPARAM_GREEN,         "Start of Alternation",         FF_TYPE_STANDARD, 0.0f);  
-	SetParamInfo(FFPARAM_BLUE,          "Rotation",          FF_TYPE_STANDARD, 0.0f);  
- 	SetParamInfo(FFPARAM_ALPHA,         "MaxIter",         FF_TYPE_STANDARD, 0.25f);  
+	SetParamInfo(FFPARAM_RED,           "Count Tori",           FF_TYPE_STANDARD,0.5f);  
+//	SetParamInfo(FFPARAM_GREEN,         "lightDirX",         FF_TYPE_STANDARD, 0.2f);  
+//	SetParamInfo(FFPARAM_BLUE,          "LightDirY",          FF_TYPE_STANDARD, 0.70f);  
+ //	SetParamInfo(FFPARAM_ALPHA,         "lightDirZ",         FF_TYPE_STANDARD, 0.0f);  
 
 	SetParamInfo(FFPARAM_VECTOR1_X, "Shift beforex", FF_TYPE_STANDARD, 0.5f); 
-    SetParamInfo(FFPARAM_VECTOR1_Y, "Seed 1 Power", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR1_Z, "Seed 1 Real", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR1_W, "Seed 1 Imag", FF_TYPE_STANDARD, 0.5f);
+    SetParamInfo(FFPARAM_VECTOR1_Y, "Shift beforey", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR1_Z, "Shift beforez", FF_TYPE_STANDARD, 0.5f);
+//	SetParamInfo(FFPARAM_VECTOR1_W, "xxx", FF_TYPE_STANDARD, 0.5f);
 
 	SetParamInfo(FFPARAM_VECTOR2_X, "shift afterx", FF_TYPE_STANDARD, 0.5f); 
-	SetParamInfo(FFPARAM_VECTOR2_Y, "Seed 2 Power", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR2_Z, "Seed 2 Real", FF_TYPE_STANDARD, 0.05f);
-	SetParamInfo(FFPARAM_VECTOR2_W, "Seed 2 Imag", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR2_Y, "shift aftery", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR2_Z, "shift afterz", FF_TYPE_STANDARD, 0.5f);
+//	SetParamInfo(FFPARAM_VECTOR2_W, "xxx", FF_TYPE_STANDARD, 0.5f);
 
-	SetParamInfo(FFPARAM_VECTOR3_X, "RotX", FF_TYPE_STANDARD, 0.0f); 
-	SetParamInfo(FFPARAM_VECTOR3_Y, "RotY", FF_TYPE_STANDARD, 0.0f);
+	SetParamInfo(FFPARAM_VECTOR3_X, "RotX", FF_TYPE_STANDARD, 0.150f); 
+	SetParamInfo(FFPARAM_VECTOR3_Y, "RotY", FF_TYPE_STANDARD, 0.5f);
 	SetParamInfo(FFPARAM_VECTOR3_Z, "RotZ", FF_TYPE_STANDARD, 0.0f);
-	SetParamInfo(FFPARAM_VECTOR3_W, "Seed 3 Imag", FF_TYPE_STANDARD, 0.0f);
+//	SetParamInfo(FFPARAM_VECTOR3_W, "xxx", FF_TYPE_STANDARD, 0.0f);
 
-	SetParamInfo(FFPARAM_VECTOR4_X, "Decay 1", FF_TYPE_STANDARD, 1.0f);
-	SetParamInfo(FFPARAM_VECTOR4_Y, "Decay 2", FF_TYPE_STANDARD, 1.0f);
-	SetParamInfo(FFPARAM_VECTOR4_Z, "Decay 3", FF_TYPE_STANDARD, 1.0f);
-	SetParamInfo(FFPARAM_VECTOR4_W, "Decay 4", FF_TYPE_STANDARD, 1.0f);
+	SetParamInfo(FFPARAM_VECTOR4_X, "Decay 1", FF_TYPE_STANDARD,.50f);
+	SetParamInfo(FFPARAM_VECTOR4_Y, "Decay 2", FF_TYPE_STANDARD,.50f);
+	SetParamInfo(FFPARAM_VECTOR4_Z, "Decay 3", FF_TYPE_STANDARD,.50f);
+	SetParamInfo(FFPARAM_VECTOR4_W, "Decay 4", FF_TYPE_STANDARD, .50f);
 
 	SetParamInfo(FFPARAM_COLOR1_RED, "Color 1 Red", FF_TYPE_RED, 1.0f);
 	SetParamInfo(FFPARAM_COLOR1_GREEN, "Color 1 Green", FF_TYPE_GREEN, 1.0f);
 	SetParamInfo(FFPARAM_COLOR1_BLUE, "Color 1 Blue", FF_TYPE_BLUE, 1.0f);
-	 SetParamInfo(FFPARAM_COLOR1_ALPHA, "Color 1 Alpha", FF_TYPE_STANDARD, 1.0f);
+	// SetParamInfo(FFPARAM_COLOR1_ALPHA, "Color 1 Alpha", FF_TYPE_STANDARD, 1.0f);
 
 	SetParamInfo(FFPARAM_COLOR2_RED, "Color 2 Red", FF_TYPE_RED, 1.0f);
 	SetParamInfo(FFPARAM_COLOR2_GREEN, "Color 2 Green", FF_TYPE_GREEN, 0.0f);
 	SetParamInfo(FFPARAM_COLOR2_BLUE, "Color 2 Blue", FF_TYPE_BLUE, 0.0f);
-	SetParamInfo(FFPARAM_COLOR2_ALPHA, "Color 2 Alpha", FF_TYPE_STANDARD, 1.0f);	
+//	SetParamInfo(FFPARAM_COLOR2_ALPHA, "Color 2 Alpha", FF_TYPE_STANDARD, 1.0f);	
 
 	// Set defaults
 	SetDefaults();
@@ -562,10 +436,10 @@ void ShaderMaker::createDisplayList() {
 		//
 
 		if (i % 2 == 0) {
-			DrawTorus((i + 1)*1.0, 0.25, 0, 1, 1);
+			DrawTorus((i + 1)*1.0,.25,0, 0, 0);
 		}
 		else {
-			DrawTorus((i + 1)*1.0, 0.25, 1, 0, 0);
+			DrawTorus((i + 1)*1.0, 0.25,1,1,1);
 
 		}
 		glEndList();
@@ -729,7 +603,7 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		intervalTime = 1.0;
 		// update decay values
 		for (int kk = 0; kk < 100; kk++) { 
-			if (kk==0) {
+			if (kk==0 || !decaysInitialised) {
 				decays1[kk].x = lerp(decays1[kk].x, m_vector1.x, m_vector4.x*m_vector4.x*intervalTime);
 				decays1[kk].y = lerp(decays1[kk].y, m_vector1.y, m_vector4.x*m_vector4.x*intervalTime);
 				decays1[kk].z = lerp(decays1[kk].z, m_vector1.z, m_vector4.x*m_vector4.x*intervalTime);
@@ -762,6 +636,7 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 				decays3[kk].w = lerpifShorter(decays3[kk].w, decays3[kk - 1].w, m_vector4.z*m_vector4.z*intervalTime);
 			}
 		}
+		decaysInitialised = true;
 	//	printf("Decays updated");
 
 
@@ -987,16 +862,16 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		glLoadIdentity();
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
-		glFrontFace(GL_CW);
+		//glDisable(GL_CULL_FACE);
+		//glCullFace(GL_FRONT);
+		//glFrontFace(GL_CW);
 		glDisable(GL_BLEND);
 		 
 
 		gluPerspective(65, m_vpWidth / m_vpHeight, 1.0, 1000.0);
-		gluLookAt(25,0, 0, 0, 0, 0, 0, 1, 0);
+		gluLookAt(0,0, 25, 0, 0, 0, 0, 1, 0);
 		float size = 10.0;
-		int count = 25;
+		int count = 100*m_UserRed ;
 		glMatrixMode(GL_MODELVIEW);
 
 
@@ -1012,13 +887,12 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 			float radius = ululu + 1.0;
 			float width = 0.15;
 
-		glTranslatef(decays1[ululu].x*size *2.0 - size, decays1[ululu].y *size *2.0 - size, decays1[ululu].z*size *2.0- size );
+		  glTranslatef(decays1[ululu].x*size *2.0 - size, decays1[ululu].y *size *2.0 - size, decays1[ululu].z*size *2.0- size );
 			//glScalef(ululu, ululu, ululu);
-		 
-
-		glRotatef(decays3[ululu].x*360.0, 1.0, 0.0, 0.0);
-		glRotatef(decays3[ululu].y*360.0, 0.0, 1.0, 0.0);
-		glRotatef(decays3[ululu].z*360.0, 0.0, 0.0, 1.0);
+		  
+		glRotatef(decays3[ululu].x*360.0-180, 1.0, 0.0, 0.0); // yaw
+		glRotatef(decays3[ululu].y*180.0-90, 0.0, 1.0, 0.0); // pitch
+	   glRotatef(decays3[ululu].z*360.0-180, 0.0, 0.0, 1.0); // roll
 		 
 		// second movement, in direction of 
 		 glTranslatef(decays2[ululu].x * size *2.0-size, decays2[ululu].y *size *2.0- size,  decays2[ululu].z*2.0*size-size);
@@ -1529,7 +1403,7 @@ void ShaderMaker::SetDefaults() {
 	m_times.z = 0.0;
 	m_times.w = 0.0;
 
-
+	decaysInitialised = false;
 	for (int k = 0; k < DECAY_COUNT; k++) {
 		decays1[k].x = 0;
 		decays1[k].y = 0;

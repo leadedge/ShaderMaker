@@ -232,7 +232,7 @@ protected:
 	GLint m_timedeltaLocation; // iTimeDelta - time elapsed since last frame
 	GLint m_framerateLocation;	// iFrameRate - 1.f / _deltaTime
 	GLint m_samplerateLocation;	// iSampleRate - 44100.f default
-
+	bool decaysInitialised;
 	// Extras
 	GLint m_inputColourLocation;
 

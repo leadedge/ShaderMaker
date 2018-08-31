@@ -3,6 +3,35 @@
 ![one of i-love-chaos logos print your own more than endless possibilities](media/i-love-chaos-white-000000000000003.png )
 
 
+<!-- TOC -->
+- [Source Plugins](#source-plugins)
+  - [001 Mandelbrot   ![Generic badge](https://img.shields.io/badge/HYBRID-ALTERNATE-green.svg) [![Generic badge](https://img.shields.io/badge/3ARY-YES-green.svg)](https://shields.io/)](#001-mandelbrot---generic-badgehttpsimgshieldsiobadgehybrid-alternate-greensvg-generic-badgehttpsimgshieldsiobadge3ary-yes-greensvghttpsshieldsio)
+    - [Parameters](#parameters)
+    - [Status](#status)
+  - [002 Mandelbox ![Generic badge](https://img.shields.io/badge/HYBRID-ALTERNATE-green.svg) [![Generic badge](https://img.shields.io/badge/3ARY-YES-green.svg)](https://shields.io/)](#002-mandelbox-generic-badgehttpsimgshieldsiobadgehybrid-alternate-greensvg-generic-badgehttpsimgshieldsiobadge3ary-yes-greensvghttpsshieldsio)
+    - [Parameters](#parameters-1)
+    - [Status](#status-1)
+  - [003 Sinewave 1D  [![Generic badge](https://img.shields.io/badge/3ARY-YES-green.svg)](https://shields.io/)](#003-sinewave-1d--generic-badgehttpsimgshieldsiobadge3ary-yes-greensvghttpsshieldsio)
+    - [Parameters](#parameters-2)
+    - [Status](#status-2)
+  - [004 Circle Sun      [![Generic badge](https://img.shields.io/badge/3ARY-YES-green.svg)](https://shields.io/)](#004-circle-sun------generic-badgehttpsimgshieldsiobadge3ary-yes-greensvghttpsshieldsio)
+    - [Parameters](#parameters-3)
+    - [Status](#status-3)
+  - [006 Starfield](#006-starfield)
+  - [007 Tori](#007-tori)
+- [Effect Plugins](#effect-plugins)
+  - [001 God Rays](#001-god-rays)
+    - [Parameters](#parameters-4)
+    - [Status](#status-4)
+- [Shadertoy Conversions](#shadertoy-conversions)
+  - [001 Kali Sea Creature](#001-kali-sea-creature)
+- [Parameters](#parameters-5)
+  - [001 Kali Sea Creature Extended](#001-kali-sea-creature-extended)
+- [Parameters](#parameters-6)
+  - [Status](#status-5)
+
+<!-- TOC END -->
+
 ## Source Plugins
 
 ### 001 Mandelbrot   ![Generic badge](https://img.shields.io/badge/HYBRID-ALTERNATE-green.svg) [![Generic badge](https://img.shields.io/badge/3ARY-YES-green.svg)](https://shields.io/)
@@ -123,7 +152,7 @@ Version: 2.0
 
 core fun functionality, finished no further additions/changes planned 
               
-### 006 Starfield Kali Sea Creature Extended
+### 006 Starfield  
                                     
 | Render | Parameters |
 | ------------- | ------------- |   

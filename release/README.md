@@ -5,36 +5,40 @@
 
 <!-- TOC -->
 - [Source Plugins](#source-plugins)
-  - [001 Mandelbrot   ![Generic badge](https://img.shields.io/badge/HYBRID-ALTERNATE-green.svg) [![Generic badge](https://img.shields.io/badge/3ARY-YES-green.svg)](https://shields.io/)](#001-mandelbrot---generic-badgehttpsimgshieldsiobadgehybrid-alternate-greensvg-generic-badgehttpsimgshieldsiobadge3ary-yes-greensvghttpsshieldsio)
+  - [001 Mandelbrot](#001-mandelbrot)
     - [Parameters](#parameters)
     - [Status](#status)
-  - [002 Mandelbox ![Generic badge](https://img.shields.io/badge/HYBRID-ALTERNATE-green.svg) [![Generic badge](https://img.shields.io/badge/3ARY-YES-green.svg)](https://shields.io/)](#002-mandelbox-generic-badgehttpsimgshieldsiobadgehybrid-alternate-greensvg-generic-badgehttpsimgshieldsiobadge3ary-yes-greensvghttpsshieldsio)
+  - [002 Mandelbox](#002-mandelbox)
     - [Parameters](#parameters-1)
     - [Status](#status-1)
-  - [003 Sinewave 1D  [![Generic badge](https://img.shields.io/badge/3ARY-YES-green.svg)](https://shields.io/)](#003-sinewave-1d--generic-badgehttpsimgshieldsiobadge3ary-yes-greensvghttpsshieldsio)
+  - [003 Sinewave 1D](#003-sinewave-1d)
     - [Parameters](#parameters-2)
     - [Status](#status-2)
-  - [004 Circle Sun      [![Generic badge](https://img.shields.io/badge/3ARY-YES-green.svg)](https://shields.io/)](#004-circle-sun------generic-badgehttpsimgshieldsiobadge3ary-yes-greensvghttpsshieldsio)
+  - [004 Circle Sun](#004-circle-sun)
     - [Parameters](#parameters-3)
     - [Status](#status-3)
   - [006 Starfield](#006-starfield)
+- [Parameters](#parameters-4)
+  - [Status](#status-4)
   - [007 Tori](#007-tori)
+- [Parameters](#parameters-5)
+  - [Status](#status-5)
 - [Effect Plugins](#effect-plugins)
   - [001 God Rays](#001-god-rays)
-    - [Parameters](#parameters-4)
-    - [Status](#status-4)
+    - [Parameters](#parameters-6)
+    - [Status](#status-6)
 - [Shadertoy Conversions](#shadertoy-conversions)
   - [001 Kali Sea Creature](#001-kali-sea-creature)
-- [Parameters](#parameters-5)
+- [Parameters](#parameters-7)
   - [001 Kali Sea Creature Extended](#001-kali-sea-creature-extended)
-- [Parameters](#parameters-6)
-  - [Status](#status-5)
+- [Parameters](#parameters-8)
+  - [Status](#status-7)
 
 <!-- TOC END -->
 
 ## Source Plugins
 
-### 001 Mandelbrot   ![Generic badge](https://img.shields.io/badge/HYBRID-ALTERNATE-green.svg) [![Generic badge](https://img.shields.io/badge/3ARY-YES-green.svg)](https://shields.io/)
+### 001 Mandelbrot  
        
 | Render | Parameters |
 | ------------- | ------------- |
@@ -66,7 +70,7 @@ ID: SM01
 Version: 2.0
  
 
-### 002 Mandelbox ![Generic badge](https://img.shields.io/badge/HYBRID-ALTERNATE-green.svg) [![Generic badge](https://img.shields.io/badge/3ARY-YES-green.svg)](https://shields.io/)
+### 002 Mandelbox 
 | Render | Parameters |
 | ------------- | ------------- |
 | ![Mandelbox Example](media/002-mandelbox.png )  |  ![Mandelbox Params](media/002-mandelbox-params.png )  |
@@ -92,7 +96,7 @@ Version: 2.0
 
 core functionality, perhaps make scale parameter a alternation option
 
-### 003 Sinewave 1D  [![Generic badge](https://img.shields.io/badge/3ARY-YES-green.svg)](https://shields.io/)
+### 003 Sinewave 1D  
        
 | Render | Parameters |
 | ------------- | ------------- |                
@@ -118,7 +122,7 @@ Version: 2.0
 core functionality, no changes planned, inversions and line mode can be achieved using other visual plugins/options
 
 
-### 004 Circle Sun      [![Generic badge](https://img.shields.io/badge/3ARY-YES-green.svg)](https://shields.io/)
+### 004 Circle Sun    
          
 | Render | Parameters |
 | ------------- | ------------- |       
@@ -158,7 +162,9 @@ core fun functionality, finished no further additions/changes planned
 | ------------- | ------------- |   
 |![kali extended render](media/sm-006-starfield-render.png )   |   ![kali extended params](media/sm-006-starfield-params.png ) 
    
-        
+                
+## Parameters         
+#### Status 
                      
 ### 007 Tori
                                     
@@ -166,7 +172,9 @@ core fun functionality, finished no further additions/changes planned
 | ------------- | ------------- |   
 |![kali extended render](media/007-tori-render.png )   |   ![kali extended params](media/007-tori-params.png ) 
    
-                
+              
+## Parameters            
+#### Status 
 ## Effect Plugins
 
 ### 001 God Rays        

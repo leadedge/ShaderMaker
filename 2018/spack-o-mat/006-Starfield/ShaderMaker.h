@@ -126,6 +126,7 @@ protected:
 
 	Vector m_color1;
 	Vector m_color2;
+	Vector m_color3;
 	Vector m_speeds;
 
 	Vector m_times;
@@ -231,6 +232,7 @@ protected:
 	GLint m_inputVector4Location;
 	GLint m_inputColor1Location;
 	GLint m_inputColor2Location;
+	GLint m_inputColor3Location;
 	GLint m_inputTimesLocation;
 
 	GLint m_inputJuliaLocation;

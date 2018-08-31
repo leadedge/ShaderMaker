@@ -243,7 +243,9 @@ the shadertoy https://www.shadertoy.com/view/Mtf3Rr script by kali is the source
 - Object Inclination/Elevation - object rotation using polar coordinate
 - Ojbect Shift X/Y/Z - object translation
 - Color 1/2 - the color gradient is applied to the surface of the object
-            
+       
+#### Status 
+     
 ### 001 Kali Sea Creature Extended
                                     
 | Render | Parameters |

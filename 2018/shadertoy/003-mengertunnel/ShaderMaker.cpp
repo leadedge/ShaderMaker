@@ -156,12 +156,12 @@ void main()
 // ++++++ COPY/PASTE YOUR GLSL SANDBOX OR SHADERTOY SHADER CODE HERE +++++
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 char *fragmentShaderCode =STRINGIFY(
-	
+	// https://www.shadertoy.com/view/Mdf3z7
 	const float MaxSteps =30;
 const float MinimumDistance= 0.0009;
 const float normalDistance  =   0.0002;
 
-const float Iterations= 17; 
+const float Iterations= 7; 
  float Scale = iParam4.x * 8.;
 
 const float FieldOfView= 1.0;
@@ -341,7 +341,7 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 //	SetParamInfo(FFPARAM_SPEED3,         "Speed 3",         FF_TYPE_STANDARD, 0.0f); m_UserSpeed3 = 0.0f;
 //	SetParamInfo(FFPARAM_SPEED4,         "Speed 4",         FF_TYPE_STANDARD, 0.0f); m_UserSpeed4 = 0.0f;
 
-	SetParamInfo(FFPARAM_MOUSEX,        "CamrotX",       FF_TYPE_STANDARD, 0.0f); m_UserMouseX = 0.0f;
+	SetParamInfo(FFPARAM_MOUSEX,        "CamrotX",       FF_TYPE_STANDARD, 0.0f); m_UserMouseX = 0.0f;z
 	SetParamInfo(FFPARAM_MOUSEY,        "CamrotY",       FF_TYPE_STANDARD, 0.0f); m_UserMouseY = 0.0f;
 /*	SetParamInfo(FFPARAM_MOUSELEFTX,    "Scale",  FF_TYPE_STANDARD, 0.5f); m_UserMouseLeftX = 0.0f;
 	SetParamInfo(FFPARAM_MOUSELEFTY,    "RotSway2",  FF_TYPE_STANDARD, 0.1f); m_UserMouseLeftY = 0.5f;

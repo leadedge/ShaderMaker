@@ -418,15 +418,15 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 
     vec3 tot = vec3(0.0); 
         
-        vec2 xy = (-iResolution.xy+2.0*(fragCoord.xy)) / iResolution.y;
+        vec2 xy =-1.* (-iResolution.xy+2.0*(fragCoord.xy)) / iResolution.y;
 
         // camera	
-        vec3 ro = vec3( 8.5*triCos(0.2+.33*time), 5.0+2.0*triCos(0.1*time), 8.5*triSin(0.1+0.37*time) );
-        vec3 ta = vec3( -2.5+3.0*triCos(1.2+.41*time), 0.0, 2.0+3.0*triSin(2.0+0.38*time) );
+        vec3 ro = vec3(0.0,10.0,0.0);
+        vec3 ta = vec3(0.0);
         float roll = 0.2*sin(0.1*time);
 
         // camera tx
-        mat3 ca = setLookAt( ro, ta, roll );
+        mat3 ca = setLookAt( ro,ta, roll );
         vec3 rd = normalize( ca * vec3(xy.xy,1.75) );
         
         vec3 col = render( ro, rd );
@@ -484,9 +484,9 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 
 	// Parameters
 	SetParamInfo(FFPARAM_SPEED,         "Speed",         FF_TYPE_STANDARD, 0.5f); m_UserSpeed = 0.0f; 
-	SetParamInfo(FFPARAM_SPEED2,         "Speed 2",         FF_TYPE_STANDARD, 0.0f); m_UserSpeed2 = 0.0f;
-	SetParamInfo(FFPARAM_SPEED3,         "Speed 3",         FF_TYPE_STANDARD, 0.0f); m_UserSpeed3 = 0.0f;
-	SetParamInfo(FFPARAM_SPEED4,         "Speed 4",         FF_TYPE_STANDARD, 0.0f); m_UserSpeed4 = 0.0f;
+	SetParamInfo(FFPARAM_SPEED2,         "Height 1",         FF_TYPE_STANDARD, 0.0f); m_UserSpeed2 = 1.0f;
+	SetParamInfo(FFPARAM_SPEED3,         "Height 2",         FF_TYPE_STANDARD, 0.0f); m_UserSpeed3 = 0.50f;
+	SetParamInfo(FFPARAM_SPEED4,         "Height 3",         FF_TYPE_STANDARD, 0.0f); m_UserSpeed4 = 0.250f;
 
 	SetParamInfo(FFPARAM_MOUSEX,        "Rot1 Axis XY",       FF_TYPE_STANDARD, 0.0f); m_UserMouseX = 0.0f;
 	SetParamInfo(FFPARAM_MOUSEY,        "Rot1 Axis Z",       FF_TYPE_STANDARD, 0.0f); m_UserMouseY = 0.0f;
@@ -694,13 +694,13 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		// Calculate elapsed time
 		lastTime = elapsedTime;
 		elapsedTime = GetCounter()/1000.0; // In seconds - higher resolution than timeGetTime()
-		m_time = m_time + (float)(elapsedTime-lastTime)*m_UserSpeed*2.0f; // increment scaled by user input 0.0 - 2.0
+		m_time = m_time + (float)(elapsedTime-lastTime)*(m_UserSpeed*2.0f-1.0f); // increment scaled by user input 0.0 - 2.0
 
-		m_time2 = m_time2 + (float)(elapsedTime-lastTime)*m_UserSpeed2*2.0f; // increment scaled by user input 0.0 - 2.0
+		m_time2 = m_time2 + (float)(elapsedTime-lastTime)*(m_UserSpeed2*2.0f - 1.0f); // increment scaled by user input 0.0 - 2.0
 
-		m_time3 = m_time3 + (float)(elapsedTime-lastTime)*m_UserSpeed3*2.0f; // increment scaled by user input 0.0 - 2.0
+		m_time3 = m_time3 + (float)(elapsedTime-lastTime)*(m_UserSpeed3*2.0f - 1.0f); // increment scaled by user input 0.0 - 2.0
 
-		m_time4= m_time4 + (float)(elapsedTime-lastTime)*m_UserSpeed4*2.0f; // increment scaled by user input 0.0 - 2.0
+		m_time4= m_time4 + (float)(elapsedTime-lastTime)*(m_UserSpeed4*2.0f - 1.0f); // increment scaled by user input 0.0 - 2.0
 
 		// Just pass elapsed time for individual channel times
 		m_channelTime[0] = m_time;

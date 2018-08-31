@@ -382,7 +382,7 @@ vec3 CameraPath( float t )
 //--------------------------------------------------------------------------
 void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {
-	float m = (iMouse.x/iResolution.x)*30.0;
+	float m = -(iMouse.x/iResolution.x)*30.0;
 	gTime = iGlobalTime*.5 + m + 75.5;
 	cloudy =iParam2.x;
     float lightning = 0.0;
@@ -401,7 +401,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
        
 	
     vec2 xy = fragCoord.xy / iResolution.xy;
-	vec2 uv = (-1.0 + 2.0 * xy) * vec2(iResolution.x/iResolution.y,1.0);
+	vec2 uv =- (-1.0 + 2.0 * xy) * vec2(iResolution.x/iResolution.y,1.0);
 	
 	vec3 cameraPos = CameraPath(gTime - 2.0);
 	vec3 camTar	   = CameraPath(gTime - .0);
@@ -428,6 +428,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 	float l = exp(-length(pos) * .00002);
 	col = mix(vec3(.6-cloudy*1.2)+flash*.3, col, max(l, .2));
 	
+	/*
 	// Do the lens flares...
 	float bri = dot(cw, sunLight) * 2.7 * clamp(-cloudy+.2, 0.0, .2);
 	if (bri > 0.0)
@@ -446,7 +447,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 		col += bri * vec3(.8, .8, 1.0) * pow(glare2, 8.0)*9.0;
 		col += bri * sunColour * pow(glare3, 4.0)*10.0;
 	}
-	
+	*/
 	vec2 st =  uv * vec2(.5+(xy.y+1.0)*.3, .02)+vec2(gTime*.5+xy.y*.2, gTime*.2);
 	// Rain...
 	float f = texture2D(iChannel0, st, -100.0).y * texture2D(iChannel0, st*.773, -100.0).x * 1.55;
@@ -462,7 +463,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 	//col = (col*col*(3.0-2.0*col));
 
 	// Vignette...
-	col *= .55+0.45*pow(70.0*xy.x*xy.y*(1.0-xy.x)*(1.0-xy.y), 0.15 );	
+	// col *= .55+0.45*pow(70.0*xy.x*xy.y*(1.0-xy.x)*(1.0-xy.y), 0.15 );	
 	
 	fragColor=vec4(col, 1.0);
 }
@@ -1452,7 +1453,7 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 				// http://magicmusicvisuals.com/forums/viewtopic.php?f=2&t=196
 				//
 				static char *stoyMainFunction = { "void main(void) {\n"
-												  "    mainImage(gl_FragColor, gl_FragCoord.xy);\n"
+												  "    mainImage(gl_FragColor,  gl_FragCoord.xy);\n"
 												  "}\n" };
 				stoyUniforms += stoyMainFunction;
 			}
@@ -1494,7 +1495,12 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 				m_inputTextureLocation2		 = -1;
 				m_inputTextureLocation3		 = -1;
 				m_screenLocation			 = -1;
-				m_surfaceSizeLocation		 = -1;
+				m_surfaceSizeLocation = -1;
+				m_iParam2Location = -1;
+				m_iParam3Location = -1;
+				m_iParam4Location = -1;
+
+
 				// m_surfacePositionLocation	= -1; // TODO
 				// m_vertexPositionLocation    = -1; // TODO
 

@@ -1,4 +1,5 @@
 #include "FFGLShader.h"
+#include <stdio.h>
 
 FFGLShader::FFGLShader()
 {
@@ -135,21 +136,9 @@ int FFGLShader::Compile(const char *vtxProgram, const char *fragProgram)
         sizeof(log)-1,
         &returnedLength,
         log);
-	  
-		  int msgboxID = MessageBox(
-        NULL,
-       log,
-        "Compile Error",
-        MB_ICONWARNING | MB_OK
-    );
 
-		   int msgboxID2 = MessageBox(
-        NULL,
-		fragProgram,	   
-        "Fragment Code",
-        MB_ICONWARNING | MB_OK
-    );
-
+	  printf(fragProgram)
+		  printf(log)
       log[returnedLength] = 0;
       int a;
       a=0;
@@ -198,6 +187,8 @@ int FFGLShader::Compile(const char *vtxProgram, const char *fragProgram)
         &returnedLength,
         log);
 
+	  printf(vtxProgram)
+		  printf(log)
       log[returnedLength] = 0;
       int a;
       a=0;

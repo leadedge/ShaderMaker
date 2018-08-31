@@ -17,22 +17,25 @@
   - [004 Circle Sun](#004-circle-sun)
     - [Parameters](#parameters-3)
     - [Status](#status-3)
-  - [006 Starfield](#006-starfield)
+  - [005 3 Balls](#005-3-balls)
     - [Parameters](#parameters-4)
     - [Status](#status-4)
-  - [007 Tori](#007-tori)
+  - [006 Starfield](#006-starfield)
     - [Parameters](#parameters-5)
     - [Status](#status-5)
-- [Effect Plugins](#effect-plugins)
-  - [001 God Rays](#001-god-rays)
+  - [007 Tori](#007-tori)
     - [Parameters](#parameters-6)
     - [Status](#status-6)
+- [Effect Plugins](#effect-plugins)
+  - [001 God Rays](#001-god-rays)
+    - [Parameters](#parameters-7)
+    - [Status](#status-7)
 - [Shadertoy Conversions](#shadertoy-conversions)
   - [001 Kali Sea Creature](#001-kali-sea-creature)
-    - [Parameters](#parameters-7)
-  - [001 Kali Sea Creature Extended](#001-kali-sea-creature-extended)
     - [Parameters](#parameters-8)
-    - [Status](#status-7)
+  - [001 Kali Sea Creature Extended](#001-kali-sea-creature-extended)
+    - [Parameters](#parameters-9)
+    - [Status](#status-8)
 
 <!-- TOC END -->
 
@@ -155,13 +158,27 @@ ID: SM04
 Version: 2.0
 
 core fun functionality, finished no further additions/changes planned 
-              
+            
+### 005 3 Balls  
+                                    
+| Render | Parameters |
+| ------------- | ------------- |   
+|![kali extended render](media/005-3balls-render.png )   |   ![kali extended params](media/005-3balls-params.png ) 
+   
+3 balls with independent location,size,shape,color
+                
+                
+                
+#### Parameters         
+#### Status     
 ### 006 Starfield  
                                     
 | Render | Parameters |
 | ------------- | ------------- |   
 |![kali extended render](media/sm-006-starfield-render.png )   |   ![kali extended params](media/sm-006-starfield-params.png ) 
    
+           
+a starfield with 3 different colors, shapes and sizes
                 
 #### Parameters         
 #### Status 
@@ -172,6 +189,7 @@ core fun functionality, finished no further additions/changes planned
 | ------------- | ------------- |   
 |![kali extended render](media/007-tori-render.png )   |   ![kali extended params](media/007-tori-params.png ) 
    
+a torus group decaying the parameters of the first one, making the group slowly follow the leader
               
 #### Parameters            
 #### Status 

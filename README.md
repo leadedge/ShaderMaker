@@ -3,7 +3,12 @@
 ![one of i-love-chaos logos print your own more than endless possibilities](release/media/i-love-chaos-white-000000000000003.png "One of I-Love-Chaos")
           
 this repository is a huge development repository for plugins by VJ-Spack-O-Mat
-        
+<!-- TOC -->
+- [QuickStart](#quickstart)
+- [Mission Statement](#mission-statement)
+  - [Who is VJ Spack-O-Mat and why](#who-is-vj-spack-o-mat-and-why)
+
+<!-- TOC END -->
 # QuickStart
 
 - for downloading binaries and documentation

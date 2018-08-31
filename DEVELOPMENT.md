@@ -1,6 +1,19 @@
  
 # Repository 
+<!-- TOC -->
+- [Prefixes](#prefixes)
+- [Quickstart (only dll copy)](#quickstart-only-dll-copy)
+- [Concepts](#concepts)
+  - [3-Arity](#3-arity)
+  - [Repeatable parameters](#repeatable-parameters)
+  - [Simple / Complex](#simple--complex)
+  - [Time](#time)
+  - [Hybridisation -> Alternation](#hybridisation---alternation)
+  - [Exponentional Parameters](#exponentional-parameters)
+  - [Tileable](#tileable)
+  - [Polar Coordinates](#polar-coordinates)
 
+<!-- TOC END -->
 this repository is a collection of adjusted [https://github.com/leadedge/ShaderMaker][ShaderMaker] templates with a very high redundancy,
 the build process is - as of now - only manual 64Bit build in [https://visualstudio.microsoft.com/](VisualStudio) and copying of .dll files to resolume plugin directory.
 

@@ -2,7 +2,9 @@
 *.idb
 *.sdf
 *.exp
-*.map 
-*.obj 
+*.map
+*.obj
 *.opensdf
+node_modules
 *.filters
+package-lock.json

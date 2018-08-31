@@ -243,16 +243,19 @@ protected:
 	GLint m_inputColor1Location;
 	GLint m_inputColor2Location;
 	GLint m_inputTimesLocation;
+	GLint m_inputIsPhase2Location;
 
 	GLint m_inputJuliaLocation;
 
 	GLint m_inputShowKnobsLocation;
 
+	GLint m_displayList[1000];
 	void SetDefaults();
 	void StartCounter();
 	double GetCounter();
 	bool LoadShader(std::string shaderString);
 
+	void createDisplayList();
 	void renderQuad2(float texMaxX, float texMaxY);
 	void updateRenderTargets(int newWidth, int newHeight);
 	void CreateRectangleTexture(FFGLTextureStruct Texture, FFGLTexCoords maxCoords, GLuint &glTexture, GLenum texunit, GLuint &fbo, GLuint hostFbo);

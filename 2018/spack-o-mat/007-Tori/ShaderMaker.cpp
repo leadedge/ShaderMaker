@@ -229,7 +229,7 @@ vec3 hsv2rgb(vec3 c)
 	return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
 
-vec3 lightDir = vec3(1, 1, 1);
+vec3 lightDir = vec3(1.0, 1.0, 1.0);
 const vec3 innerColor = vec3(1.0, 0.0, 0.0);
 const vec3 outerColor = vec3(1.0, 1.0, 1.0);
 const float maxIterations = 256;
@@ -257,16 +257,21 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 	 
 
 	vec2 uv = fragCoord / iResolution.x;
-	vec2 texCoord = gl_TexCoord[1].st ;
-	vec3 color = texture(iChannel0, texCoord).rgb;
-	vec3 color2 = texture(iChannel1, texCoord).rgb;
+	vec2 texCoord = gl_TexCoord[1].st ; 
 		vec3 col_out = gl_Color.xyz;
-		// lighting
-		float light = clamp(dot(N, lightDir), 0, 1);
-		float ambient = .50;
 		//   gl_FragColor = vec4(N.x,N.y,N.z,1);
-		fragColor = vec4(col_out*ambient + col_out*light + color + color2, 1);
-	
+
+		if (isPhase2<0.5)
+		{
+			// lighting
+			float light = clamp(dot(N, lightDir), 0.0, 1.0);
+			float ambient = .50;
+			fragColor = vec4(col_out*ambient + col_out*light, 1.0);
+		}
+		else {
+			fragColor = texture(iChannel0, texCoord).rgba;
+
+		}
 		 
 
 }
@@ -454,7 +459,7 @@ FFResult ShaderMaker::InitGL(const FFGLViewportStruct *vp)
 	glGenTextures(1, &renderedTexture1Depth);
 
 	m_extensions.glGenFramebuffersEXT(1, &m_FramebufferId); 
-
+	createDisplayList();
 	return FF_SUCCESS;
 }
 
@@ -545,6 +550,26 @@ void ShaderMaker::renderQuad2(float texMaxX, float texMaxY)
 	glVertex2f(1, -1);
 
 	glEnd();
+
+}
+void ShaderMaker::createDisplayList() {
+	// create one display list
+	for (int i = 0; i<125; i++) {
+		m_displayList[i] = glGenLists(1);
+
+		// fill displaylist
+		glNewList(m_displayList[i], GL_COMPILE);
+		//
+
+		if (i % 2 == 0) {
+			DrawTorus((i + 1)*1.0, 0.25, 0, 1, 1);
+		}
+		else {
+			DrawTorus((i + 1)*1.0, 0.25, 1, 0, 0);
+
+		}
+		glEndList();
+	}
 
 }
 void renderQuad(){
@@ -715,10 +740,10 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 				decays2[kk].z = lerp(decays2[kk].z, m_vector2.z, m_vector4.y* m_vector4.y*intervalTime);
 				decays2[kk].w = lerp(decays2[kk].w, m_vector2.w, m_vector4.y* m_vector4.y*intervalTime);
 
-				decays3[kk].x = lerp(decays3[kk].x, m_vector3.x, m_vector4.z*m_vector4.z*intervalTime);
-				decays3[kk].y = lerp(decays3[kk].y, m_vector3.y, m_vector4.z*m_vector4.z*intervalTime);
-				decays3[kk].z = lerp(decays3[kk].z, m_vector3.z, m_vector4.z*m_vector4.z*intervalTime);
-				decays3[kk].w = lerp(decays3[kk].w, m_vector3.w, m_vector4.z*m_vector4.z*intervalTime);
+				decays3[kk].x = lerpifShorter(decays3[kk].x, m_vector3.x, m_vector4.z*m_vector4.z*intervalTime);
+				decays3[kk].y = lerpifShorter(decays3[kk].y, m_vector3.y, m_vector4.z*m_vector4.z*intervalTime);
+				decays3[kk].z = lerpifShorter(decays3[kk].z, m_vector3.z, m_vector4.z*m_vector4.z*intervalTime);
+				decays3[kk].w = lerpifShorter(decays3[kk].w, m_vector3.w, m_vector4.z*m_vector4.z*intervalTime);
 			}
 			else {
 				decays1[kk].x = lerp(decays1[kk].x, decays1[kk - 1].x, m_vector4.x*m_vector4.x*intervalTime);
@@ -731,10 +756,10 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 				decays2[kk].z = lerp(decays2[kk].z, decays2[kk - 1].z, m_vector4.y*m_vector4.y*intervalTime);
 				decays2[kk].w = lerp(decays2[kk].w, decays2[kk - 1].w, m_vector4.y*m_vector4.y*intervalTime);
 
-				decays3[kk].x = lerp(decays3[kk].x, decays3[kk - 1].x, m_vector4.z*m_vector4.z*intervalTime);
-				decays3[kk].y = lerp(decays3[kk].y, decays3[kk - 1].y, m_vector4.z*m_vector4.z*intervalTime);
-				decays3[kk].z = lerp(decays3[kk].z, decays3[kk - 1].z, m_vector4.z*m_vector4.z*intervalTime);
-				decays3[kk].w = lerp(decays3[kk].w, decays3[kk - 1].w, m_vector4.z*m_vector4.z*intervalTime);
+				decays3[kk].x = lerpifShorter(decays3[kk].x, decays3[kk - 1].x, m_vector4.z*m_vector4.z*intervalTime);
+				decays3[kk].y = lerpifShorter(decays3[kk].y, decays3[kk - 1].y, m_vector4.z*m_vector4.z*intervalTime);
+				decays3[kk].z = lerpifShorter(decays3[kk].z, decays3[kk - 1].z, m_vector4.z*m_vector4.z*intervalTime);
+				decays3[kk].w = lerpifShorter(decays3[kk].w, decays3[kk - 1].w, m_vector4.z*m_vector4.z*intervalTime);
 			}
 		}
 	//	printf("Decays updated");
@@ -956,21 +981,26 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		renderQuat();
 		*/
 
+		m_extensions.glUniform1fARB(m_inputIsPhase2Location, 0.0);
 		 
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LESS);
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
-		glFrontFace(GL_CW);	
-		gluPerspective(65, m_vpWidth / m_vpHeight, 0.011, 1000.0);
+		glFrontFace(GL_CW);
+		glDisable(GL_BLEND);
+		 
+
+		gluPerspective(65, m_vpWidth / m_vpHeight, 1.0, 1000.0);
 		gluLookAt(25,0, 0, 0, 0, 0, 0, 1, 0);
 		float size = 10.0;
 		int count = 25;
 		glMatrixMode(GL_MODELVIEW);
 
 
-		glClearColor(255, 255, 0, 255);
+		glClearColor(0, 0, 0, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
@@ -980,7 +1010,7 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 	//		glScalef(1.0/ululu, 1.0/ululu, 1.0/ululu);
 
 			float radius = ululu + 1.0;
-			float width = 0.5;
+			float width = 0.15;
 
 		glTranslatef(decays1[ululu].x*size *2.0 - size, decays1[ululu].y *size *2.0 - size, decays1[ululu].z*size *2.0- size );
 			//glScalef(ululu, ululu, ululu);
@@ -994,10 +1024,12 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		 glTranslatef(decays2[ululu].x * size *2.0-size, decays2[ululu].y *size *2.0- size,  decays2[ululu].z*2.0*size-size);
 
 
+		 glCallList(m_displayList[ululu]);
 		//glBegin(GL_LINES);
-		 DrawTorus(radius, width,1.0,0.50,0.0);
+		// DrawTorus(radius, width,1.0,0.50,0.0);
 	//	glEnd();
 		}
+		m_extensions.glUniform1fARB(m_inputIsPhase2Location, 1.0);
 
 	 	m_extensions.glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, pGL->HostFBO);
 
@@ -1598,6 +1630,7 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 									  "uniform float iFrameRate;\n"
 									  "uniform float inputJulia;\n"
 									  "uniform float iSampleRate;\n"
+									  "uniform float isPhase2;\n"
 									  "uniform vec4 iMouse;\n"
 				"const float PI = 3.1415926535897932384626433832795; "
 									  "uniform vec4 iDate;\n"
@@ -1691,7 +1724,7 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 				m_inputColor2Location = -1;
 
 				m_inputJuliaLocation = -1;
-
+				m_inputIsPhase2Location = -1;
 				// ===========================================================
 				// ShaderToy new uniforms
 				m_frameLocation				= -1; // iFrame - frame number
@@ -1860,6 +1893,8 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 					m_inputColourLocation = m_shader.FindUniform("inputColour");
 
 
+				if (m_inputIsPhase2Location  < 0)
+					m_inputIsPhase2Location = m_shader.FindUniform("isPhase2");
 				if (m_inputVector1Location  < 0)
 					m_inputVector1Location = m_shader.FindUniform("inputVector1");
 

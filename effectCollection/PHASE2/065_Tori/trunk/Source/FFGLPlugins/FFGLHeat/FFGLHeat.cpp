@@ -594,7 +594,9 @@ std::cout << "ERROR" <<status<< "\n";
  // glTexEnvi(GL_POINT_SPRITE, GL_COORD_REPLACE, GL_TRUE);
   glDisable(GL_BLEND);
 //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
   glEnable(GL_DEPTH_TEST);
+  glDepthFunc(GL_NEVER);
 //  glBlendFunc(GL_SRC_ALPHA, GL_ONE);
   //bind the heat texture to texture unit 0
   glEnable(GL_CULL_FACE ); 
@@ -705,7 +707,6 @@ glRotatef(rotations[i].y, 0, 1, 0);
 glRotatef(rotations[i].z, 0, 0, 1);
 glCallList(m_displayList[i]);
   } 
-
 
 
  // m_shader.UnbindShader();

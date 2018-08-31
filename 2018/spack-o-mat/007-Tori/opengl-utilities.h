@@ -1,9 +1,32 @@
 /* Draw a torus */
 #include "ShaderMaker.h"
-	
-float lerp(float a,float b, float t){
-	
+
+float lerp(float a, float b, float t) {
+
 	return a + (b - a)*t;
+}
+float lerpifShorter(float a, float b, float t) {
+
+	float distNormal = abs(a - b);
+	float distOtherDirection = abs((a - (b + 1.0)));
+	float distOtherDirection2 = abs((a - (b - 1.0)));
+
+	if (distNormal <= distOtherDirection&&distNormal <= distOtherDirection2) {
+
+
+		return a + (b - a)*t;
+
+	}
+	else if (distOtherDirection <= distNormal &&distOtherDirection <= distOtherDirection2) {
+
+		return a + ((b+1.0) - a)*t-1.;
+
+	}
+	else if (distOtherDirection2 <= distNormal &&distOtherDirection2 <= distOtherDirection) {
+
+		return a + ((b-1.0) - a)*t+1.0;
+	}
+
 } 
 Vector torusValue(float angleZ, float angleInner,float torusRadius,float torusWidth) {
 
@@ -40,7 +63,7 @@ void torus(int numc, int numt)
 }
 
 void DrawTorus(float radius, float width, float r, float g, float b) {
-	int numc = 8, numt = 32;
+	int numc = 16, numt = 36;
 
 	double TWOPI = 2 * PI;
 	for (int i = 0; i < numc; i++) {

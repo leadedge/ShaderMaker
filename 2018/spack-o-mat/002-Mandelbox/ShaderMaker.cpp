@@ -739,23 +739,29 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		if (m_inputVector5Location >= 0)
 			m_extensions.glUniform4fARB(m_inputVector5Location, m_vector4.x, m_vector4.y, m_vector4.z, m_vector4.w );
 
-		if (m_inputColor1Location >= 0)
-			m_extensions.glUniform4fARB(m_inputColor1Location, m_color1.x, m_color1.y, m_color1.z, m_color1.w);
+		if (m_inputColor1Location >= 0) {
+			// use array initialzer, by value does seem to be unstable (especially when using these ARB module versions)
+			float hello[4] = { m_color1.x,m_color1.y,m_color1.z,m_color1.w };
+			m_extensions.glUniform4fvARB(m_inputColor1Location, 1, hello);
+//			m_extensions.glUniform4fARB(m_inputColor1Location, m_color1.x, m_color1.y, m_color1.z, m_color1.w);
+		}
 
 		if (m_inputColor2Location >= 0) {
 
 			// printf("Input Color 2 Location is %i %f %f %f %f\n", m_inputColor2Location, m_color2.x, m_color2.y, m_color2.z, m_color2.w);
-			m_extensions.glUniform4fARB(m_inputColor2Location, m_color2.x, m_color2.y, m_color2.z, m_color2.w); 
+			//m_extensions.glUniform4fARB(m_inputColor2Location, m_color2.x, m_color2.y, m_color2.z, m_color2.w); 
+			float hello[4] = { m_color2.x,m_color2.y,m_color2.z,m_color2.w };
+			m_extensions.glUniform4fvARB(m_inputColor2Location, 1, hello);
 		}
-		if (m_inputTimesLocation >= 0)
-			m_extensions.glUniform4fARB(m_inputTimesLocation, m_times.x, m_times.y, m_times.z, m_times.w);
+	//	if (m_inputTimesLocation >= 0)
+	//		m_extensions.glUniform4fARB(m_inputTimesLocation, m_times.x, m_times.y, m_times.z, m_times.w);
 
 
-		if (m_inputJuliaLocation >= 0)
-			m_extensions.glUniform1iARB(m_inputJuliaLocation, m_julia > 0.5f  );
+	//	if (m_inputJuliaLocation >= 0)
+	//		m_extensions.glUniform1iARB(m_inputJuliaLocation, m_julia > 0.5f  );
 
-		if (m_inputShowKnobsLocation >= 0)
-			m_extensions.glUniform1iARB(m_inputShowKnobsLocation, m_showKnobs >0.5f  );
+	//	if (m_inputShowKnobsLocation >= 0)
+	//		m_extensions.glUniform1iARB(m_inputShowKnobsLocation, m_showKnobs >0.5f  );
 
 
 		// Bind a texture if the shader needs one
@@ -808,7 +814,7 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		glVertex2f( 1.0,  1.0);
 		glTexCoord2f(1.0, 0.0);	
 		glVertex2f( 1.0, -1.0);
-		glEnd();
+		glEnd();	
 		glDisable(GL_TEXTURE_2D);
 
 		/*

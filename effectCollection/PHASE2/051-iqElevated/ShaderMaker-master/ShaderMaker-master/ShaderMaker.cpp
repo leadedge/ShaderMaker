@@ -412,7 +412,7 @@ col=     mix(col,inputColour.xyz,  0.5+0.5*
 
 void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {
-    vec2 xy = -1.0 + 2.0*fragCoord.xy/iResolution.xy;
+    vec2 xy =vec2(1.0,-1.0)*( -1.0 + 2.0*fragCoord.xy/iResolution.xy);
 	vec2 s = xy*vec2(iResolution.x/iResolution.y,1.0);
 
     float time = iGlobalTime*0.15 + 0.3 + 4.0*iMouse.x/iResolution.x;

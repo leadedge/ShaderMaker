@@ -61,23 +61,13 @@ int FFGLShader::BindShader()
   if (m_glProgram==0)
     return 0;
 
-  m_extensions->glUseProgramObjectARB(m_glProgram); 
+  m_extensions->glUseProgramObjectARB(m_glProgram);
 
   return 1;
 }
-void FFGLShader::printGLErrors(char* message){
 
-	GLenum err;
-	while ((err = glGetError()) != GL_NO_ERROR)
-	{
-		// Process/log the error.
-		printf(message);
-		printf("Error logged: %i\n", err);
-	}
-}
 int FFGLShader::UnbindShader()
 {
-	 
   if (m_extensions->ARB_shader_objects==0)
     return 0;
 

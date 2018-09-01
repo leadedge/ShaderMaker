@@ -20,7 +20,6 @@ public:
   
   int BindShader();
   int UnbindShader();
-  void printGLErrors(char* message);
 
   void FreeGLResources();
 

@@ -588,233 +588,254 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		m_dateTime = (float)(tmbuff.tm_hour*3600 + tmbuff.tm_min*60 + tmbuff.tm_sec);
 
 		// activate our shader
-		m_shader.BindShader();
+		if (m_shader.BindShader() == 1) {
 
-		//
-		// Assign values and set the uniforms to the shader
-		//
+			//
+			// Assign values and set the uniforms to the shader
+			//
 
-		//
-		// Common
-		//
+			//
+			// Common
+			//
 
-		// First input texture
-		// The shader will use the first texture bound to GL texture unit 0
-		if(m_inputTextureLocation >= 0 && Texture0.Handle > 0) {
-			m_extensions.glUniform1iARB(m_inputTextureLocation, 0);
+			// First input texture
+			// The shader will use the first texture bound to GL texture unit 0
+			if (m_inputTextureLocation >= 0 && Texture0.Handle > 0) {
+				m_extensions.glUniform1iARB(m_inputTextureLocation, 0);
+			}
+
+			// Second input texture
+			// The shader will use the texture bound to GL texture unit 1
+			if (m_inputTextureLocation1 >= 0 && Texture1.Handle > 0)
+				m_extensions.glUniform1iARB(m_inputTextureLocation1, 1);
+
+			/*
+			// 4 channels
+			if(m_inputTextureLocation2 >= 0 && Texture2.Handle > 0)
+				m_extensions.glUniform1iARB(m_inputTextureLocation2, 2);
+
+			if(m_inputTextureLocation3 >= 0 && Texture3.Handle > 0)
+				m_extensions.glUniform1iARB(m_inputTextureLocation3, 3);
+			*/
+
+			// Elapsed time
+			if (m_timeLocation >= 0)
+				m_extensions.glUniform1fARB(m_timeLocation, m_time);
+
+			// ===========================================================
+			// ShaderToy new uniforms
+			// iTime - iGlobalTime
+
+			// iFrame - frame number
+			if (m_frameLocation >= 0)
+				m_extensions.glUniform1fARB(m_frameLocation, m_frame);
+
+			if (m_timedeltaLocation >= 0)
+				m_extensions.glUniform1fARB(m_timedeltaLocation, m_timedelta);
+
+			if (m_framerateLocation >= 0)
+				m_extensions.glUniform1fARB(m_framerateLocation, m_framerate);
+
+			if (m_samplerateLocation >= 0)
+				m_extensions.glUniform1fARB(m_samplerateLocation, m_samplerate);
+			// ===========================================================
+
+			//
+			// GLSL sandbox
+			//
+			// resolution (viewport size)
+			if (m_screenLocation >= 0)
+				m_extensions.glUniform2fARB(m_screenLocation, m_vpWidth, m_vpHeight);
+
+			// mouse - Mouse position
+			if (m_mouseLocation >= 0) { // Vec2 - normalized
+				m_mouseX = m_UserMouseX;
+				m_mouseY = m_UserMouseY;
+				m_extensions.glUniform2fARB(m_mouseLocation, m_mouseX, m_mouseY);
+			}
+
+			// surfaceSize - Mouse left drag position - in pixel coordinates
+			if (m_surfaceSizeLocation >= 0) {
+				m_mouseLeftX = m_UserMouseLeftX*m_vpWidth;
+				m_mouseLeftY = m_UserMouseLeftY*m_vpHeight;
+				m_extensions.glUniform2fARB(m_surfaceSizeLocation, m_mouseLeftX, m_mouseLeftY);
+			}
+
+			//
+			// Shadertoy
+
+			// iMouse
+			// xy contain the current pixel coords (if LMB is down);
+			// zw contain the click pixel.
+			// Modified here equivalent to mouse unclicked or left button dragged
+			// The mouse is not being simulated, they are just inputs that can be used within the shader.
+			if (m_mouseLocationVec4 >= 0) {
+				// Convert from 0-1 to pixel coordinates for ShaderToy
+				// Here we use the resolution rather than the screen
+				m_mouseX = m_UserMouseX*m_vpWidth;
+				m_mouseY = m_UserMouseY*m_vpHeight;
+				m_mouseLeftX = m_UserMouseLeftX*m_vpWidth;
+				m_mouseLeftY = m_UserMouseLeftY*m_vpHeight;
+				m_extensions.glUniform4fARB(m_mouseLocationVec4, m_mouseX, m_mouseY, m_mouseLeftX, m_mouseLeftY);
+			}
+
+			// iResolution - viewport resolution
+			if (m_resolutionLocation >= 0) // Vec3
+				m_extensions.glUniform3fARB(m_resolutionLocation, m_vpWidth, m_vpHeight, 1.0);
+
+			// Channel resolutions are linked to the actual texture resolutions - the size is set in ProcessOpenGL
+			// Global resolution is the viewport
+			if (m_channelresolutionLocation >= 0) {
+				// uniform vec3	iChannelResolution[4]
+				// 4 channels Vec3. Float array is 4 rows, 3 cols
+				// TODO - 4 channels - 2 & 3 are unused so will not have a texture anyway
+				m_channelResolution[2][0] = m_vpWidth;
+				m_channelResolution[2][1] = m_vpHeight;
+				m_channelResolution[2][2] = 1.0;
+				m_channelResolution[3][0] = m_vpWidth;
+				m_channelResolution[3][1] = m_vpHeight;
+				m_channelResolution[3][2] = 1.0;
+				m_extensions.glUniform3fvARB(m_channelresolutionLocation, 4, (GLfloat *)m_channelResolution);
+			}
+
+			// iDate - vec4
+			if (m_dateLocation >= 0)
+				m_extensions.glUniform4fARB(m_dateLocation, m_dateYear, m_dateMonth, m_dateDay, m_dateTime);
+
+			// Channel elapsed time - vec4
+			if (m_channeltimeLocation >= 0)
+				m_extensions.glUniform1fvARB(m_channeltimeLocation, 4, m_channelTime);
+
+			// Extras - input colour is linked to the user controls Red, Green, Blue, Alpha
+			if (m_inputColourLocation >= 0)
+				m_extensions.glUniform4fARB(m_inputColourLocation, m_UserRed, m_UserGreen, m_UserBlue, m_UserAlpha);
+
+			if (m_inputVector1Location >= 0)
+				m_extensions.glUniform4fARB(m_inputVector1Location, m_vector1.x, m_vector1.y, m_vector1.z*SCALE_SEED + SHIFT_SEED, m_vector1.w*SCALE_SEED + SHIFT_SEED);
+			if (m_inputVector2Location >= 0)
+				m_extensions.glUniform4fARB(m_inputVector2Location, m_vector2.x, m_vector2.y, m_vector2.z*SCALE_SEED + SHIFT_SEED, m_vector2.w*SCALE_SEED + SHIFT_SEED);
+			if (m_inputVector3Location >= 0)
+				m_extensions.glUniform4fARB(m_inputVector3Location, m_vector3.x, m_vector3.y, m_vector3.z*SCALE_SEED + SHIFT_SEED, m_vector3.w*SCALE_SEED + SHIFT_SEED);
+			if (m_inputVector4Location >= 0)
+				m_extensions.glUniform4fARB(m_inputVector4Location, m_UserRed*m_UserRed*10.0f, m_UserBlue*PI_2, m_UserMouseX*SCALE_SEED + SHIFT_SEED, m_UserMouseY*SCALE_SEED + SHIFT_SEED);
+			m_shader.printGLErrors("Part 1");
+
+			if (m_inputColor1Location >= 0) {
+
+				//printf("Setting color 1 %i %f %f %f %f\n", m_inputColor1Location, m_color1.x, m_color1.y, m_color1.z, m_color1.w);
+				// todo:fixme: strange, sometimes if not set twice value does not land in shader
+				m_extensions.glUniform4fARB(m_inputColor1Location, m_color1.x, m_color1.y, m_color1.z, m_color1.w); 
+				float hello[4] = { m_color1.x,m_color1.y,m_color1.z,m_color1.w };
+				m_extensions.glUniform4fvARB(m_inputColor1Location, 1, hello);
+				m_shader.printGLErrors("Part 2");
+
+			}
+			if (m_inputColor2Location >= 0)
+			{
+				//printf("Setting color 1 %i %f %f %f %f\n", m_inputColor2Location, m_color2.x, m_color2.y, m_color2.z, m_color2.w);
+
+				// todo:fixme: strange, sometimes if not set twice value does not land in shader
+				m_extensions.glUniform4fARB(m_inputColor2Location, m_color2.x, m_color2.y, m_color2.z, m_color2.w);
+				float hello[4] = { m_color2.x,m_color2.y,m_color2.z,m_color2.w };
+				m_extensions.glUniform4fvARB(m_inputColor2Location, 1,hello);
+
+				m_shader.printGLErrors("Part 22 ");
+
+			}
+
+		//	if (m_inputTimesLocation >= 0)
+		//		m_extensions.glUniform4fARB(m_inputTimesLocation, m_times.x, m_times.y, m_times.z, m_times.w);
+
+
+			if (m_inputJuliaLocation >= 0)
+				m_extensions.glUniform1fARB(m_inputJuliaLocation, m_julia);
+
+			m_shader.printGLErrors("Part 3");
+
+
+			// Bind a texture if the shader needs one
+			if (m_inputTextureLocation >= 0 && Texture0.Handle > 0) {
+				m_extensions.glActiveTexture(GL_TEXTURE0);
+				// Has the local texture been created
+				// TODO - it should have been always created so this logic can be changed
+				if (m_glTexture0 > 0)
+					glBindTexture(GL_TEXTURE_2D, m_glTexture0);
+				else
+					glBindTexture(GL_TEXTURE_2D, Texture0.Handle);
+			}
+
+			// If there is a second texture, bind it to texture unit 1
+			if (m_inputTextureLocation1 >= 0 && Texture1.Handle > 0) {
+				m_extensions.glActiveTexture(GL_TEXTURE1);
+				if (m_glTexture1 > 0)
+					glBindTexture(GL_TEXTURE_2D, m_glTexture1);
+				else
+					glBindTexture(GL_TEXTURE_2D, Texture1.Handle);
+			}
+
+			/*
+			// Texture units 2 and 3
+			if(m_inputTextureLocation2 >= 0 && Texture2.Handle > 0) {
+				m_extensions.glActiveTexture(GL_TEXTURE2);
+				if(m_glTexture2 > 0)
+					glBindTexture(GL_TEXTURE_2D, m_glTexture2);
+				else
+					glBindTexture(GL_TEXTURE_2D, Texture2.Handle);
+			}
+
+			if(m_inputTextureLocation3 >= 0 && Texture3.Handle > 0) {
+				m_extensions.glActiveTexture(GL_TEXTURE3);
+				if(m_glTexture3 > 0)
+					glBindTexture(GL_TEXTURE_2D, m_glTexture3);
+				else
+					glBindTexture(GL_TEXTURE_2D, Texture3.Handle);
+			}
+			*/
+
+			// Do the draw for the shader to work
+			glEnable(GL_TEXTURE_2D);
+			glBegin(GL_QUADS);
+			glTexCoord2f(0.0, 0.0);
+			glVertex2f(-1.0, -1.0);
+			glTexCoord2f(0.0, 1.0);
+			glVertex2f(-1.0, 1.0);
+			glTexCoord2f(1.0, 1.0);
+			glVertex2f(1.0, 1.0);
+			glTexCoord2f(1.0, 0.0);
+			glVertex2f(1.0, -1.0);
+			glEnd();
+			glDisable(GL_TEXTURE_2D);
+
+			/*
+			// unbind input texture 3
+			if(m_inputTextureLocation3 >= 0 && Texture3.Handle > 0) {
+				m_extensions.glActiveTexture(GL_TEXTURE3);
+				glBindTexture(GL_TEXTURE_2D, 0);
+			}
+
+			// unbind input texture 2
+			if(m_inputTextureLocation2 >= 0 && Texture2.Handle > 0) {
+				m_extensions.glActiveTexture(GL_TEXTURE2);
+				glBindTexture(GL_TEXTURE_2D, 0);
+			}
+			*/
+
+			// unbind input texture 1
+			if (m_inputTextureLocation1 >= 0 && Texture1.Handle > 0) {
+				m_extensions.glActiveTexture(GL_TEXTURE1);
+				glBindTexture(GL_TEXTURE_2D, 0);
+			}
+
+			// unbind input texture 0
+			m_extensions.glActiveTexture(GL_TEXTURE0); // default
+			if (m_inputTextureLocation >= 0 && Texture0.Handle > 0)
+				glBindTexture(GL_TEXTURE_2D, 0);
+
+			// unbind the shader
+			m_shader.UnbindShader(); 
+			m_shader.printGLErrors("Part 5 End");
+
 		}
-
-		// Second input texture
-		// The shader will use the texture bound to GL texture unit 1
-		if(m_inputTextureLocation1 >= 0 && Texture1.Handle > 0)
-			m_extensions.glUniform1iARB(m_inputTextureLocation1, 1);
-
-		/*
-		// 4 channels
-		if(m_inputTextureLocation2 >= 0 && Texture2.Handle > 0)
-			m_extensions.glUniform1iARB(m_inputTextureLocation2, 2);
-
-		if(m_inputTextureLocation3 >= 0 && Texture3.Handle > 0)
-			m_extensions.glUniform1iARB(m_inputTextureLocation3, 3);
-		*/
-
-		// Elapsed time
-		if(m_timeLocation >= 0) 
-			m_extensions.glUniform1fARB(m_timeLocation, m_time);
-	
-		// ===========================================================
-		// ShaderToy new uniforms
-		// iTime - iGlobalTime
-
-		// iFrame - frame number
-		if (m_frameLocation >= 0)
-			m_extensions.glUniform1fARB(m_frameLocation, m_frame);
-
-		if (m_timedeltaLocation >= 0)
-			m_extensions.glUniform1fARB(m_timedeltaLocation, m_timedelta);
-
-		if (m_framerateLocation >= 0)
-			m_extensions.glUniform1fARB(m_framerateLocation, m_framerate);
-
-		if (m_samplerateLocation >= 0)
-			m_extensions.glUniform1fARB(m_samplerateLocation, m_samplerate);
-		// ===========================================================
-
-		//
-		// GLSL sandbox
-		//
-		// resolution (viewport size)
-		if(m_screenLocation >= 0) 
-			m_extensions.glUniform2fARB(m_screenLocation, m_vpWidth, m_vpHeight); 
-
-		// mouse - Mouse position
-		if(m_mouseLocation >= 0) { // Vec2 - normalized
-			m_mouseX = m_UserMouseX;
-			m_mouseY = m_UserMouseY;
-			m_extensions.glUniform2fARB(m_mouseLocation, m_mouseX, m_mouseY); 
-		}
-
-		// surfaceSize - Mouse left drag position - in pixel coordinates
-		if(m_surfaceSizeLocation >= 0) {
-			m_mouseLeftX = m_UserMouseLeftX*m_vpWidth;
-			m_mouseLeftY = m_UserMouseLeftY*m_vpHeight;
-			m_extensions.glUniform2fARB(m_surfaceSizeLocation, m_mouseLeftX, m_mouseLeftY);
-		}
-
-		//
-		// Shadertoy
-
-		// iMouse
-		// xy contain the current pixel coords (if LMB is down);
-		// zw contain the click pixel.
-		// Modified here equivalent to mouse unclicked or left button dragged
-		// The mouse is not being simulated, they are just inputs that can be used within the shader.
-		if(m_mouseLocationVec4 >= 0) {
-			// Convert from 0-1 to pixel coordinates for ShaderToy
-			// Here we use the resolution rather than the screen
-			m_mouseX     = m_UserMouseX*m_vpWidth;
-			m_mouseY     = m_UserMouseY*m_vpHeight;
-			m_mouseLeftX = m_UserMouseLeftX*m_vpWidth;
-			m_mouseLeftY = m_UserMouseLeftY*m_vpHeight;
-			m_extensions.glUniform4fARB(m_mouseLocationVec4, m_mouseX, m_mouseY, m_mouseLeftX, m_mouseLeftY); 
-		}
-
-		// iResolution - viewport resolution
-		if(m_resolutionLocation >= 0) // Vec3
-			m_extensions.glUniform3fARB(m_resolutionLocation, m_vpWidth, m_vpHeight, 1.0); 
-
-		// Channel resolutions are linked to the actual texture resolutions - the size is set in ProcessOpenGL
-		// Global resolution is the viewport
-		if(m_channelresolutionLocation >= 0) {
-			// uniform vec3	iChannelResolution[4]
-			// 4 channels Vec3. Float array is 4 rows, 3 cols
-			// TODO - 4 channels - 2 & 3 are unused so will not have a texture anyway
-			m_channelResolution[2][0] = m_vpWidth;
-			m_channelResolution[2][1] = m_vpHeight;
-			m_channelResolution[2][2] = 1.0;
-			m_channelResolution[3][0] = m_vpWidth;
-			m_channelResolution[3][1] = m_vpHeight;
-			m_channelResolution[3][2] = 1.0;
-			m_extensions.glUniform3fvARB(m_channelresolutionLocation, 4, (GLfloat *)m_channelResolution);
-		}
-
-		// iDate - vec4
-		if(m_dateLocation >= 0) 
-			m_extensions.glUniform4fARB(m_dateLocation, m_dateYear, m_dateMonth, m_dateDay, m_dateTime);
-
-		// Channel elapsed time - vec4
-		if(m_channeltimeLocation >= 0)
-			m_extensions.glUniform1fvARB(m_channeltimeLocation, 4, m_channelTime);
-
-		// Extras - input colour is linked to the user controls Red, Green, Blue, Alpha
-		if (m_inputColourLocation >= 0)
-			m_extensions.glUniform4fARB(m_inputColourLocation, m_UserRed, m_UserGreen, m_UserBlue, m_UserAlpha);
-
-		if (m_inputVector1Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector1Location, m_vector1.x, m_vector1.y, m_vector1.z*SCALE_SEED+ SHIFT_SEED, m_vector1.w*SCALE_SEED + SHIFT_SEED);
-		if (m_inputVector2Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector2Location, m_vector2.x, m_vector2.y, m_vector2.z*SCALE_SEED + SHIFT_SEED, m_vector2.w*SCALE_SEED + SHIFT_SEED);
-		if (m_inputVector3Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector3Location, m_vector3.x, m_vector3.y, m_vector3.z*SCALE_SEED + SHIFT_SEED, m_vector3.w*SCALE_SEED + SHIFT_SEED);
-		if (m_inputVector4Location >= 0)
-			m_extensions.glUniform4fARB(m_inputVector4Location,  m_UserRed*m_UserRed*10.0f, m_UserBlue*PI_2, m_UserMouseX*SCALE_SEED + SHIFT_SEED, m_UserMouseY*SCALE_SEED + SHIFT_SEED);
-		
-		if (m_inputColor1Location >= 0)
-			m_extensions.glUniform4fARB(m_inputColor1Location, m_color1.x, m_color1.y, m_color1.z, m_color1.w );
-
-		if (m_inputColor2Location >= 0)
-			m_extensions.glUniform4fARB(m_inputColor2Location, m_color2.x, m_color2.y, m_color2.z, m_color2.w);
-		 
-
-		if (m_inputTimesLocation >= 0)
-			m_extensions.glUniform4fARB(m_inputTimesLocation, m_times.x, m_times.y, m_times.z, m_times.w);
-
-
-		if (m_inputJuliaLocation >= 0)
-		m_extensions.glUniform1fARB(m_inputJuliaLocation, m_julia    );
-
-		 
-
-		// Bind a texture if the shader needs one
-		if(m_inputTextureLocation >= 0 && Texture0.Handle > 0) {
-			m_extensions.glActiveTexture(GL_TEXTURE0);
-			// Has the local texture been created
-			// TODO - it should have been always created so this logic can be changed
-			if(m_glTexture0 > 0) 
-				glBindTexture(GL_TEXTURE_2D, m_glTexture0);
-			else 
-				glBindTexture(GL_TEXTURE_2D, Texture0.Handle);
-		}
-
-		// If there is a second texture, bind it to texture unit 1
-		if(m_inputTextureLocation1 >= 0 && Texture1.Handle > 0) {
-			m_extensions.glActiveTexture(GL_TEXTURE1);
-			if(m_glTexture1 > 0)
-				glBindTexture(GL_TEXTURE_2D, m_glTexture1);
-			else
-				glBindTexture(GL_TEXTURE_2D, Texture1.Handle);
-		}
-
-		/*
-		// Texture units 2 and 3
-		if(m_inputTextureLocation2 >= 0 && Texture2.Handle > 0) {
-			m_extensions.glActiveTexture(GL_TEXTURE2);
-			if(m_glTexture2 > 0)
-				glBindTexture(GL_TEXTURE_2D, m_glTexture2);
-			else
-				glBindTexture(GL_TEXTURE_2D, Texture2.Handle);
-		}
-
-		if(m_inputTextureLocation3 >= 0 && Texture3.Handle > 0) {
-			m_extensions.glActiveTexture(GL_TEXTURE3);
-			if(m_glTexture3 > 0)
-				glBindTexture(GL_TEXTURE_2D, m_glTexture3);
-			else
-				glBindTexture(GL_TEXTURE_2D, Texture3.Handle);
-		}
-		*/
-
-		// Do the draw for the shader to work
-		glEnable(GL_TEXTURE_2D);
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.0, 0.0);	
-		glVertex2f(-1.0, -1.0);
-		glTexCoord2f(0.0, 1.0);	
-		glVertex2f(-1.0,  1.0);
-		glTexCoord2f(1.0, 1.0);	
-		glVertex2f( 1.0,  1.0);
-		glTexCoord2f(1.0, 0.0);	
-		glVertex2f( 1.0, -1.0);
-		glEnd();
-		glDisable(GL_TEXTURE_2D);
-
-		/*
-		// unbind input texture 3
-		if(m_inputTextureLocation3 >= 0 && Texture3.Handle > 0) {
-			m_extensions.glActiveTexture(GL_TEXTURE3);
-			glBindTexture(GL_TEXTURE_2D, 0);
-		}
-
-		// unbind input texture 2
-		if(m_inputTextureLocation2 >= 0 && Texture2.Handle > 0) {
-			m_extensions.glActiveTexture(GL_TEXTURE2);
-			glBindTexture(GL_TEXTURE_2D, 0);
-		}
-		*/
-
-		// unbind input texture 1
-		if(m_inputTextureLocation1 >= 0 && Texture1.Handle > 0) {
-			m_extensions.glActiveTexture(GL_TEXTURE1);
-			glBindTexture(GL_TEXTURE_2D, 0);
-		}
-
-		// unbind input texture 0
-		m_extensions.glActiveTexture(GL_TEXTURE0); // default
-		if(m_inputTextureLocation >= 0 && Texture0.Handle > 0)
-			glBindTexture(GL_TEXTURE_2D, 0);
-
-		// unbind the shader
-		m_shader.UnbindShader();
 
 	} // endif bInitialized
 
@@ -1305,11 +1326,12 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 		// Extra uniforms specific to ShaderMaker for buth GLSL Sandbox and ShaderToy
 		// For GLSL Sandbox, the extra "inputColour" uniform has to be typed into the shader
 		//		uniform vec4 inputColour
-		static char *extraUniforms = { "uniform vec4 inputTimes;\n uniform vec4 inputColor1; \n uniform vec4 inputColor2; \n uniform vec4 inputColour;\nuniform vec4 inputVector1; \nuniform vec4 inputVector2; \nuniform vec4 inputVector3; \nuniform vec4 inputVector4; \n" };
+		static char *extraUniforms = { "uniform vec4 inputTimes;\n uniform vec4 inputColour;\nuniform vec4 inputVector1; \nuniform vec4 inputVector2; \nuniform vec4 inputVector3; \nuniform vec4 inputVector4; \n" };
 		
 		// Is it a GLSL Sandbox file?
 		// look for "uniform float time;". If it does not exist it is a ShaderToy file
 		// This is an exact string, so the shader has to have it.
+
 		if(strstr(shaderString.c_str(), "uniform float time;") == 0) {
 			//
 			// ShaderToy file
@@ -1343,8 +1365,10 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 									  "uniform float inputJulia;\n"
 									  "uniform float iSampleRate;\n"
 									  "uniform vec4 iMouse;\n"
-				"const float PI = 3.1415926535897932384626433832795; "
+				                       "const float PI = 3.1415926535897932384626433832795;\n "
 									  "uniform vec4 iDate;\n"
+									   "uniform vec4 inputColor1;"
+									  "uniform vec4 inputColor2;\n"
 									  "uniform float iChannelTime[4];\n"
 									  "uniform vec3 iChannelResolution[4];\n"
 									  "uniform sampler2D iChannel0;\n"
@@ -1616,12 +1640,16 @@ bool ShaderMaker::LoadShader(std::string shaderString) {
 				if (m_inputVector4Location  < 0)
 					m_inputVector4Location = m_shader.FindUniform("inputVector4");
 
-				if (m_inputColor1Location  < 0)
-					m_inputColor1Location = m_shader.FindUniform("inputColor1");
+				if (m_inputColor1Location < 0) {
 
-				if (m_inputColor2Location  < 0)
-					m_inputColor2Location = m_shader.FindUniform("inputColor2");
+					// strange, sometimes if not set twice value does not land in shader
+					m_inputColor1Location = m_shader.FindUniform("inputColor1"); 
+				}
+				if (m_inputColor2Location < 0) {
 
+					// strange, sometimes if not set twice value does not land in shader
+					m_inputColor2Location = m_shader.FindUniform("inputColor2"); 
+				}
 
 				 
 

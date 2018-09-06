@@ -223,14 +223,19 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
  
 		//   gl_FragColor = vec4(N.x,N.y,N.z,1);
 
-		if (isPhase2<0.5)
-		{ 
-			fragColor = blur5(iChannel1, uv, iResolution, direction).rgba;
-	//		fragColor = texture(iChannel0, uv).rgba;
-//	 	 	fragColor = fragColor+ vec4(.50, .50, 0.0, 1.0);
-		}
+	 if (isPhase2<0.25)
+	 {
+	 	 fragColor = blur5(iChannel0, uv, iResolution, direction).rgba+vec4(0.0,0.0,0.0,0.0);
+		 //		fragColor = texture(iChannel0, uv).rgba;
+		 //	 	 	fragColor = fragColor+ vec4(.50, .50, 0.0, 1.0);
+	 }else if (isPhase2<0.5)
+	 {
+		 fragColor = blur5(iChannel1, uv, iResolution, direction).rgba + vec4(0.0, 0.0, 0.0, 0.0);
+		 //		fragColor = texture(iChannel0, uv).rgba;
+		 //	 	 	fragColor = fragColor+ vec4(.50, .50, 0.0, 1.0);
+	 }
 		else {
-			fragColor = texture2D(iChannel1, uv).rgba;
+			fragColor = texture2D(iChannel1, uv).rgba + vec4(0.0, 0.0, 0.1, 0.0);
 		}
 		 
 
@@ -977,15 +982,12 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 
 			// set direction to horizontal using vector1 inpout
 			if (m_inputVector1Location >= 0)
-				m_extensions.glUniform4fARB(m_inputVector1Location, 1.f,0.0f,0.0f,0.0f);
+				m_extensions.glUniform4fARB(m_inputVector1Location, 10.f*m_vector2.x,0.0f,0.0f,0.0f);
 
 			// clear first buffer
 			glClearColor(0, 0, 0, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-			m_extensions.glActiveTexture(GL_TEXTURE1);
-			glBindTexture(GL_TEXTURE_2D, m_glTexture0);
-
+			 
 			renderQuad();
 
 			printGLErrors("start3");
@@ -993,9 +995,7 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 			//
 			// m_extensions.glUniform1fARB(m_inputIsPhase2Location, );
 			// set current rendered image to texture input for second pass vertical blur 
-			m_extensions.glActiveTexture(GL_TEXTURE1);
-			glBindTexture(GL_TEXTURE_2D, renderedTexture1);
-			 
+			m_extensions.glUniform1fARB(m_inputIsPhase2Location, .35);
 			// and blur vertical
 			/*
 			set up render target for gaussian blur horizontal
@@ -1009,6 +1009,9 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 
 			m_extensions.glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, renderedTexture2Depth, 0);
 
+			m_extensions.glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, renderedTexture1);
+
 			printGLErrors("start41111");
 			glDepthMask(FALSE);
 		// 	printf("RESULT FB2 ! 0x%4x\n", m_extensions.glCheckFramebufferStatusEXT(GL_FRAMEBUFFER));
@@ -1020,7 +1023,7 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 
 		// set direction to vertical  using vector1 inpout
 			if (m_inputVector1Location >= 0)
-				m_extensions.glUniform4fARB(m_inputVector1Location, 0.0f, 1.0f, 1.0f, 0.0f);
+				m_extensions.glUniform4fARB(m_inputVector1Location, 0.0f, 10.0f*m_vector2.y, 1.0f, 0.0f);
 			printGLErrors("start43");
 		 	renderQuad();
 
@@ -1081,7 +1084,7 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 	//	printf("RESULT FB3 ! 0x%4x\n", m_extensions.glCheckFramebufferStatusEXT(GL_FRAMEBUFFER));
 
 	 	m_extensions.glActiveTexture(GL_TEXTURE1);
-	 	glBindTexture(GL_TEXTURE_2D, renderedTexture1);
+	 	glBindTexture(GL_TEXTURE_2D, renderedTexture2);
 	//	m_extensions.glActiveTexture(GL_TEXTURE0);
 	//	glBindTexture(GL_TEXTURE_2D, renderedTexture1);
 		glEnable(GL_TEXTURE_2D);

@@ -79,46 +79,46 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #define FFPARAM_MOUSEY      (111112)
 #define FFPARAM_MOUSELEFTX  (111103)
 #define FFPARAM_MOUSELEFTY  (11104)
-#define FFPARAM_RED         (0)
+#define FFPARAM_RED         (1111111)
 #define FFPARAM_GREEN       (1114)
 #define FFPARAM_BLUE        (1115)
 #define FFPARAM_ALPHA       (1116)
 
-#define FFPARAM_VECTOR1_X       (1)
+#define FFPARAM_VECTOR1_X       (0)
 #define FFPARAM_SPEEDS_X        (107)
-#define FFPARAM_VECTOR1_Y       (2)
-#define FFPARAM_VECTOR1_Z       (3)
+#define FFPARAM_VECTOR1_Y       (12342)
+#define FFPARAM_VECTOR1_Z       (12343)
 #define FFPARAM_VECTOR1_W       (11110)
 
-#define FFPARAM_VECTOR2_X       (4)
+#define FFPARAM_VECTOR2_X       (1)
 #define FFPARAM_SPEEDS_Y        (11011)
-#define FFPARAM_VECTOR2_Y       (5)
-#define FFPARAM_VECTOR2_Z       (6)
+#define FFPARAM_VECTOR2_Y       (2)
+#define FFPARAM_VECTOR2_Z       (3)
 #define FFPARAM_VECTOR2_W       (11114)
 
-#define FFPARAM_VECTOR3_X       (7)
+#define FFPARAM_VECTOR3_X       (12347)
 #define FFPARAM_SPEEDS_Z        (1015)
-#define FFPARAM_VECTOR3_Y       (8)
-#define FFPARAM_VECTOR3_Z       (9)
+#define FFPARAM_VECTOR3_Y       (12348)
+#define FFPARAM_VECTOR3_Z       (12349)
 #define FFPARAM_VECTOR3_W       (11118)
 
-#define FFPARAM_VECTOR4_X       (10)
-#define FFPARAM_VECTOR4_Y       (11)
-#define FFPARAM_VECTOR4_Z       (12)
-#define FFPARAM_VECTOR4_W       (13)
+#define FFPARAM_VECTOR4_X       (123410)
+#define FFPARAM_VECTOR4_Y       (123411)
+#define FFPARAM_VECTOR4_Z       (123412)
+#define FFPARAM_VECTOR4_W       (123413)
 
 #define FFPARAM_SPEEDS_W        (21015) 
  
 
-#define FFPARAM_COLOR1_RED       (14)  
-#define FFPARAM_COLOR1_GREEN     (15)  
-#define FFPARAM_COLOR1_BLUE      (16)  
+#define FFPARAM_COLOR1_RED       (123414)  
+#define FFPARAM_COLOR1_GREEN     (123415)  
+#define FFPARAM_COLOR1_BLUE      (123416)  
 #define FFPARAM_COLOR1_ALPHA     (1126)  
 
-#define FFPARAM_COLOR2_RED       (17)  
-#define FFPARAM_COLOR2_GREEN     (18)  
-#define FFPARAM_COLOR2_BLUE      (19)  
-#define FFPARAM_COLOR2_ALPHA     (1130)   
+#define FFPARAM_COLOR2_RED       (123417)  
+#define FFPARAM_COLOR2_GREEN     (112348)  
+#define FFPARAM_COLOR2_BLUE      (123419)  
+#define FFPARAM_COLOR2_ALPHA     (12341130)   
 
 
 #define STRINGIFY(A) #A
@@ -216,6 +216,11 @@ vec4 blur13(sampler2D image, vec2 uv, vec2 resolution, vec2 direction) {
 
 vec2 direction = inputVector1.xy;
 
+
+float focusCenter = inputVector2.x;
+float focusSize = inputVector2.y;
+float defocusSize= inputVector2.z; 
+
 void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {
 
@@ -225,17 +230,38 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 
 	 if (isPhase2<0.25)
 	 {
-	 	 fragColor = blur5(iChannel0, uv, iResolution, direction).rgba+vec4(0.0,0.0,0.0,0.0);
+	 	 fragColor = blur13(iChannel0, uv, iResolution, direction).rgba+vec4(0.0,0.0,0.0,0.0);
 		 //		fragColor = texture(iChannel0, uv).rgba;
 		 //	 	 	fragColor = fragColor+ vec4(.50, .50, 0.0, 1.0);
 	 }else if (isPhase2<0.5)
 	 {
-		 fragColor = blur5(iChannel1, uv, iResolution, direction).rgba + vec4(0.0, 0.0, 0.0, 0.0);
+		 fragColor = blur13(iChannel1, uv, iResolution, direction).rgba + vec4(0.0, 0.0, 0.0, 0.0);
 		 //		fragColor = texture(iChannel0, uv).rgba;
 		 //	 	 	fragColor = fragColor+ vec4(.50, .50, 0.0, 1.0);
 	 }
 		else {
-			fragColor = texture2D(iChannel1, uv).rgba + vec4(0.0, 0.0, 0.1, 0.0);
+
+			// here the tilt shift happens step3 of the shader, will be optimized in future (according the phases ... perhaps)
+			vec4 original = texture2D(iChannel0, uv).rgba;
+			vec4 blurred = texture2D(iChannel1, uv).rgba;
+
+			float distanceCenter = abs(uv.y - focusCenter);
+			if (distanceCenter < focusSize) {
+			// inside focus, just return input
+				fragColor = original;
+			}	else {
+			// outside focus, do gradient 
+				if (defocusSize > 0.0) {
+					float focusDist = abs(distanceCenter - focusSize);
+					float grad = clamp(focusDist, 0.0, defocusSize);
+
+
+					fragColor = mix(original, blurred, grad / defocusSize);
+				}
+				else {
+					fragColor = blurred;
+				}
+			}
 		}
 		 
 
@@ -282,39 +308,39 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	// SetParamInfo(FFPARAM_MOUSEY,        "Center Y",       FF_TYPE_STANDARD, 0.5f); 
 	//SetParamInfo(FFPARAM_MOUSELEFTX,    "X mouse left",  FF_TYPE_STANDARD, 0.5f); 
 	//SetParamInfo(FFPARAM_MOUSELEFTY,    "Y mouse left",  FF_TYPE_STANDARD, 0.5f);  
-	SetParamInfo(FFPARAM_RED,           "Count Tori",           FF_TYPE_STANDARD,0.5f);  
+//	SetParamInfo(FFPARAM_RED,           "Count Tori",           FF_TYPE_STANDARD,0.5f);  
 //	SetParamInfo(FFPARAM_GREEN,         "lightDirX",         FF_TYPE_STANDARD, 0.2f);  
 //	SetParamInfo(FFPARAM_BLUE,          "LightDirY",          FF_TYPE_STANDARD, 0.70f);  
  //	SetParamInfo(FFPARAM_ALPHA,         "lightDirZ",         FF_TYPE_STANDARD, 0.0f);  
 
-	SetParamInfo(FFPARAM_VECTOR1_X, "Shift beforex", FF_TYPE_STANDARD, 0.5f); 
-    SetParamInfo(FFPARAM_VECTOR1_Y, "Shift beforey", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR1_Z, "Shift beforez", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR1_X, "Blur", FF_TYPE_STANDARD, 0.25f); 
+  //  SetParamInfo(FFPARAM_VECTOR1_Y, "xxx", FF_TYPE_STANDARD, 0.5f);
+//	SetParamInfo(FFPARAM_VECTOR1_Z, "Shift beforez", FF_TYPE_STANDARD, 0.5f);
 //	SetParamInfo(FFPARAM_VECTOR1_W, "xxx", FF_TYPE_STANDARD, 0.5f);
 
-	SetParamInfo(FFPARAM_VECTOR2_X, "shift afterx", FF_TYPE_STANDARD, 0.5f); 
-	SetParamInfo(FFPARAM_VECTOR2_Y, "shift aftery", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR2_Z, "shift afterz", FF_TYPE_STANDARD, 0.5f);
+	SetParamInfo(FFPARAM_VECTOR2_X, "Focus center", FF_TYPE_STANDARD, 0.5f); 
+	SetParamInfo(FFPARAM_VECTOR2_Y, "Focus size", FF_TYPE_STANDARD, 0.1f);
+	SetParamInfo(FFPARAM_VECTOR2_Z, "Defocus size", FF_TYPE_STANDARD, 0.25f);
 //	SetParamInfo(FFPARAM_VECTOR2_W, "xxx", FF_TYPE_STANDARD, 0.5f);
 
-	SetParamInfo(FFPARAM_VECTOR3_X, "RotX", FF_TYPE_STANDARD, 0.150f); 
-	SetParamInfo(FFPARAM_VECTOR3_Y, "RotY", FF_TYPE_STANDARD, 0.5f);
-	SetParamInfo(FFPARAM_VECTOR3_Z, "RotZ", FF_TYPE_STANDARD, 0.0f);
+//	SetParamInfo(FFPARAM_VECTOR3_X, "xxx", FF_TYPE_STANDARD, 0.150f); 
+//	SetParamInfo(FFPARAM_VECTOR3_Y, "xxx", FF_TYPE_STANDARD, 0.5f);
+//	SetParamInfo(FFPARAM_VECTOR3_Z, "xxx", FF_TYPE_STANDARD, 0.0f);
 //	SetParamInfo(FFPARAM_VECTOR3_W, "xxx", FF_TYPE_STANDARD, 0.0f);
 
-	SetParamInfo(FFPARAM_VECTOR4_X, "Decay 1", FF_TYPE_STANDARD,.50f);
-	SetParamInfo(FFPARAM_VECTOR4_Y, "Decay 2", FF_TYPE_STANDARD,.50f);
-	SetParamInfo(FFPARAM_VECTOR4_Z, "Decay 3", FF_TYPE_STANDARD,.50f);
-	SetParamInfo(FFPARAM_VECTOR4_W, "Decay 4", FF_TYPE_STANDARD, .50f);
+//	SetParamInfo(FFPARAM_VECTOR4_X, "xxx 1", FF_TYPE_STANDARD,.50f);
+///	SetParamInfo(FFPARAM_VECTOR4_Y, "xxx 2", FF_TYPE_STANDARD,.50f);
+//	SetParamInfo(FFPARAM_VECTOR4_Z, "xxx 3", FF_TYPE_STANDARD,.50f);
+//	SetParamInfo(FFPARAM_VECTOR4_W, "xxx 4", FF_TYPE_STANDARD, .50f);
+//
+//	SetParamInfo(FFPARAM_COLOR1_RED, "Color 1 Red", FF_TYPE_RED, 1.0f);
+//	SetParamInfo(FFPARAM_COLOR1_GREEN, "Color 1 Green", FF_TYPE_GREEN, 1.0f);
+//	SetParamInfo(FFPARAM_COLOR1_BLUE, "Color 1 Blue", FF_TYPE_BLUE, 1.0f);
+//	SetParamInfo(FFPARAM_COLOR1_ALPHA, "Color 1 Alpha", FF_TYPE_STANDARD, 1.0f);
 
-	SetParamInfo(FFPARAM_COLOR1_RED, "Color 1 Red", FF_TYPE_RED, 1.0f);
-	SetParamInfo(FFPARAM_COLOR1_GREEN, "Color 1 Green", FF_TYPE_GREEN, 1.0f);
-	SetParamInfo(FFPARAM_COLOR1_BLUE, "Color 1 Blue", FF_TYPE_BLUE, 1.0f);
-	// SetParamInfo(FFPARAM_COLOR1_ALPHA, "Color 1 Alpha", FF_TYPE_STANDARD, 1.0f);
-
-	SetParamInfo(FFPARAM_COLOR2_RED, "Color 2 Red", FF_TYPE_RED, 1.0f);
-	SetParamInfo(FFPARAM_COLOR2_GREEN, "Color 2 Green", FF_TYPE_GREEN, 0.0f);
-	SetParamInfo(FFPARAM_COLOR2_BLUE, "Color 2 Blue", FF_TYPE_BLUE, 0.0f);
+//	SetParamInfo(FFPARAM_COLOR2_RED, "Color 2 Red", FF_TYPE_RED, 1.0f);
+//	SetParamInfo(FFPARAM_COLOR2_GREEN, "Color 2 Green", FF_TYPE_GREEN, 0.0f);
+//	SetParamInfo(FFPARAM_COLOR2_BLUE, "Color 2 Blue", FF_TYPE_BLUE, 0.0f);
 //	SetParamInfo(FFPARAM_COLOR2_ALPHA, "Color 2 Alpha", FF_TYPE_STANDARD, 1.0f);	
 
 	// Set defaults
@@ -942,220 +968,68 @@ FFResult ShaderMaker::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		}
 
 		printGLErrors("start005");
-		// If there is a second texture, bind it to texture unit 1
-		// here we have the gaussian blur filter, accepting only one input, channel0 is always the original input, channel2 is the current blur, start with original input always, hence assign texture0 here
-	/*	if(m_inputTextureLocation1 >= 0 && Texture1.Handle > 0) {
-			m_extensions.glActiveTexture(GL_TEXTURE1);
-			if(m_glTexture1 > 0)
-				glBindTexture(GL_TEXTURE_2D, m_glTexture0);
-			else
-				glBindTexture(GL_TEXTURE_2D, Texture0.Handle);
-		}*/
-
-		/*
-		// Texture units 2 and 3
-		if(m_inputTextureLocation2 >= 0 && Texture2.Handle > 0) {
-			m_extensions.glActiveTexture(GL_TEXTURE2);
-			if(m_glTexture2 > 0)
-				glBindTexture(GL_TEXTURE_2D, m_glTexture2);
-			else
-				glBindTexture(GL_TEXTURE_2D, Texture2.Handle);
-		}
-
-		if(m_inputTextureLocation3 >= 0 && Texture3.Handle > 0) {
-			m_extensions.glActiveTexture(GL_TEXTURE3);
-			if(m_glTexture3 > 0)
-				glBindTexture(GL_TEXTURE_2D, m_glTexture3);
-			else
-				glBindTexture(GL_TEXTURE_2D, Texture3.Handle);
-		}
-		*/
+		 
 
 		// Do the draw for the shader to work
 
-		 
-		for (int i = 0; i < m_vector1.x*100; i++) {
 
+		int blurcount = floor(m_vector1.x*100.0);
+		int blurFract = (m_vector1.x*100.0)-(long)(m_vector1.x*100.0);
+		/*
+		if blur is 0 dont use the for loop but call the gaussian blur with the fractional part to 1 of the blurcount value
+
+		remark: the inputPhase is used to distinguis the shader, this could be done using multiple shaders but as of now it
+		is implemented like this 
+		*/
+		if (blurcount >0) {
+			for (int i = 0; i < floor(m_vector1.x*100.0); ++i) {
+
+				if (m_inputIsPhase2Location >= 0)
+					m_extensions.glUniform1fARB(m_inputIsPhase2Location, i == 0 ? 0.0 : 0.35);
+				if (m_inputVector1Location >= 0)
+					m_extensions.glUniform4fARB(m_inputVector1Location, 0.0f, 1.0f, 0.0f, 0.0f);
+				this->renderTo(m_FramebufferId, renderedTexture1, renderedTexture1Depth, renderedTexture2);
+
+				if (m_inputIsPhase2Location >= 0)
+					m_extensions.glUniform1fARB(m_inputIsPhase2Location, 0.350);
+				if (m_inputVector1Location >= 0)
+					m_extensions.glUniform4fARB(m_inputVector1Location, 1.0f, 0.f, 0.0f, 0.0f);
+				this->renderTo(m_FramebufferId, renderedTexture2, renderedTexture2Depth, renderedTexture1);
+
+			}
+		}
+		else {
+
+			// if blur is 0 us truncated float value for simulating from 0..1 first blur
 			if (m_inputIsPhase2Location >= 0)
-				m_extensions.glUniform1fARB(m_inputIsPhase2Location,i==0? 0.0:0.35);
+				m_extensions.glUniform1fARB(m_inputIsPhase2Location,  0.0 );
 			if (m_inputVector1Location >= 0)
-				m_extensions.glUniform4fARB(m_inputVector1Location, 0.0f, 1.0f, 0.0f, 0.0f);
+				m_extensions.glUniform4fARB(m_inputVector1Location, 0.0f, blurFract* 1.0f, 0.0f, 0.0f);
 			this->renderTo(m_FramebufferId, renderedTexture1, renderedTexture1Depth, renderedTexture2);
 
 			if (m_inputIsPhase2Location >= 0)
 				m_extensions.glUniform1fARB(m_inputIsPhase2Location, 0.350);
 			if (m_inputVector1Location >= 0)
-				m_extensions.glUniform4fARB(m_inputVector1Location,  1.0f,0.f, 0.0f, 0.0f);
+				m_extensions.glUniform4fARB(m_inputVector1Location, blurFract*1.0f, 0.f, 0.0f, 0.0f);
 			this->renderTo(m_FramebufferId, renderedTexture2, renderedTexture2Depth, renderedTexture1);
-		
+
+
 		}
-			
-
-			/*
-			//m_extensions.glActiveTexture(GL_TEXTURE1);
-			//glBindTexture(GL_TEXTURE_2D, m_glTexture0); 
-			printGLErrors("start");
-
-			glClearColor(0, 0, 0, 0);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			/*
-			set up render target for gaussian blur horizontal
-			* /
-			m_extensions.glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_FramebufferId);
-
-			m_extensions.glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, renderedTexture1, 0);
-
-			m_extensions.glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, renderedTexture1Depth, 0);
-
-			glDepthMask(FALSE);
-			glEnable(GL_TEXTURE_2D);
-
-		// printf("RESULT FB ! 0x%4x\n", m_extensions.glCheckFramebufferStatusEXT(GL_FRAMEBUFFER));
-			printGLErrors("start2");
-
-			// set direction to horizontal using vector1 inpout
-			if (m_inputVector1Location >= 0)
-				m_extensions.glUniform4fARB(m_inputVector1Location, 10.f*m_vector2.x,0.0f,0.0f,0.0f);
-
-			// clear first buffer
-			glClearColor(0, 0, 0, 0);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			 
-			renderQuad();
-
-			printGLErrors("start3");
-			* /
-			//
-			// m_extensions.glUniform1fARB(m_inputIsPhase2Location, );
-			// set current rendered image to texture input for second pass vertical blur 
-			m_extensions.glUniform1fARB(m_inputIsPhase2Location, .35);
-			// and blur vertical
-			/*
-			set up render target for gaussian blur horizontal
-			* /
-			printGLErrors("start41");
-			m_extensions.glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_FramebufferId2);
-			printGLErrors("start411");
-
-			m_extensions.glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, renderedTexture2, 0);
-			printGLErrors("start4111");
-
-			m_extensions.glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, renderedTexture2Depth, 0);
-
-			m_extensions.glActiveTexture(GL_TEXTURE1);
-			glBindTexture(GL_TEXTURE_2D, renderedTexture1);
-
-			printGLErrors("start41111");
-			glDepthMask(FALSE);
-		// 	printf("RESULT FB2 ! 0x%4x\n", m_extensions.glCheckFramebufferStatusEXT(GL_FRAMEBUFFER));
-			// clear second buffer
-		//	glClearColor(0, 0, 0, 0);
-		//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			
-			printGLErrors("start42");
-
-		// set direction to vertical  using vector1 inpout
-			if (m_inputVector1Location >= 0)
-				m_extensions.glUniform4fARB(m_inputVector1Location, 0.0f, 10.0f*m_vector2.y, 1.0f, 0.0f);
-			printGLErrors("start43");
-		 	renderQuad();
 
 
-
-			printGLErrors("start44");
-		/* rendering of own geometry ...
-
-		m_extensions.glUniform1fARB(m_inputIsPhase2Location, 0.0);
 		 
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LESS);
-		//glDisable(GL_CULL_FACE);
-		//glCullFace(GL_FRONT);
-		//glFrontFace(GL_CW);
-		glDisable(GL_BLEND);
-		 
-
-		gluPerspective(65, m_vpWidth / m_vpHeight, 1.0, 1000.0);
-		gluLookAt(0,0, 25, 0, 0, 0, 0, 1, 0);
-		float size = 10.0;
-		int count = 100*m_UserRed ;
-		glMatrixMode(GL_MODELVIEW);
-
-
-
-		for (int ululu = 0; ululu < count; ululu++) {
-			glMatrixMode(GL_MODELVIEW);
-			glLoadIdentity();
-	//		glScalef(1.0/ululu, 1.0/ululu, 1.0/ululu);
-
-			float radius = ululu + 1.0;
-			float width = 0.15;
-
-		  glTranslatef(decays1[ululu].x*size *2.0 - size, decays1[ululu].y *size *2.0 - size, decays1[ululu].z*size *2.0- size );
-			//glScalef(ululu, ululu, ululu);
-		  
-		glRotatef(decays3[ululu].x*360.0-180, 1.0, 0.0, 0.0); // yaw
-		glRotatef(decays3[ululu].y*180.0-90, 0.0, 1.0, 0.0); // pitch
-	   glRotatef(decays3[ululu].z*360.0-180, 0.0, 0.0, 1.0); // roll
-		 
-		// second movement, in direction of 
-		 glTranslatef(decays2[ululu].x * size *2.0-size, decays2[ululu].y *size *2.0- size,  decays2[ululu].z*2.0*size-size);
-
-
-		 glCallList(m_displayList[ululu]);
-		//glBegin(GL_LINES);
-		// DrawTorus(radius, width,1.0,0.50,0.0);
-	//	glEnd();
-		}
-		*/
 		if (m_inputIsPhase2Location >= 0)
 			m_extensions.glUniform1fARB(m_inputIsPhase2Location, 1.0);
 
-	 	m_extensions.glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, pGL->HostFBO);
-	//	printf("RESULT FB3 ! 0x%4x\n", m_extensions.glCheckFramebufferStatusEXT(GL_FRAMEBUFFER));
+	 	m_extensions.glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, pGL->HostFBO); 
 
 	 	m_extensions.glActiveTexture(GL_TEXTURE1);
-	 	glBindTexture(GL_TEXTURE_2D, renderedTexture2);
-	//	m_extensions.glActiveTexture(GL_TEXTURE0);
-	//	glBindTexture(GL_TEXTURE_2D, renderedTexture1);
+	 	glBindTexture(GL_TEXTURE_2D, renderedTexture2); 
 		glEnable(GL_TEXTURE_2D);
 		glClearColor(0, 0, 0, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		renderQuad(); 
-		/*
-		//  glBindTexture(GL_TEXTURE_2D, Texture.Handle);
+		renderQuad();  
 
-		glClearColor(0, 2, 0, 0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		gluOrtho2D(-1, 1, -1, 1);
-		glViewport(0, 0, m_vpWidth ,m_vpHeight);
-
-
-
-	  renderQuad2(1.0,1.0);
-	  */
-		 
-		//printf("Render updated");
-
-		/*
-		// unbind input texture 3
-		if(m_inputTextureLocation3 >= 0 && Texture3.Handle > 0) {
-			m_extensions.glActiveTexture(GL_TEXTURE3);
-			glBindTexture(GL_TEXTURE_2D, 0);
-		}
-
-		// unbind input texture 2
-		if(m_inputTextureLocation2 >= 0 && Texture2.Handle > 0) {
-			m_extensions.glActiveTexture(GL_TEXTURE2);
-			glBindTexture(GL_TEXTURE_2D, 0);
-		}
-		*/
 		// unbind input texture 1
 		if(m_inputTextureLocation1 >= 0 && Texture1.Handle > 0) {
 			m_extensions.glActiveTexture(GL_TEXTURE1);
@@ -1219,11 +1093,7 @@ char * ShaderMaker::GetParameterDisplay(DWORD dwIndex) {
 		case FFPARAM_ALPHA:
 			cross_secure_sprintf(m_DisplayValue, 16, "%d", (int)(m_UserAlpha*256.0));
 			return m_DisplayValue;
-
-		case FFPARAM_VECTOR1_X:
-			cross_secure_sprintf(m_DisplayValue, 16, "xxxxxxxxxxx%dxxxxxxxxxxxx", (int)(m_vector1.x));
-			return m_DisplayValue;
-
+			 
 
 		default:
 			return m_DisplayValue;

@@ -221,6 +221,19 @@ Version 1.0
 
 nice core functionality, not using a pre render step, might receive a gaussian blur/prefilter step in future, and adjustment for transluency options like alpha or luminance
  
+ 
+ 
+### 003 Tilt Shift
+     
+| Render | Parameters |
+| ------------- | ------------- |   
+|![tilt shift render](media/sf-003-tiltshift-render.png )   |   ![kali extended params](media/sf-003-tiltshift-params.png )    
+the tilt shift effect is implemented as a gaussian blur with a vertical linear focus gradient
+
+the example image shows the default effect on the default suncircle
+ 
+ 
+ 
 ## Shadertoy Conversions
 
 ### 001 Kali Sea Creature

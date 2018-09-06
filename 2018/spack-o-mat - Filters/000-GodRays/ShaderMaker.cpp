@@ -107,7 +107,7 @@ static CFFGLPluginInfo PluginInfo (
 	"SoM GodRays",						// *** Plugin name - make it different for each plugin 
 	1,						   			// API major version number 													
 	006,								// API minor version number	
-	1,									// *** Plugin major version number
+	2,									// *** Plugin major version number
 	000,								// *** Plugin minor version number
 	// FF_EFFECT,							// Plugin type can always be an effect
 	FF_EFFECT,						// or change this to FF_SOURCE for shaders that do not use a texture
@@ -334,21 +334,21 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 
 	*/
 	 
-	SetParamInfo(FFPARAM_VECTOR1_X, "Exposure", FF_TYPE_STANDARD, 1.0f);
-	SetParamInfo(FFPARAM_VECTOR1_Y, "Decay", FF_TYPE_STANDARD, 1.0f);
-	SetParamInfo(FFPARAM_VECTOR1_Z, "Density", FF_TYPE_STANDARD, 1.0f);
-	SetParamInfo(FFPARAM_VECTOR1_W, "Weight", FF_TYPE_STANDARD, 1.0f);
+	SetParamInfo(FFPARAM_VECTOR1_X, "Exposure", FF_TYPE_STANDARD, .25f);
+	SetParamInfo(FFPARAM_VECTOR1_Y, "Decay", FF_TYPE_STANDARD, .90f);
+	SetParamInfo(FFPARAM_VECTOR1_Z, "Density", FF_TYPE_STANDARD, .90f);
+	SetParamInfo(FFPARAM_VECTOR1_W, "Weight", FF_TYPE_STANDARD, .90f);
 
 
 //	SetParamInfo(FFPARAM_VECTOR2_X, "Vector2X", FF_TYPE_STANDARD, 1.0f);
 //	SetParamInfo(FFPARAM_VECTOR2_Y, "Vector2Y", FF_TYPE_STANDARD, 1.0f);
 //	SetParamInfo(FFPARAM_VECTOR2_Z, "Vector2Z", FF_TYPE_STANDARD, 1.0f);
-	SetParamInfo(FFPARAM_VECTOR2_W, "Bias", FF_TYPE_STANDARD, 1.0f);
+	SetParamInfo(FFPARAM_VECTOR2_W, "Bias", FF_TYPE_STANDARD, .10f);
 
 
-	SetParamInfo(FFPARAM_VECTOR3_X, "Light X", FF_TYPE_STANDARD, 1.0f);
-	SetParamInfo(FFPARAM_VECTOR3_Y, "Light Y", FF_TYPE_STANDARD, 1.0f);
-	SetParamInfo(FFPARAM_VECTOR3_Z, "Light Radius", FF_TYPE_STANDARD, 1.0f);
+	SetParamInfo(FFPARAM_VECTOR3_X, "Light X", FF_TYPE_STANDARD, .50f);
+	SetParamInfo(FFPARAM_VECTOR3_Y, "Light Y", FF_TYPE_STANDARD, .50f);
+	SetParamInfo(FFPARAM_VECTOR3_Z, "Light Radius", FF_TYPE_STANDARD, .50f);
 //	SetParamInfo(FFPARAM_VECTOR3_W, "Vector3W", FF_TYPE_STANDARD, 1.0f);
 
 	/*

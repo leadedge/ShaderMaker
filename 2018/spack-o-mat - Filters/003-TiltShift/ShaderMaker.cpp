@@ -128,12 +128,12 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 static CFFGLPluginInfo PluginInfo ( 
 	ShaderMaker::CreateInstance,		// Create method
-	"SX07",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
+	"SF03",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
 	"SoM TiltShift",						// *** Plugin name - make it different for each plugin 
 	1,						   			// API major version number 													
 	006,								// API minor version number	
 	2,									// *** Plugin major version number
-	002,								// *** Plugin minor version number
+	000,								// *** Plugin minor version number
 	// FF_EFFECT,							// Plugin type can always be an effect
 	FF_EFFECT,						// or change this to FF_SOURCE for shaders that do not use a texture
 	"SoM TiltShift",     // *** Plugin description - you can expand on this

@@ -232,7 +232,19 @@ nice core functionality, not using a pre render step, might receive a gaussian b
 the tilt shift effect is implemented as a gaussian blur with a vertical linear focus gradient
 
 the example image shows the default effect on the default suncircle
- 
+                   
+![kali extended params](media/sf-003-tiltshift-params.png )    
+#### Parameters
+
+- Blur - the gaussian blur amount applied to the full defocussed section
+- Focus Center - the vertical center of the focus
+- Focus Size - the size of the focus area
+- Defocus Size - the size of the blending area between focused/defocused
+- Angle - the rotation of the focus line                   
+                   
+#### Status 
+                 
+finished, and is used as base for every filter that might need gaussian blur in future
  
  
 ## Shadertoy Conversions

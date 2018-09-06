@@ -94,7 +94,7 @@ int (*cross_secure_sprintf)(char *, size_t, const char *, ...) = snprintf;
 #define FFPARAM_SPEEDS_Y        (11011)
 #define FFPARAM_VECTOR2_Y       (2)
 #define FFPARAM_VECTOR2_Z       (3)
-#define FFPARAM_VECTOR2_W       (11114)
+#define FFPARAM_VECTOR2_W       (4)
 
 #define FFPARAM_VECTOR3_X       (12347)
 #define FFPARAM_SPEEDS_Z        (1015)
@@ -189,7 +189,16 @@ varying vec3 N;
 
 vec3 lightDir = normalize(vec3(0.0,1.0,0.0));
 vec3 lightDir2 = normalize(vec3(0.0,0.0,1.0));
- 
+
+// https://gist.github.com/yiwenl/3f804e80d0930e34a0b33359259b556c#file-glsl-rotation-2d
+vec2 rotate(vec2 v, float a) {
+	float s = sin(a);
+	float c = cos(a);
+	mat2 m = mat2(c, -s, s, c);
+	return m * v;
+}
+
+// https://github.com/Jam3/glsl-fast-gaussian-blur
 vec4 blur5(sampler2D image, vec2 uv, vec2 resolution, vec2 direction) {
 	vec4 color = vec4(0.0);
 	vec2 off1 = vec2(1.3333333333333333) * direction;
@@ -216,11 +225,11 @@ vec4 blur13(sampler2D image, vec2 uv, vec2 resolution, vec2 direction) {
 
 vec2 direction = inputVector1.xy;
 
-
-float focusCenter = inputVector2.x;
+float focusCenter = inputVector2.x*2.0-1.0;
 float focusSize = inputVector2.y;
-float defocusSize= inputVector2.z; 
-
+float defocusSize = inputVector2.z;
+float focusAngle= inputVector2.w*PI*2.0;
+ 
 void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {
 
@@ -240,12 +249,13 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 		 //	 	 	fragColor = fragColor+ vec4(.50, .50, 0.0, 1.0);
 	 }
 		else {
+			vec2 uv2 = rotate(uv*2.0 - 1.0,focusAngle);
 
 			// here the tilt shift happens step3 of the shader, will be optimized in future (according the phases ... perhaps)
 			vec4 original = texture2D(iChannel0, uv).rgba;
 			vec4 blurred = texture2D(iChannel1, uv).rgba;
 
-			float distanceCenter = abs(uv.y - focusCenter);
+			float distanceCenter = abs(uv2.y - focusCenter);
 			if (distanceCenter < focusSize) {
 			// inside focus, just return input
 				fragColor = original;
@@ -321,7 +331,7 @@ ShaderMaker::ShaderMaker():CFreeFrameGLPlugin()
 	SetParamInfo(FFPARAM_VECTOR2_X, "Focus center", FF_TYPE_STANDARD, 0.5f); 
 	SetParamInfo(FFPARAM_VECTOR2_Y, "Focus size", FF_TYPE_STANDARD, 0.1f);
 	SetParamInfo(FFPARAM_VECTOR2_Z, "Defocus size", FF_TYPE_STANDARD, 0.25f);
-//	SetParamInfo(FFPARAM_VECTOR2_W, "xxx", FF_TYPE_STANDARD, 0.5f);
+ 	SetParamInfo(FFPARAM_VECTOR2_W, "Angle", FF_TYPE_STANDARD, 0.0f);
 
 //	SetParamInfo(FFPARAM_VECTOR3_X, "xxx", FF_TYPE_STANDARD, 0.150f); 
 //	SetParamInfo(FFPARAM_VECTOR3_Y, "xxx", FF_TYPE_STANDARD, 0.5f);

@@ -8,7 +8,6 @@ this repository is a huge development repository for plugins by VJ-Spack-O-Mat
 - [Mission Statement](#mission-statement)
   - [Who is VJ Spack-O-Mat and why](#who-is-vj-spack-o-mat-and-why)
 
-
 <!-- TOC END -->
 # QuickStart
 

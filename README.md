@@ -1,27 +1,34 @@
-# ShaderMaker
-A source code template to create FreeframeGL plugins from GLSL Sandbox and ShaderToy shaders.
 
-For the shaders that you find useful with "ShaderLoader" and will use a lot,
-it is useful to have a dedicated FreeFrameGL plugin that does not not rely on a shader file.
+# VJ Spack-O-Mat FFGL Plugins 
+![one of i-love-chaos logos print your own more than endless possibilities](release/media/i-love-chaos-white-000000000000003.png "One of I-Love-Chaos")
+          
+this repository is a huge development repository for plugins by VJ-Spack-O-Mat
+<!-- TOC -->
+- [QuickStart](#quickstart)
+- [Mission Statement](#mission-statement)
+  - [Who is VJ Spack-O-Mat and why](#who-is-vj-spack-o-mat-and-why)
 
-## Windows
-This is a Visual Studio C++ project that can make any number of them.
-Download everything and unzip into in any folder, open the VS2010 solution file with
-Visual Studio and change to "release", it should build OK as-is. More examples are in the source file.
+<!-- TOC END -->
+# QuickStart
 
-## Mac
-In build/osx there are both and XCode project and a makefile. In both cases, the resulting bundle will be created in
-Binaries/osx. 
+- for downloading binaries and documentation
+    [Spack-O-Mat Plugins Binaries](release)
+    
+- for developing with this repository
+    [Spack-O-Mat Plugin Development](DEVELOPMENT.md)
 
-## How to use
-To make your own shader plugin, all you do is copy/paste the shader code into the source file,
-change the plugin information and rename the resulting dll. There are some things to take note of, 
-but hopefully the code and documentation are clear enough.
+# Mission Statement
 
-Refer to the documentation for further details.
+## Who is VJ Spack-O-Mat and why
 
-## Credits
-Implementation by Lynn Jarvis spout@zeal.co  
-MacOSX port by Amaury Hazan amaury@billaboop.com  
-The MacOSX port was supported by Coldcut/Ninja Tune as a contribution to the Visuals Community  
+__Christian Kleinhuis__ - former administrator of [www.fractalforums.com](http://fractalforums.com), succeeded by [fractalforums.org](http://fractalforums.org) - is __VJ Spack-O-Mat__. 
 
+__Christian__ and the __VJ__ together with the folks at [ChaosTube](https://www.youtube.com/channel/UCej4aqqeusL5iUnKHjmKjLQ) Youtube channel - which are __Christian Kleinhuis__ as well (*speaker*,*artist*,*scientist*,*keeper*) - follow a huge goal, the goal is to create a popular stimulating didactory experience 
+for introducing the [Chaos Theory](https://www.wikiwand.com/en/Chaos_theory) to the world. 
+
+This shall be a physical space with musical resting and dancing opportunities - _the cafe_ -, a free for everyone area to introduce the abstract theory behind chaos theory using interactive tutorials - _the classroom_ -, an area where contemporary digital art is exhibited, providing the possibility for each participating artist in earning money from the exposure, hence this area will have an entry fee - _the exhibition_ - and finally the fourth level is christian's own massive digital playground featuring the stuff he has already experienced: [interactive kinect usage](https://youtu.be/sasvx7GcIT4?t=64) - safe laser experiments [https://github.com/trifox/laserapi](LaserApi), touch screen floors using various fractal generation techniques or plain [https://github.com/trifox/ShaderMaker](Resolume) plugins :) and everything that might be of his personal interest who knows ...  - _the mutatorkammer_.
+
+The concept shall barry itself, selling drinks, food (broccoli) and merchandise should produce the income needed to supply the above
+mentioned spaces around the world spreading knowledge and letting most of the money create either other spaces or sense full contributions to the development of the world - where not only art and free minded spaces carry on but following mostly the golden rule to participate in any outcomings ... 
+ 
+show your affection on [i-love-chaos](http://ilc.fractalforums.com) 

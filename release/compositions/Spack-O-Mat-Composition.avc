@@ -1,0 +1,2639 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Composition name="Composition" uniqueId="1499333061498" numDecks="2" currentDeckIndex="0" numLayers="4" numColumns="16" compositionIsRelative="0">
+	<versionInfo name="Resolume Arena" majorVersion="6" minorVersion="0" microVersion="11" revision="61108"/>
+	<CompositionInfo name="Spack-O-Mat-Composition" description="Spack-O-Mat Example Composition" width="1920" height="1080">
+		<DeckInfo name="AV" id="1499337861242" closed="0"/>
+		<DeckInfo name="empty" id="1503475749193" closed="0"/>
+	</CompositionInfo>
+	<Params name="Params">
+		<Param name="Name" default="" value="Spack-O-Mat-Composition"/>
+		<Param name="Description" default="" value="Spack-O-Mat Example Composition"/>
+		<ParamRange name="Speed" default="1" value="1.0000000673363149684"/>
+		<ParamChoice name="Beat Snap" default="1" value="5" storeChoices="0"/>
+		<Param name="KeyboardShortcutPreset" default="" value="Default"/>
+		<Param name="MidiShortcutPreset" default="" value="Default"/>
+		<Param name="OscShortcutPreset" default="" value="OutputAllMessages"/>
+		<Param name="DmxShortcutPreset" default="" value="Default"/>
+	</Params>
+	<Params name="Dashboard">
+		<ParamRange name="Link 1" altName="RGB" default="0" value="0"/>
+		<ParamRange name="Link 2" altName="Hue" default="0" value="0"/>
+		<ParamRange name="Link 3" altName="Distort" default="0" value="0"/>
+		<ParamRange name="Link 4" altName="Flip" default="0" value="0"/>
+		<ParamRange name="Link 5" altName="Kaleido" default="0" value="0"/>
+		<ParamRange name="Link 6" altName="Mirror" default="0" value="0"/>
+		<ParamRange name="Link 7" altName="Twitch" default="0" value="0"/>
+		<ParamRange name="Link 8" altName="Trails" default="0" value="0"/>
+	</Params>
+	<CompositionView name="CompositionObjectView">
+		<FoldParams name="FoldParams">
+			<FoldState component="/compositionproperties/dashboard/" folded="0"/>
+		</FoldParams>
+	</CompositionView>
+	<AudioTrack name="AudioTrack">
+		<AudioEffectChain name="AudioEffectChain"/>
+	</AudioTrack>
+	<VideoTrack name="VideoTrack">
+		<Params name="Params">
+			<ParamRange storage="3" name="Width" default="1920" value="1920"/>
+			<ParamRange storage="3" name="Height" default="1080" value="1080"/>
+		</Params>
+		<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain">
+			<RenderPass storage="0" name="HueRotate" type="DryWetEffect" uniqueId="A128" baseType="DryWetEffect" index="0">
+				<View name="View" folded="1"/>
+				<RenderPass name="HueRotate" type="HueRotate" uniqueId="A128" baseType="Effect" dwType="Effect">
+					<Params name="Params">
+						<ParamRange name="Hue Rotate" default="0" value="0">
+							<BehaviourDouble name="BehaviourDouble">
+								<PhaseSourceLink name="PhaseSourceLink" canSetLinkedParam="1"/>
+							</BehaviourDouble>
+						</ParamRange>
+					</Params>
+				</RenderPass>
+				<ChoosableMixer name="Mixer">
+					<RenderPass name="Alpha" type="Alpha" uniqueId="A006" baseType="Mixer"/>
+				</ChoosableMixer>
+			</RenderPass>
+			<RenderPass storage="0" name="Distortion" type="DryWetEffect" uniqueId="A129" baseType="DryWetEffect" index="1">
+				<View name="View" folded="1"/>
+				<RenderPass name="Distortion" type="Distortion" uniqueId="A129" baseType="Effect" dwType="Effect">
+					<Params name="Params">
+						<ParamRange name="Distort" default="0" value="0">
+							<BehaviourDouble name="BehaviourDouble">
+								<PhaseSourceLink name="PhaseSourceLink" canSetLinkedParam="1"/>
+							</BehaviourDouble>
+						</ParamRange>
+					</Params>
+				</RenderPass>
+				<ChoosableMixer name="Mixer">
+					<RenderPass name="Alpha" type="Alpha" uniqueId="A006" baseType="Mixer"/>
+				</ChoosableMixer>
+			</RenderPass>
+			<RenderPass storage="0" name="Flip" type="DryWetEffect" uniqueId="A104" baseType="DryWetEffect" index="2">
+				<Params name="Params">
+					<ParamRange name="Opacity" default="1" value="0">
+						<BehaviourDouble name="BehaviourDouble">
+							<PhaseSourceLink name="PhaseSourceLink" canSetLinkedParam="1"/>
+						</BehaviourDouble>
+					</ParamRange>
+				</Params>
+				<View name="View" folded="1"/>
+				<RenderPass name="Flip" type="Flip" uniqueId="A104" baseType="Effect" dwType="Effect"/>
+				<ChoosableMixer name="Mixer">
+					<RenderPass name="Alpha" type="Alpha" uniqueId="A006" baseType="Mixer"/>
+				</ChoosableMixer>
+			</RenderPass>
+			<RenderPass storage="0" name="MirrorQuad" type="DryWetEffect" uniqueId="A180" baseType="DryWetEffect" index="3">
+				<Params name="Params">
+					<ParamRange name="Opacity" default="1" value="0">
+						<BehaviourDouble name="BehaviourDouble">
+							<PhaseSourceLink name="PhaseSourceLink" canSetLinkedParam="1"/>
+						</BehaviourDouble>
+					</ParamRange>
+				</Params>
+				<View name="View" folded="1"/>
+				<RenderPass name="MirrorQuad" type="MirrorQuad" uniqueId="A180" baseType="Effect" dwType="Effect">
+					<Params name="Params">
+						<Param name="Flip X" default="0" value="1"/>
+						<Param name="Flip Y" default="0" value="1"/>
+					</Params>
+				</RenderPass>
+				<ChoosableMixer name="Mixer">
+					<RenderPass name="Alpha" type="Alpha" uniqueId="A006" baseType="Mixer"/>
+				</ChoosableMixer>
+			</RenderPass>
+			<RenderPass storage="0" name="PolarKaleido" type="DryWetEffect" uniqueId="A190" baseType="DryWetEffect" index="4">
+				<Params name="Params">
+					<ParamRange name="Opacity" default="1" value="0">
+						<BehaviourDouble name="BehaviourDouble">
+							<PhaseSourceLink name="PhaseSourceLink" canSetLinkedParam="1"/>
+						</BehaviourDouble>
+					</ParamRange>
+				</Params>
+				<View name="View" folded="1"/>
+				<RenderPass name="PolarKaleido" type="PolarKaleido" uniqueId="A190" baseType="Effect" dwType="Effect">
+					<Params name="Params">
+						<ParamRange name="Parts" default="1" value="3.1026475694444446418"/>
+					</Params>
+				</RenderPass>
+				<ChoosableMixer name="Mixer">
+					<RenderPass name="Alpha" type="Alpha" uniqueId="A006" baseType="Mixer"/>
+				</ChoosableMixer>
+			</RenderPass>
+			<RenderPass storage="0" name="TwitchEffect" type="DryWetEffect" uniqueId="A183" baseType="DryWetEffect" index="5">
+				<View name="View" folded="1"/>
+				<RenderPass name="TwitchEffect" type="TwitchEffect" uniqueId="A183" baseType="Effect" dwType="Effect">
+					<Params name="Params">
+						<ParamRange name="Global Twitch" default="1" value="0">
+							<BehaviourDouble name="BehaviourDouble">
+								<PhaseSourceLink name="PhaseSourceLink" canSetLinkedParam="1"/>
+							</BehaviourDouble>
+						</ParamRange>
+						<ParamRange name="Max Pos X" default="0" value="0.16168981481481481399"/>
+						<ParamRange name="Max Pos Y" default="0" value="0.056336805555555556635"/>
+						<ParamRange name="Pos Frequency" default="0" value="0.72291666666666665186"/>
+						<ParamRange name="Max Scale" default="0" value="0.34713541666666664076"/>
+						<ParamRange name="Scale Frequency" default="0" value="0.72832754629629625764"/>
+						<ParamRange name="Max Light" default="0" value="0.69403935185185183787"/>
+						<ParamRange name="Light Frequency" default="0" value="1"/>
+						<ParamRange name="Max RGB Shift" default="0" value="1"/>
+						<ParamRange name="RGB Frequency" default="0" value="0.42638888888888887285"/>
+					</Params>
+				</RenderPass>
+				<ChoosableMixer name="Mixer">
+					<RenderPass name="Alpha" type="Alpha" uniqueId="A006" baseType="Mixer"/>
+				</ChoosableMixer>
+			</RenderPass>
+			<RenderPass storage="0" name="Trails" type="DryWetEffect" uniqueId="A111" baseType="DryWetEffect" index="6">
+				<View name="View" folded="1"/>
+				<RenderPass name="Trails" type="Trails" uniqueId="A111" baseType="Effect" dwType="Effect">
+					<Params name="Params">
+						<ParamRange name="Feedback" default="0.89999997615814208984" value="0">
+							<BehaviourDouble name="BehaviourDouble">
+								<PhaseSourceLink name="PhaseSourceLink" canSetLinkedParam="1"/>
+							</BehaviourDouble>
+						</ParamRange>
+					</Params>
+				</RenderPass>
+				<ChoosableMixer name="Mixer">
+					<RenderPass name="Alpha" type="Alpha" uniqueId="A006" baseType="Mixer"/>
+				</ChoosableMixer>
+			</RenderPass>
+			<RenderPass name="Transform" type="TransformEffect" uniqueId="17122039101699797593" baseType="Effect" index="7">
+				<View name="View" bCanBeDisabled="0" bCanBeRemoved="0"/>
+			</RenderPass>
+		</RenderPass>
+		<ChoosableMixer name="Blend"/>
+	</VideoTrack>
+	<Layer uniqueId="1499337861302" layerIndex="0">
+		<Params name="Params"/>
+		<Params name="Dashboard">
+			<ParamRange name="Link 1" altName="Hue" default="0" value="0"/>
+		</Params>
+		<ClipTransition name="ClipTransition">
+			<Params name="Params">
+				<ParamRange name="Duration" default="0" value="0.37610727161946416741"/>
+			</Params>
+		</ClipTransition>
+		<LayerView name="LayerView">
+			<FoldParams name="FoldParams">
+				<FoldState component="/layerproperties/dashboard/" folded="0"/>
+			</FoldParams>
+		</LayerView>
+		<AudioTrack name="AudioTrack">
+			<AudioEffectChain name="AudioEffectChain"/>
+		</AudioTrack>
+		<VideoTrack name="VideoTrack">
+			<Params name="Params">
+				<ParamRange storage="3" name="Width" default="1920" value="1920"/>
+				<ParamRange storage="3" name="Height" default="1080" value="1080"/>
+			</Params>
+			<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain">
+				<RenderPass name="Transform" type="TransformEffect" uniqueId="17122039101699797593" baseType="Effect" index="0">
+					<View name="View" bCanBeDisabled="0" bCanBeRemoved="0"/>
+				</RenderPass>
+			</RenderPass>
+			<ChoosableMixer name="Blend">
+				<Params name="Params">
+					<ParamChoice storage="3" name="Blend Mode" default="67464114" value="67464114" storeChoices="0"/>
+				</Params>
+				<RenderPass name="Add" type="Add" uniqueId="A005" baseType="Mixer"/>
+			</ChoosableMixer>
+			<ChoosableMixer name="Transition">
+				<RenderPass name="Alpha" type="Alpha" uniqueId="A006" baseType="Mixer"/>
+			</ChoosableMixer>
+		</VideoTrack>
+	</Layer>
+	<Layer uniqueId="1499337861304" layerIndex="1">
+		<Params name="Params">
+			<Param name="Name" default="Layer #" value="Layer 2"/>
+		</Params>
+		<Params name="Dashboard">
+			<ParamRange name="Link 1" altName="Hue" default="0" value="0"/>
+		</Params>
+		<ClipTransition name="ClipTransition">
+			<Params name="Params">
+				<ParamRange name="Duration" default="0" value="1.1642556199134159733"/>
+			</Params>
+		</ClipTransition>
+		<LayerView name="LayerView">
+			<FoldParams name="FoldParams">
+				<FoldState component="/groupedcomponent/autopilot/" folded="0"/>
+				<FoldState component="/layerproperties/dashboard/" folded="0"/>
+			</FoldParams>
+		</LayerView>
+		<AudioTrack name="AudioTrack">
+			<AudioEffectChain name="AudioEffectChain"/>
+		</AudioTrack>
+		<VideoTrack name="VideoTrack">
+			<Params name="Params">
+				<ParamRange name="Opacity" default="0.5" value="1"/>
+				<ParamRange storage="3" name="Width" default="1920" value="1920"/>
+				<ParamRange storage="3" name="Height" default="1080" value="1080"/>
+			</Params>
+			<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain">
+				<RenderPass name="Transform" type="TransformEffect" uniqueId="17122039101699797593" baseType="Effect" index="0">
+					<View name="View" bCanBeDisabled="0" bCanBeRemoved="0"/>
+				</RenderPass>
+			</RenderPass>
+			<ChoosableMixer name="Blend">
+				<Params name="Params">
+					<ParamChoice storage="3" name="Blend Mode" default="67464114" value="67464114" storeChoices="0"/>
+				</Params>
+				<RenderPass name="Add" type="Add" uniqueId="A005" baseType="Mixer"/>
+			</ChoosableMixer>
+			<ChoosableMixer name="Transition">
+				<RenderPass name="Alpha" type="Alpha" uniqueId="A006" baseType="Mixer"/>
+			</ChoosableMixer>
+		</VideoTrack>
+	</Layer>
+	<Layer uniqueId="1499337861306" layerIndex="2">
+		<Params name="Params"/>
+		<Params name="Dashboard">
+			<ParamRange name="Link 1" altName="Hue" default="0" value="0"/>
+		</Params>
+		<ClipTransition name="ClipTransition">
+			<Params name="Params">
+				<ParamRange name="Duration" default="0" value="2.3899840148585669297"/>
+			</Params>
+		</ClipTransition>
+		<LayerView name="LayerView">
+			<FoldParams name="FoldParams">
+				<FoldState component="/groupedcomponent/autopilot/" folded="0"/>
+				<FoldState component="/layerproperties/dashboard/" folded="0"/>
+			</FoldParams>
+		</LayerView>
+		<AudioTrack name="AudioTrack">
+			<AudioEffectChain name="AudioEffectChain"/>
+		</AudioTrack>
+		<VideoTrack name="VideoTrack">
+			<Params name="Params">
+				<ParamRange name="Opacity" default="0.5" value="1"/>
+				<ParamRange storage="3" name="Width" default="1920" value="1920"/>
+				<ParamRange storage="3" name="Height" default="1080" value="1080"/>
+			</Params>
+			<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain">
+				<RenderPass name="Transform" type="TransformEffect" uniqueId="17122039101699797593" baseType="Effect" index="0">
+					<View name="View" bCanBeDisabled="0" bCanBeRemoved="0"/>
+				</RenderPass>
+			</RenderPass>
+			<ChoosableMixer name="Blend">
+				<Params name="Params">
+					<ParamChoice storage="3" name="Blend Mode" default="67464114" value="67464114" storeChoices="0"/>
+				</Params>
+				<RenderPass name="Add" type="Add" uniqueId="A005" baseType="Mixer"/>
+			</ChoosableMixer>
+			<ChoosableMixer name="Transition">
+				<RenderPass name="Alpha" type="Alpha" uniqueId="A006" baseType="Mixer"/>
+			</ChoosableMixer>
+		</VideoTrack>
+	</Layer>
+	<Layer uniqueId="1534111012788" layerIndex="3">
+		<Params name="Params"/>
+		<ClipTransition name="ClipTransition">
+			<Params name="Params">
+				<ParamRange name="Duration" default="0" value="1.6566175840244945494"/>
+			</Params>
+		</ClipTransition>
+		<LayerView name="LayerView">
+			<FoldParams name="FoldParams"/>
+		</LayerView>
+		<AudioTrack name="AudioTrack">
+			<AudioEffectChain name="AudioEffectChain"/>
+		</AudioTrack>
+		<VideoTrack name="VideoTrack">
+			<Params name="Params">
+				<ParamRange name="Opacity" default="0.5" value="1"/>
+				<ParamRange storage="3" name="Width" default="1920" value="1920"/>
+				<ParamRange storage="3" name="Height" default="1080" value="1080"/>
+			</Params>
+			<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain">
+				<RenderPass storage="0" name="Transform" type="TransformEffect" uniqueId="17122039101699797593" baseType="Effect" index="0">
+					<View name="View" bCanBeDisabled="0" bCanBeRemoved="0"/>
+				</RenderPass>
+			</RenderPass>
+			<ChoosableMixer name="Blend">
+				<Params name="Params">
+					<ParamChoice storage="3" name="Blend Mode" default="67464114" value="67464114" storeChoices="0"/>
+				</Params>
+				<RenderPass name="Add" type="Add" uniqueId="A005" baseType="Mixer"/>
+			</ChoosableMixer>
+			<ChoosableMixer name="Transition">
+				<RenderPass name="Alpha" type="Alpha" uniqueId="A006" baseType="Mixer"/>
+			</ChoosableMixer>
+		</VideoTrack>
+	</Layer>
+	<Column uniqueId="1499337861293" columnIndex="0">
+		<Params name="Params">
+			<Param name="Name" default="Column #" value="AV 001"/>
+		</Params>
+	</Column>
+	<Column uniqueId="1499337861294" columnIndex="1">
+		<Params name="Params">
+			<Param name="Name" default="Column #" value="AV 002"/>
+		</Params>
+	</Column>
+	<Column uniqueId="1499337861295" columnIndex="2">
+		<Params name="Params">
+			<Param name="Name" default="Column #" value="AV 003"/>
+		</Params>
+	</Column>
+	<Column uniqueId="1499337861296" columnIndex="3">
+		<Params name="Params">
+			<Param name="Name" default="Column #" value="AV 004"/>
+		</Params>
+	</Column>
+	<Column uniqueId="1499337861297" columnIndex="4">
+		<Params name="Params">
+			<Param name="Name" default="Column #" value="AV 005"/>
+		</Params>
+	</Column>
+	<Column uniqueId="1499337861298" columnIndex="5">
+		<Params name="Params">
+			<Param name="Name" default="Column #" value="AV 006"/>
+		</Params>
+	</Column>
+	<Column uniqueId="1499337861299" columnIndex="6"/>
+	<Column uniqueId="1499337861300" columnIndex="7"/>
+	<Column uniqueId="1535273652020" columnIndex="8"/>
+	<Column uniqueId="1535273652025" columnIndex="9"/>
+	<Column uniqueId="1535273652030" columnIndex="10"/>
+	<Column uniqueId="1535273652035" columnIndex="11"/>
+	<Column uniqueId="1535273652040" columnIndex="12"/>
+	<Column uniqueId="1535273652045" columnIndex="13"/>
+	<Column uniqueId="1535273652050" columnIndex="14"/>
+	<Column uniqueId="1535273652055" columnIndex="15"/>
+	<CrossFader name="CrossFader">
+		<AudioTrack name="AudioTrack">
+			<AudioEffectChain name="AudioEffectChain"/>
+		</AudioTrack>
+		<VideoTrack name="VideoTrack">
+			<Params name="Params">
+				<ParamRange storage="3" name="Width" default="1920" value="1920"/>
+				<ParamRange storage="3" name="Height" default="1080" value="1080"/>
+			</Params>
+			<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain">
+				<RenderPass name="Transform" type="TransformEffect" uniqueId="17122039101699797593" baseType="Effect" index="0">
+					<View name="View" bCanBeDisabled="0" bCanBeRemoved="0"/>
+				</RenderPass>
+			</RenderPass>
+			<ChoosableMixer name="Blend">
+				<Params name="Params">
+					<ParamChoice name="Blend Mode" default="0" value="67464115" storeChoices="0"/>
+				</Params>
+				<RenderPass name="Alpha" type="Alpha" uniqueId="A006" baseType="Mixer"/>
+			</ChoosableMixer>
+			<ChoosableMixer name="Blend mode">
+				<Params name="Params">
+					<ParamChoice name="Blend Mode" default="0" value="67464115" storeChoices="0"/>
+				</Params>
+				<RenderPass name="Alpha" type="Alpha" uniqueId="A006" baseType="Mixer"/>
+			</ChoosableMixer>
+		</VideoTrack>
+	</CrossFader>
+	<TempoController name="TempoController">
+		<Params name="Params">
+			<ParamRange name="Tempo" default="120" value="127"/>
+		</Params>
+	</TempoController>
+	<Deck name="Deck" uniqueId="1499337861242" closed="0" numLayers="4" numColumns="16" deckIndex="0">
+		<Params name="Params">
+			<Param name="Name" default="empty" value="AV"/>
+			<ParamChoice name="ColorId" default="0" value="2" storeChoices="0"/>
+		</Params>
+		<ColumnAttributes index="0" name="AV 001" color="0"/>
+		<ColumnAttributes index="1" name="AV 002" color="0"/>
+		<ColumnAttributes index="2" name="AV 003" color="0"/>
+		<ColumnAttributes index="3" name="AV 004" color="0"/>
+		<ColumnAttributes index="4" name="AV 005" color="0"/>
+		<ColumnAttributes index="5" name="AV 006" color="0"/>
+		<Clip name="Clip" uniqueId="1534194256384" layerIndex="1" columnIndex="0">
+			<Params name="Params">
+				<Param storage="3" name="Name" default="Solid Color" value="Solid Color"/>
+				<ParamChoice storage="3" name="TransportType" default="0" value="0" storeChoices="0"/>
+			</Params>
+			<Transport name="Transport">
+				<Params name="Params">
+					<ParamRange name="Position" default="0" value="1187.0328799915207583">
+						<ValueRange name="minMax" min="0" max="60000"/>
+						<ValueRange name="startStop" min="0" max="60000"/>
+						<BehaviourDouble name="BehaviourDouble">
+							<PhaseSourceTimeline name="PhaseSourceTimeline" globalSpeedEnabled="1">
+								<Params name="Params">
+									<ParamRange storage="3" name="Beats" default="128" value="128"/>
+									<ParamRange storage="3" name="BPM" default="128" value="128"/>
+									<ParamRange storage="3" name="Speed" default="1" value="1"/>
+									<ParamChoice storage="3" name="Syncmode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayDirection" default="1" value="1" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayMode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayModeAway" default="0" value="0" storeChoices="0"/>
+									<Param storage="3" name="Finished" default="0" value="0"/>
+								</Params>
+								<ParamBasedDuration name="ParamBasedDuration"/>
+								<Beats_double name="Beats_double" mode="0" numDetectedBeats="-1" numManualBeats="128" detectedTempo="-1" manualTempo="128" detected="0"/>
+							</PhaseSourceTimeline>
+						</BehaviourDouble>
+					</ParamRange>
+				</Params>
+			</Transport>
+			<ClipView name="ClipView">
+				<FoldParams name="FoldParams">
+					<FoldState component="/groupedcomponent/solidcolor/color/paramcolorcomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/videotrackinfocomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/videotrackinfocomponent/tracksettingscomponent/" folded="0"/>
+				</FoldParams>
+			</ClipView>
+			<VideoTrack name="VideoTrack" manualDuration="60000">
+				<Params name="Params">
+					<ParamRange name="Opacity" default="1" value="0"/>
+					<ParamRange storage="3" name="Width" default="1920" value="1920"/>
+					<ParamRange storage="3" name="Height" default="1080" value="1080"/>
+					<Param storage="3" name="RScale" default="1" value="1"/>
+					<Param storage="3" name="GScale" default="1" value="1"/>
+					<Param storage="3" name="BScale" default="1" value="1"/>
+					<Param storage="3" name="AScale" default="1" value="1"/>
+				</Params>
+				<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain">
+					<RenderPass storage="0" name="Transform" type="TransformEffect" uniqueId="17122039101699797593" baseType="Effect" index="0">
+						<View name="View" bCanBeDisabled="0" bCanBeRemoved="0"/>
+					</RenderPass>
+				</RenderPass>
+				<ChoosableMixer name="Blend"/>
+				<PrimarySource>
+					<VideoSource storage="0" name="VideoSource" width="1920" height="1080" type="GeneratorVideoSource">
+						<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain"/>
+						<RenderPass name="SolidColor" type="SolidColor" uniqueId="A403" baseType="Generator">
+							<Params name="Params">
+								<ParamColor name="Color" channelmode="2" paletteEnabled="0" color="4278190080">
+									<Params name="Channels">
+										<ParamRange name="Red" default="1" value="0"/>
+										<ParamRange name="Saturation" default="1" value="0"/>
+										<ParamRange name="Brightness" default="1" value="0"/>
+									</Params>
+								</ParamColor>
+							</Params>
+						</RenderPass>
+					</VideoSource>
+				</PrimarySource>
+			</VideoTrack>
+		</Clip>
+		<Clip name="Clip" uniqueId="1534194256284" layerIndex="2" columnIndex="0">
+			<Params name="Params">
+				<Param storage="3" name="Name" default="Solid Color" value="Solid Color"/>
+				<ParamChoice storage="3" name="TransportType" default="0" value="0" storeChoices="0"/>
+			</Params>
+			<Transport name="Transport">
+				<Params name="Params">
+					<ParamRange name="Position" default="0" value="2398.4770609936672372">
+						<BehaviourDouble name="BehaviourDouble">
+							<PhaseSourceTimeline name="PhaseSourceTimeline" globalSpeedEnabled="1">
+								<Params name="Params">
+									<ParamRange storage="3" name="Beats" default="8" value="8"/>
+									<ParamRange storage="3" name="BPM" default="96" value="96"/>
+									<ParamRange storage="3" name="Speed" default="1" value="1"/>
+									<ParamChoice storage="3" name="Syncmode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayDirection" default="1" value="1" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayMode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayModeAway" default="0" value="0" storeChoices="0"/>
+									<Param storage="3" name="Finished" default="0" value="0"/>
+								</Params>
+								<ParamBasedDuration name="ParamBasedDuration"/>
+								<Beats_double name="Beats_double" mode="0" numDetectedBeats="-1" numManualBeats="8" detectedTempo="-1" manualTempo="96" detected="0"/>
+							</PhaseSourceTimeline>
+						</BehaviourDouble>
+					</ParamRange>
+				</Params>
+			</Transport>
+			<ClipView name="ClipView">
+				<FoldParams name="FoldParams">
+					<FoldState component="/groupedcomponent/solidcolor/color/paramcolorcomponent/" folded="0"/>
+				</FoldParams>
+			</ClipView>
+			<VideoTrack name="VideoTrack" manualDuration="0">
+				<Params name="Params">
+					<ParamRange name="Opacity" default="1" value="0"/>
+					<ParamRange storage="3" name="Width" default="1920" value="1920"/>
+					<ParamRange storage="3" name="Height" default="1080" value="1080"/>
+					<Param storage="3" name="RScale" default="1" value="1"/>
+					<Param storage="3" name="GScale" default="1" value="1"/>
+					<Param storage="3" name="BScale" default="1" value="1"/>
+					<Param storage="3" name="AScale" default="1" value="1"/>
+				</Params>
+				<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain">
+					<RenderPass storage="0" name="Transform" type="TransformEffect" uniqueId="17122039101699797593" baseType="Effect" index="0">
+						<View name="View" bCanBeDisabled="0" bCanBeRemoved="0"/>
+					</RenderPass>
+				</RenderPass>
+				<ChoosableMixer name="Blend"/>
+				<PrimarySource>
+					<VideoSource storage="0" name="VideoSource" width="1920" height="1080" type="GeneratorVideoSource">
+						<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain"/>
+						<RenderPass name="SolidColor" type="SolidColor" uniqueId="A403" baseType="Generator">
+							<Params name="Params">
+								<ParamColor name="Color" channelmode="2" paletteEnabled="0" color="4278190080">
+									<Params name="Channels">
+										<ParamRange name="Red" default="1" value="0"/>
+										<ParamRange name="Saturation" default="1" value="0"/>
+										<ParamRange name="Brightness" default="1" value="0"/>
+									</Params>
+								</ParamColor>
+							</Params>
+						</RenderPass>
+					</VideoSource>
+				</PrimarySource>
+			</VideoTrack>
+		</Clip>
+		<Clip name="Clip" uniqueId="1534095113862" layerIndex="3" columnIndex="0">
+			<Params name="Params">
+				<Param storage="3" name="Name" default="Text Block" value="Text Block"/>
+				<ParamChoice storage="3" name="TransportType" default="0" value="0" storeChoices="0"/>
+			</Params>
+			<Transport name="Transport">
+				<Params name="Params">
+					<ParamRange name="Position" default="0" value="1.9999999999999840128">
+						<ValueRange name="minMax" min="0" max="10"/>
+						<ValueRange name="startStop" min="0" max="10"/>
+						<BehaviourDouble name="BehaviourDouble">
+							<PhaseSourceTimeline name="PhaseSourceTimeline" globalSpeedEnabled="1">
+								<Params name="Params">
+									<ParamRange storage="3" name="Beats" default="4" value="4"/>
+									<ParamRange storage="3" name="BPM" default="24000" value="500"/>
+									<ParamRange storage="3" name="Speed" default="1" value="1"/>
+									<ParamChoice storage="3" name="Syncmode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayDirection" default="1" value="1" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayMode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayModeAway" default="0" value="0" storeChoices="0"/>
+									<Param storage="3" name="Finished" default="0" value="0"/>
+								</Params>
+								<ParamBasedDuration name="ParamBasedDuration"/>
+								<Beats_double name="Beats_double" mode="0" numDetectedBeats="-1" numManualBeats="4" detectedTempo="-1" manualTempo="24000" detected="0"/>
+							</PhaseSourceTimeline>
+						</BehaviourDouble>
+					</ParamRange>
+				</Params>
+			</Transport>
+			<ClipView name="ClipView">
+				<FoldParams name="FoldParams"/>
+			</ClipView>
+			<VideoTrack name="VideoTrack" manualDuration="10">
+				<Params name="Params">
+					<ParamRange storage="3" name="Width" default="1920" value="1920"/>
+					<ParamRange storage="3" name="Height" default="1080" value="1080"/>
+					<Param storage="3" name="RScale" default="1" value="1"/>
+					<Param storage="3" name="GScale" default="1" value="1"/>
+					<Param storage="3" name="BScale" default="1" value="1"/>
+					<Param storage="3" name="AScale" default="1" value="1"/>
+				</Params>
+				<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain">
+					<RenderPass storage="0" name="Transform" type="TransformEffect" uniqueId="17122039101699797593" baseType="Effect" index="0">
+						<View name="View" bCanBeDisabled="0" bCanBeRemoved="0"/>
+					</RenderPass>
+				</RenderPass>
+				<ChoosableMixer name="Blend"/>
+				<PrimarySource>
+					<VideoSource storage="0" name="VideoSource" width="1920" height="1080" type="GeneratorVideoSource">
+						<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain"/>
+						<RenderPass name="BlockTextGenerator" type="BlockTextGenerator" uniqueId="3600113141201236715" baseType="Generator">
+							<Params name="Params">
+								<Param name="Text" default="Resolume" value="Spack-O-Mat
+MandelbrotSpack-O-Mat
+MandelbrotSpack-O-Mat
+MandelbrotSpack-O-Mat
+MandelbrotSpack-O-Mat
+Mandelbrot"/>
+								<ParamChoice name="Font" default="Arial Black" value="Arial" storeChoices="0"/>
+								<ParamChoice name="Style" default="Regular" value="Black" storeChoices="0"/>
+								<ParamColor name="Color" channelmode="2" paletteEnabled="0" color="4294967295"/>
+								<ParamRange name="Size" default="1" value="0.5"/>
+								<ParamRange name="Spacing Y" default="0" value="-78.184156436011903679"/>
+							</Params>
+						</RenderPass>
+					</VideoSource>
+				</PrimarySource>
+			</VideoTrack>
+		</Clip>
+		<Clip name="Clip" uniqueId="1535221228302" layerIndex="0" columnIndex="1">
+			<Params name="Params">
+				<Param storage="3" name="Name" default="SoM Mandelbrot" value="SoM Mandelbrot"/>
+				<ParamChoice storage="3" name="TransportType" default="0" value="0" storeChoices="0"/>
+			</Params>
+			<Params name="Dashboard">
+				<ParamRange name="Link 1" default="0" value="0.25984251968503935259"/>
+				<ParamRange name="Link 3" default="0" value="0.24409448818897638844"/>
+			</Params>
+			<Transport name="Transport">
+				<Params name="Params">
+					<ParamRange name="Position" default="0" value="666.93876490105549237">
+						<BehaviourDouble name="BehaviourDouble">
+							<PhaseSourceTimeline name="PhaseSourceTimeline" globalSpeedEnabled="1">
+								<Params name="Params">
+									<ParamRange storage="3" name="Beats" default="8" value="8"/>
+									<ParamRange storage="3" name="BPM" default="96" value="96"/>
+									<ParamRange storage="3" name="Speed" default="1" value="1"/>
+									<ParamChoice storage="3" name="Syncmode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayDirection" default="1" value="1" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayMode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayModeAway" default="0" value="0" storeChoices="0"/>
+									<Param storage="3" name="Finished" default="0" value="0"/>
+								</Params>
+								<ParamBasedDuration name="ParamBasedDuration"/>
+								<Beats_double name="Beats_double" mode="0" numDetectedBeats="-1" numManualBeats="8" detectedTempo="-1" manualTempo="96" detected="0"/>
+							</PhaseSourceTimeline>
+						</BehaviourDouble>
+					</ParamRange>
+				</Params>
+			</Transport>
+			<ClipView name="ClipView">
+				<FoldParams name="FoldParams">
+					<FoldState component="/clipproperties/dashboard/" folded="0"/>
+					<FoldState component="/groupedcomponent/sommandelbrot/centerx/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/sommandelbrot/centery/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/sommandelbrot/rotation/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/sommandelbrot/seed1imag/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/sommandelbrot/seed1real/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/sommandelbrot/seed1speed/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/sommandelbrot/seed2imag/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/sommandelbrot/seed2real/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/sommandelbrot/seed3imag/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/sommandelbrot/seed3real/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/sommandelbrot/seed3speed/parambasecomponent/parambasecomponent/" folded="0"/>
+				</FoldParams>
+			</ClipView>
+			<VideoTrack name="VideoTrack" manualDuration="0">
+				<Params name="Params">
+					<ParamRange storage="3" name="Width" default="1920" value="1920"/>
+					<ParamRange storage="3" name="Height" default="1080" value="1080"/>
+					<Param storage="3" name="RScale" default="1" value="1"/>
+					<Param storage="3" name="GScale" default="1" value="1"/>
+					<Param storage="3" name="BScale" default="1" value="1"/>
+					<Param storage="3" name="AScale" default="1" value="1"/>
+				</Params>
+				<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain">
+					<RenderPass storage="0" name="Transform" type="TransformEffect" uniqueId="17122039101699797593" baseType="Effect" index="0">
+						<View name="View" bCanBeDisabled="0" bCanBeRemoved="0"/>
+					</RenderPass>
+				</RenderPass>
+				<ChoosableMixer name="Blend"/>
+				<PrimarySource>
+					<VideoSource storage="0" name="VideoSource" width="1920" height="1080" type="GeneratorVideoSource">
+						<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain"/>
+						<RenderPass name="SoM Mandelbrot" type="FFGLGenerator" uniqueId="SM01" baseType="Generator">
+							<Params name="Params">
+								<ParamRange name="Center X" default="0.5" value="0.49160202956226761728">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.33333333333333331483">
+													<ValueRange name="startStop" min="0.33333333333333331483" max="0.66666666666666662966"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="20.223984375000000568"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0.5" curve="33"/>
+													<point x="0.16366906474820144823" y="0.19327731092436969962" curve="10"/>
+													<point x="0.44964028776978404167" y="0.57142857142857139685" curve="10"/>
+													<point x="0.74280575539568338694" y="0.17647058823529412908" curve="10"/>
+													<point x="1" y="0.5" curve="10"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Center Y" default="0.5" value="0.26059810332105837194">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.5">
+													<ValueRange name="startStop" min="0.66666666666666662966" max="1"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="15.616007812500001251"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0.5" curve="33"/>
+													<point x="0.20143884892086330596" y="0.18487394957983188659" curve="10"/>
+													<point x="0.46402877697841715676" y="0.67226890756302515317" curve="10"/>
+													<point x="0.74460431654676262347" y="0.12605042016806722316" curve="10"/>
+													<point x="1" y="0.5" curve="10"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Zoom" default="1" value="0.32254656115878399536">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="Gain" default="0" value="33.024000000000000909"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0.25" curve="33"/>
+													<point x="0.23201438848920860614" y="0.39495798319327735104" curve="10"/>
+													<point x="0.41906474820143885252" y="0.21848739495798322197" curve="10"/>
+													<point x="0.75179856115107912551" y="0.39495798319327735104" curve="10"/>
+													<point x="1" y="0.25" curve="10"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Start of Alterna" default="0.5" value="0.024691278706749513611"/>
+								<ParamRange name="Rotation" default="0" value="0.67566237213902347047">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="Gain" default="0" value="35.328000000000002956"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="MaxIter" default="0.10000000149011611938" value="1"/>
+								<ParamRange name="Seed 1 Real" default="0.5" value="0.48506346538167305349">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.5">
+													<ValueRange name="startStop" min="0" max="0.11286121278297243931"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="29.952046875000007731"/>
+												<ParamRange name="Fallback" default="1000" value="1873.3331787109375455"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0.5" curve="33"/>
+													<point x="0.20323741007194245922" y="0.41176470588235292158" curve="10"/>
+													<point x="0.45863309352517983575" y="0.59663865546218475266" curve="10"/>
+													<point x="0.75539568345323748755" y="0.39495798319327729553" curve="10"/>
+													<point x="1" y="0.5" curve="10"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Seed 1 Imag" default="0.5" value="0.38646683789503433193">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.5">
+													<ValueRange name="startStop" min="0.144357275775098437" max="0.24409448818897638844"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="29.823984375000009095"/>
+												<ParamRange name="Fallback" default="1000" value="1898.6663574218748636"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="3" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0.5" curve="33"/>
+													<point x="0.18705035971223019087" y="0.37815126050420166948" curve="10"/>
+													<point x="0.46223021582733814228" y="0.63025210084033611579" curve="10"/>
+													<point x="0.74280575539568349797" y="0.39495798319327735104" curve="10"/>
+													<point x="1" y="0.5" curve="10"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Seed 2 Real" default="0.5" value="0.44030952878744566981">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.5">
+													<ValueRange name="startStop" min="0.65879233052411412253" max="0.87401574803149606474"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="33.663984374999998295"/>
+												<ParamRange name="Fallback" default="1000" value="1853.0672851562501364"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0.5" curve="33"/>
+													<point x="0.2086330935251798635" y="0.37815126050420172499" curve="10"/>
+													<point x="0.46762589928057562982" y="0.60504201680672264896" curve="10"/>
+													<point x="0.80035971223021584731" y="0.37815126050420166948" curve="10"/>
+													<point x="1" y="0.5" curve="10"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Seed 2 Imag" default="0.5" value="0.47963058788643192498">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.33333333333333331483">
+													<ValueRange name="startStop" min="0.33333333333333331483" max="0.52755905511811018727"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="38.528039062499999545"/>
+												<ParamRange name="Fallback" default="1000" value="1822.6672851562498181"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0.5" curve="33"/>
+													<point x="0.21762589928057554656" y="0.4033613445378150808" curve="10"/>
+													<point x="0.49280575539568349797" y="0.59663865546218486369" curve="10"/>
+													<point x="0.7823741007194244812" y="0.46218487394957985526" curve="10"/>
+													<point x="1" y="0.5" curve="10"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Seed 3 Real" default="0.5" value="0.46739572420333747038">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.5">
+													<ValueRange name="startStop" min="0.31233563761072835607" max="0.41207381120816927167"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="33.664125000000012733"/>
+												<ParamRange name="Fallback" default="1000" value="1988"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0.5" curve="33"/>
+													<point x="0.2014388489208632782" y="0.42857142857142860315" curve="10"/>
+													<point x="0.50359712230215825102" y="0.57142857142857139685" curve="10"/>
+													<point x="0.80755395683453234934" y="0.44537815126050417369" curve="10"/>
+													<point x="1" y="0.5" curve="10"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Seed 3 Imag" default="0.5" value="0.47932171049779470628">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.5">
+													<ValueRange name="startStop" min="0.41207381120816927167" max="0.52231003168061018727"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="31.615968750000007503"/>
+												<ParamRange name="Fallback" default="1000" value="1972.7999999999999545"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0.5" curve="33"/>
+													<point x="0.19784172661870502719" y="0.38655462184873951026" curve="10"/>
+													<point x="0.47122302158273382533" y="0.53781512605042014474" curve="10"/>
+													<point x="0.77877697841726623018" y="0.47058823529411764053" curve="10"/>
+													<point x="1" y="0.5" curve="10"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Color 1 Red" default="1" value="0.89278752436647168533"/>
+							</Params>
+							<FFGLPlugin name="FFGLPlugin" uniqueId="SM01" fileName="D:\RESOLUME_PLUGINS\SoM-001-Mandelbrot.dll"/>
+						</RenderPass>
+					</VideoSource>
+				</PrimarySource>
+			</VideoTrack>
+		</Clip>
+		<Clip name="Clip" uniqueId="1535306019074" layerIndex="0" columnIndex="2">
+			<Params name="Params">
+				<Param storage="3" name="Name" default="SoM Mandelbrot" value="SoM Mandelbrot"/>
+				<ParamChoice storage="3" name="TransportType" default="0" value="0" storeChoices="0"/>
+			</Params>
+			<Params name="Dashboard">
+				<ParamRange name="Link 1" default="0" value="0.25984251968503935259"/>
+				<ParamRange name="Link 3" default="0" value="0.24409448818897638844"/>
+			</Params>
+			<Transport name="Transport">
+				<Params name="Params">
+					<ParamRange name="Position" default="0" value="1128.9535239781864675">
+						<BehaviourDouble name="BehaviourDouble">
+							<PhaseSourceTimeline name="PhaseSourceTimeline" globalSpeedEnabled="1">
+								<Params name="Params">
+									<ParamRange storage="3" name="Beats" default="8" value="8"/>
+									<ParamRange storage="3" name="BPM" default="96" value="96"/>
+									<ParamRange storage="3" name="Speed" default="1" value="1"/>
+									<ParamChoice storage="3" name="Syncmode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayDirection" default="1" value="1" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayMode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayModeAway" default="0" value="0" storeChoices="0"/>
+									<Param storage="3" name="Finished" default="0" value="0"/>
+								</Params>
+								<ParamBasedDuration name="ParamBasedDuration"/>
+								<Beats_double name="Beats_double" mode="0" numDetectedBeats="-1" numManualBeats="8" detectedTempo="-1" manualTempo="96" detected="0"/>
+							</PhaseSourceTimeline>
+						</BehaviourDouble>
+					</ParamRange>
+				</Params>
+			</Transport>
+			<ClipView name="ClipView">
+				<FoldParams name="FoldParams">
+					<FoldState component="/clipproperties/dashboard/" folded="0"/>
+					<FoldState component="/groupedcomponent/sommandelbrot/centerx/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/sommandelbrot/rotation/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/sommandelbrot/seed1imag/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/sommandelbrot/seed1real/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/sommandelbrot/seed1speed/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/sommandelbrot/seed2imag/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/sommandelbrot/seed2real/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/sommandelbrot/seed3imag/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/sommandelbrot/seed3real/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/sommandelbrot/seed3speed/parambasecomponent/parambasecomponent/" folded="0"/>
+				</FoldParams>
+			</ClipView>
+			<VideoTrack name="VideoTrack" manualDuration="0">
+				<Params name="Params">
+					<ParamRange storage="3" name="Width" default="1920" value="1920"/>
+					<ParamRange storage="3" name="Height" default="1080" value="1080"/>
+					<Param storage="3" name="RScale" default="1" value="1"/>
+					<Param storage="3" name="GScale" default="1" value="1"/>
+					<Param storage="3" name="BScale" default="1" value="1"/>
+					<Param storage="3" name="AScale" default="1" value="1"/>
+				</Params>
+				<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain">
+					<RenderPass storage="0" name="Transform" type="TransformEffect" uniqueId="17122039101699797593" baseType="Effect" index="0">
+						<View name="View" bCanBeDisabled="0" bCanBeRemoved="0"/>
+					</RenderPass>
+				</RenderPass>
+				<ChoosableMixer name="Blend"/>
+				<PrimarySource>
+					<VideoSource storage="0" name="VideoSource" width="1920" height="1080" type="GeneratorVideoSource">
+						<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain"/>
+						<RenderPass name="SoM Mandelbrot" type="FFGLGenerator" uniqueId="SM01" baseType="Generator">
+							<Params name="Params">
+								<ParamRange name="Center X" default="0.5" value="0.29499683045504387913"/>
+								<ParamRange name="Center Y" default="0.5" value="0.43274853801169588241"/>
+								<ParamRange name="Zoom" default="1" value="0.17283942685489767088"/>
+								<ParamRange name="Start of Alterna" default="0.5" value="0.024691278706749513611"/>
+								<ParamRange name="Rotation" default="0" value="0.7485380116959063912"/>
+								<ParamRange name="MaxIter" default="0.10000000149011611938" value="1"/>
+								<ParamRange name="Seed 1 Real" default="0.5" value="0.57916871516844381507">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.5">
+													<ValueRange name="startStop" min="0" max="0.11286121278297243931"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="-16.000007812500008697"/>
+												<ParamRange name="Fallback" default="1000" value="100"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0.5" curve="33"/>
+													<point x="0.20323741007194245922" y="0.41176470588235292158" curve="10"/>
+													<point x="0.47482014388489207635" y="0.5798319327731090711" curve="10"/>
+													<point x="0.75539568345323748755" y="0.39495798319327729553" curve="10"/>
+													<point x="1" y="0.5" curve="10"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Seed 1 Imag" default="0.5" value="0.62183412254887160397">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.5">
+													<ValueRange name="startStop" min="0.144357275775098437" max="0.24409448818897638844"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="-14.208046874999993747"/>
+												<ParamRange name="Fallback" default="1000" value="100"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="3" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0.5" curve="33"/>
+													<point x="0.18705035971223019087" y="0.37815126050420166948" curve="10"/>
+													<point x="0.46223021582733814228" y="0.63025210084033611579" curve="10"/>
+													<point x="0.74280575539568349797" y="0.39495798319327735104" curve="10"/>
+													<point x="1" y="0.5" curve="10"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Seed 2 Real" default="0.5" value="0.58729276183776979448">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.5">
+													<ValueRange name="startStop" min="0.65879233052411412253" max="0.87401574803149606474"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="12.671999999999997044"/>
+												<ParamRange name="Fallback" default="1000" value="100"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0.5" curve="33"/>
+													<point x="0.2086330935251798635" y="0.37815126050420172499" curve="10"/>
+													<point x="0.46762589928057562982" y="0.60504201680672264896" curve="10"/>
+													<point x="0.80035971223021584731" y="0.37815126050420166948" curve="10"/>
+													<point x="1" y="0.5" curve="10"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Seed 2 Imag" default="0.5" value="0.59653188562163661501">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.33333333333333331483">
+													<ValueRange name="startStop" min="0.33333333333333331483" max="0.52755905511811018727"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="0.38411718749999579359"/>
+												<ParamRange name="Fallback" default="1000" value="100"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0.5" curve="33"/>
+													<point x="0.21762589928057554656" y="0.4033613445378150808" curve="10"/>
+													<point x="0.49280575539568349797" y="0.59663865546218486369" curve="10"/>
+													<point x="0.7823741007194244812" y="0.46218487394957985526" curve="10"/>
+													<point x="1" y="0.5" curve="10"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Seed 3 Real" default="0.5" value="0.57138628273127767265">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.5">
+													<ValueRange name="startStop" min="0.31233563761072835607" max="0.41207381120816927167"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="2.1761718750000085265"/>
+												<ParamRange name="Fallback" default="1000" value="100"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0.5" curve="33"/>
+													<point x="0.2014388489208632782" y="0.42857142857142860315" curve="10"/>
+													<point x="0.50359712230215825102" y="0.57142857142857139685" curve="10"/>
+													<point x="0.80755395683453234934" y="0.44537815126050417369" curve="10"/>
+													<point x="1" y="0.5" curve="10"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Seed 3 Imag" default="0.5" value="0.53166417277575450662">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.5">
+													<ValueRange name="startStop" min="0.41207381120816927167" max="0.52231003168061018727"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="15.999937500000001478"/>
+												<ParamRange name="Fallback" default="1000" value="1972.7999999999999545"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0.5" curve="33"/>
+													<point x="0.19784172661870502719" y="0.38655462184873951026" curve="10"/>
+													<point x="0.47122302158273382533" y="0.53781512605042014474" curve="10"/>
+													<point x="0.77877697841726623018" y="0.47058823529411764053" curve="10"/>
+													<point x="1" y="0.5" curve="10"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Color 1 Red" default="1" value="0.89278752436647168533"/>
+							</Params>
+							<FFGLPlugin name="FFGLPlugin" uniqueId="SM01" fileName="D:\RESOLUME_PLUGINS\SoM-001-Mandelbrot.dll"/>
+						</RenderPass>
+					</VideoSource>
+				</PrimarySource>
+			</VideoTrack>
+		</Clip>
+		<Clip name="Clip" uniqueId="1535219043789" layerIndex="3" columnIndex="2">
+			<Params name="Params">
+				<Param storage="3" name="Name" default="Text Block" value="Text Block"/>
+				<ParamChoice storage="3" name="TransportType" default="0" value="0" storeChoices="0"/>
+			</Params>
+			<Transport name="Transport">
+				<Params name="Params">
+					<ParamRange name="Position" default="0" value="1339.8506921727359895">
+						<BehaviourDouble name="BehaviourDouble">
+							<PhaseSourceTimeline name="PhaseSourceTimeline" globalSpeedEnabled="1">
+								<Params name="Params">
+									<ParamRange storage="3" name="Beats" default="8" value="8"/>
+									<ParamRange storage="3" name="BPM" default="96" value="96"/>
+									<ParamRange storage="3" name="Speed" default="1" value="1"/>
+									<ParamChoice storage="3" name="Syncmode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayDirection" default="1" value="1" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayMode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayModeAway" default="0" value="0" storeChoices="0"/>
+									<Param storage="3" name="Finished" default="0" value="0"/>
+								</Params>
+								<ParamBasedDuration name="ParamBasedDuration"/>
+								<Beats_double name="Beats_double" mode="0" numDetectedBeats="-1" numManualBeats="8" detectedTempo="-1" manualTempo="96" detected="0"/>
+							</PhaseSourceTimeline>
+						</BehaviourDouble>
+					</ParamRange>
+				</Params>
+			</Transport>
+			<ClipView name="ClipView">
+				<FoldParams name="FoldParams">
+					<FoldState component="/groupedcomponent/textblock/color/paramcolorcomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/videotrackinfocomponent/" folded="1"/>
+					<FoldState component="/groupedcomponent/videotrackinfocomponent/tracksettingscomponent/" folded="1"/>
+				</FoldParams>
+			</ClipView>
+			<VideoTrack name="VideoTrack" manualDuration="0">
+				<Params name="Params">
+					<ParamRange storage="3" name="Width" default="3840" value="3840"/>
+					<ParamRange storage="3" name="Height" default="2160" value="2160"/>
+					<Param storage="3" name="RScale" default="1" value="1"/>
+					<Param storage="3" name="GScale" default="1" value="1"/>
+					<Param storage="3" name="BScale" default="1" value="1"/>
+					<Param storage="3" name="AScale" default="1" value="1"/>
+				</Params>
+				<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain">
+					<RenderPass storage="0" name="Transform" type="TransformEffect" uniqueId="17122039101699797593" baseType="Effect" index="0">
+						<View name="View" bCanBeDisabled="0" bCanBeRemoved="0"/>
+					</RenderPass>
+				</RenderPass>
+				<ChoosableMixer name="Blend"/>
+				<PrimarySource>
+					<VideoSource storage="0" name="VideoSource" width="3840" height="2160" type="GeneratorVideoSource">
+						<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain"/>
+						<RenderPass name="BlockTextGenerator" type="BlockTextGenerator" uniqueId="3600113141201236715" baseType="Generator">
+							<Params name="Params">
+								<Param name="Text" default="Resolume" value="I 
+CHAOS"/>
+								<ParamChoice name="Font" default="Arial Black" value="Arial" storeChoices="0"/>
+								<ParamChoice name="Style" default="Regular" value="Black" storeChoices="0"/>
+								<ParamColor name="Color" channelmode="2" paletteEnabled="0" color="4278190080">
+									<Params name="Channels">
+										<ParamRange name="Red" default="1" value="0"/>
+										<ParamRange name="Green" default="1" value="0"/>
+										<ParamRange name="Blue" default="1" value="0"/>
+										<ParamRange name="Brightness" default="1" value="0"/>
+									</Params>
+								</ParamColor>
+								<ParamRange name="Size" default="1" value="2.9488896251860121644"/>
+								<ParamChoice name="Alignment" default="1" value="0" storeChoices="0"/>
+								<ParamRange name="Position X" default="0" value="200"/>
+							</Params>
+						</RenderPass>
+					</VideoSource>
+				</PrimarySource>
+			</VideoTrack>
+		</Clip>
+		<Clip name="Clip" uniqueId="1535297462921" layerIndex="0" columnIndex="3">
+			<Params name="Params">
+				<Param storage="3" name="Name" default="SoM Mandelbrot" value="SoM Mandelbrot"/>
+				<ParamChoice storage="3" name="TransportType" default="0" value="0" storeChoices="0"/>
+			</Params>
+			<Transport name="Transport">
+				<Params name="Params">
+					<ParamRange name="Position" default="0" value="1351.0344347502350502">
+						<BehaviourDouble name="BehaviourDouble">
+							<PhaseSourceTimeline name="PhaseSourceTimeline" globalSpeedEnabled="1">
+								<Params name="Params">
+									<ParamRange storage="3" name="Beats" default="8" value="8"/>
+									<ParamRange storage="3" name="BPM" default="96" value="96"/>
+									<ParamRange storage="3" name="Speed" default="1" value="1"/>
+									<ParamChoice storage="3" name="Syncmode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayDirection" default="1" value="1" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayMode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayModeAway" default="0" value="0" storeChoices="0"/>
+									<Param storage="3" name="Finished" default="0" value="0"/>
+								</Params>
+								<ParamBasedDuration name="ParamBasedDuration"/>
+								<Beats_double name="Beats_double" mode="0" numDetectedBeats="-1" numManualBeats="8" detectedTempo="-1" manualTempo="96" detected="0"/>
+							</PhaseSourceTimeline>
+						</BehaviourDouble>
+					</ParamRange>
+				</Params>
+			</Transport>
+			<ClipView name="ClipView">
+				<FoldParams name="FoldParams"/>
+			</ClipView>
+			<VideoTrack name="VideoTrack" manualDuration="0">
+				<Params name="Params">
+					<ParamRange storage="3" name="Width" default="1920" value="1920"/>
+					<ParamRange storage="3" name="Height" default="1080" value="1080"/>
+					<Param storage="3" name="RScale" default="1" value="1"/>
+					<Param storage="3" name="GScale" default="1" value="1"/>
+					<Param storage="3" name="BScale" default="1" value="1"/>
+					<Param storage="3" name="AScale" default="1" value="1"/>
+				</Params>
+				<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain">
+					<RenderPass storage="0" name="Transform" type="TransformEffect" uniqueId="17122039101699797593" baseType="Effect" index="0">
+						<View name="View" bCanBeDisabled="0" bCanBeRemoved="0"/>
+					</RenderPass>
+				</RenderPass>
+				<ChoosableMixer name="Blend"/>
+				<PrimarySource>
+					<VideoSource storage="0" name="VideoSource" width="1920" height="1080" type="GeneratorVideoSource">
+						<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain"/>
+						<RenderPass name="SoM Mandelbrot" type="FFGLGenerator" uniqueId="SM01" baseType="Generator">
+							<Params name="Params">
+								<ParamRange name="MaxIter" default="0.10000000149011611938" value="0.49777785528273810201"/>
+								<ParamRange name="Seed 2 Real" default="0.5" value="0.24888881138392857095"/>
+								<ParamRange name="Seed 2 Imag" default="0.5" value="0.44063499813988094012"/>
+								<ParamRange name="Seed 3 Imag" default="0.5" value="0.34031738281250001332"/>
+							</Params>
+							<FFGLPlugin name="FFGLPlugin" uniqueId="SM01" fileName="D:\RESOLUME_PLUGINS\SoM-001-Mandelbrot.dll"/>
+						</RenderPass>
+					</VideoSource>
+				</PrimarySource>
+			</VideoTrack>
+		</Clip>
+		<Clip name="Clip" uniqueId="1534111012778" layerIndex="1" columnIndex="4">
+			<Params name="Params">
+				<Param storage="3" name="Name" default="Video Router" value="RadialBlur"/>
+				<ParamChoice storage="3" name="TransportType" default="0" value="0" storeChoices="0"/>
+			</Params>
+			<Transport name="Transport">
+				<Params name="Params">
+					<ParamRange name="Position" default="0" value="25351.083949280313391">
+						<ValueRange name="minMax" min="0" max="60000"/>
+						<ValueRange name="startStop" min="0" max="60000"/>
+						<BehaviourDouble name="BehaviourDouble">
+							<PhaseSourceTimeline name="PhaseSourceTimeline" globalSpeedEnabled="1">
+								<Params name="Params">
+									<ParamRange storage="3" name="Beats" default="128" value="128"/>
+									<ParamRange storage="3" name="BPM" default="128" value="128"/>
+									<ParamRange storage="3" name="Speed" default="1" value="1"/>
+									<ParamChoice storage="3" name="Syncmode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayDirection" default="1" value="1" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayMode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayModeAway" default="0" value="0" storeChoices="0"/>
+									<Param storage="3" name="Finished" default="0" value="0"/>
+								</Params>
+								<ParamBasedDuration name="ParamBasedDuration"/>
+								<Beats_double name="Beats_double" mode="0" numDetectedBeats="-1" numManualBeats="128" detectedTempo="-1" manualTempo="128" detected="0"/>
+							</PhaseSourceTimeline>
+						</BehaviourDouble>
+					</ParamRange>
+				</Params>
+			</Transport>
+			<ClipView name="ClipView">
+				<FoldParams name="FoldParams">
+					<FoldState component="/groupedcomponent/renderpasschaincomponent/transform/" folded="1"/>
+					<FoldState component="/groupedcomponent/videotrackinfocomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/videotrackinfocomponent/tracksettingscomponent/" folded="0"/>
+				</FoldParams>
+			</ClipView>
+			<VideoTrack name="VideoTrack" manualDuration="60000">
+				<Params name="Params">
+					<ParamRange storage="3" name="Width" default="1920" value="1920"/>
+					<ParamRange storage="3" name="Height" default="1080" value="1080"/>
+					<Param storage="3" name="RScale" default="1" value="1"/>
+					<Param storage="3" name="GScale" default="1" value="1"/>
+					<Param storage="3" name="BScale" default="1" value="1"/>
+					<Param storage="3" name="AScale" default="1" value="1"/>
+				</Params>
+				<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain">
+					<RenderPass storage="0" name="RadialBlur" type="DryWetEffect" uniqueId="sy03" baseType="DryWetEffect" index="0">
+						<Params name="Params">
+							<ParamRange name="Opacity" default="1" value="0.80000000000000004441"/>
+						</Params>
+						<RenderPass name="RadialBlur" type="FFGLEffect" uniqueId="sy03" baseType="Effect" dwType="Effect">
+							<Params name="Params">
+								<ParamRange name="Steps" default="0.30000001192092895508" value="0.30000001199999998258"/>
+								<ParamRange name="Distance" default="0.10000000149011611938" value="0.10000000100000000502"/>
+								<ParamRange name="Rotation" default="0.5" value="0.87043189399999998379"/>
+							</Params>
+							<FFGLPlugin name="FFGLPlugin" uniqueId="sy03" fileName="C:\Program Files\Resolume Arena 6\plugins\vfx\SyzGL_RadialBlur.dll"/>
+						</RenderPass>
+						<ChoosableMixer name="Mixer">
+							<Params name="Params">
+								<ParamChoice name="Blend Mode" default="67464115" value="67464114" storeChoices="0"/>
+							</Params>
+							<RenderPass name="Add" type="Add" uniqueId="A005" baseType="Mixer"/>
+						</ChoosableMixer>
+					</RenderPass>
+					<RenderPass storage="0" name="Transform" type="TransformEffect" uniqueId="17122039101699797593" baseType="Effect" index="1">
+						<View name="View" folded="1" bCanBeDisabled="0" bCanBeRemoved="0"/>
+					</RenderPass>
+				</RenderPass>
+				<ChoosableMixer name="Blend"/>
+				<PrimarySource>
+					<VideoSource name="VideoSource" width="1920" height="1080" type="CompositionRouterVideoSource">
+						<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain"/>
+					</VideoSource>
+				</PrimarySource>
+			</VideoTrack>
+		</Clip>
+		<Clip name="Clip" uniqueId="1534092062680" layerIndex="2" columnIndex="4">
+			<Params name="Params">
+				<Param storage="3" name="Name" default="Video Router" value="Kaleidoscope"/>
+				<ParamChoice storage="3" name="TransportType" default="0" value="0" storeChoices="0"/>
+			</Params>
+			<Params name="Dashboard">
+				<ParamRange name="Link 1" default="0" value="0.13385826771653544509"/>
+				<ParamRange name="Link 2" default="0" value="0.29133858267716533641"/>
+				<ParamRange name="Link 3" default="0" value="0.24409448818897638844"/>
+				<ParamRange name="Link 4" default="0" value="0.1023622047244094474"/>
+			</Params>
+			<Transport name="Transport">
+				<Params name="Params">
+					<ParamRange name="Position" default="0" value="56203.250316469202517">
+						<ValueRange name="minMax" min="0" max="60000"/>
+						<ValueRange name="startStop" min="0" max="60000"/>
+						<BehaviourDouble name="BehaviourDouble">
+							<PhaseSourceTimeline name="PhaseSourceTimeline" globalSpeedEnabled="1">
+								<Params name="Params">
+									<ParamRange storage="3" name="Beats" default="128" value="128"/>
+									<ParamRange storage="3" name="BPM" default="128" value="128"/>
+									<ParamRange storage="3" name="Speed" default="1" value="1"/>
+									<ParamChoice storage="3" name="Syncmode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayDirection" default="1" value="1" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayMode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayModeAway" default="0" value="0" storeChoices="0"/>
+									<Param storage="3" name="Finished" default="0" value="0"/>
+								</Params>
+								<ParamBasedDuration name="ParamBasedDuration"/>
+								<Beats_double name="Beats_double" mode="0" numDetectedBeats="-1" numManualBeats="128" detectedTempo="-1" manualTempo="128" detected="0"/>
+							</PhaseSourceTimeline>
+						</BehaviourDouble>
+					</ParamRange>
+				</Params>
+			</Transport>
+			<ClipView name="ClipView">
+				<FoldParams name="FoldParams">
+					<FoldState component="/groupedcomponent/renderpasschaincomponent/kaleidoscope/inputrotation/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/renderpasschaincomponent/kaleidoscope/rotation/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/videotrackinfocomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/videotrackinfocomponent/tracksettingscomponent/" folded="0"/>
+				</FoldParams>
+			</ClipView>
+			<VideoTrack name="VideoTrack" manualDuration="60000">
+				<Params name="Params">
+					<ParamRange storage="3" name="Width" default="1920" value="1920"/>
+					<ParamRange storage="3" name="Height" default="1080" value="1080"/>
+					<Param storage="3" name="RScale" default="1" value="1"/>
+					<Param storage="3" name="GScale" default="1" value="1"/>
+					<Param storage="3" name="BScale" default="1" value="1"/>
+					<Param storage="3" name="AScale" default="1" value="1"/>
+				</Params>
+				<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain">
+					<RenderPass storage="0" name="Kaleidoscope" type="DryWetEffect" uniqueId="sy02" baseType="DryWetEffect" index="0">
+						<RenderPass name="Kaleidoscope" type="FFGLEffect" uniqueId="sy02" baseType="Effect" dwType="Effect">
+							<Params name="Params">
+								<ParamRange name="Angles" default="0.30000001192092895508" value="0.46095238095238094678"/>
+								<ParamRange name="Rotation" default="0" value="0.21752798916040363975">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.5">
+													<ValueRange name="startStop" min="0" max="0.33333333333333331483"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="-1.7919843750000268301"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Zoom" default="0.5" value="0.69714285714285717521"/>
+								<ParamRange name="Input Rotation" default="0" value="0.11223607967491791571">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.33333333333333331483">
+													<ValueRange name="startStop" min="0.33333333333333331483" max="0.66666666666666662966"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="7.167960937499991303"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+									</BehaviourDouble>
+								</ParamRange>
+								<Param name="Black BG" default="0" value="1"/>
+							</Params>
+							<FFGLPlugin name="FFGLPlugin" uniqueId="sy02" fileName="C:\Program Files\Resolume Arena 6\plugins\vfx\SyzGL_Kaleidoscope.dll"/>
+						</RenderPass>
+						<ChoosableMixer name="Mixer">
+							<Params name="Params">
+								<ParamChoice name="Blend Mode" default="67464115" value="67464114" storeChoices="0"/>
+							</Params>
+							<RenderPass name="Add" type="Add" uniqueId="A005" baseType="Mixer"/>
+						</ChoosableMixer>
+					</RenderPass>
+					<RenderPass storage="0" name="Transform" type="TransformEffect" uniqueId="17122039101699797593" baseType="Effect" index="1">
+						<View name="View" bCanBeDisabled="0" bCanBeRemoved="0"/>
+					</RenderPass>
+				</RenderPass>
+				<ChoosableMixer name="Blend"/>
+				<PrimarySource>
+					<VideoSource name="VideoSource" width="1920" height="1080" type="CompositionRouterVideoSource">
+						<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain"/>
+					</VideoSource>
+				</PrimarySource>
+			</VideoTrack>
+		</Clip>
+		<Clip name="Clip" uniqueId="1534092062675" layerIndex="2" columnIndex="5">
+			<Params name="Params">
+				<Param storage="3" name="Name" default="Video Router" value="Infinite Zoom"/>
+				<ParamChoice storage="3" name="TransportType" default="0" value="0" storeChoices="0"/>
+			</Params>
+			<Transport name="Transport">
+				<Params name="Params">
+					<ParamRange name="Position" default="0" value="13650.672227718954673">
+						<ValueRange name="minMax" min="0" max="60000"/>
+						<ValueRange name="startStop" min="0" max="60000"/>
+						<BehaviourDouble name="BehaviourDouble">
+							<PhaseSourceTimeline name="PhaseSourceTimeline" globalSpeedEnabled="1">
+								<Params name="Params">
+									<ParamRange storage="3" name="Beats" default="128" value="128"/>
+									<ParamRange storage="3" name="BPM" default="128" value="128"/>
+									<ParamRange storage="3" name="Speed" default="1" value="1"/>
+									<ParamChoice storage="3" name="Syncmode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayDirection" default="1" value="1" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayMode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayModeAway" default="0" value="0" storeChoices="0"/>
+									<Param storage="3" name="Finished" default="0" value="0"/>
+								</Params>
+								<ParamBasedDuration name="ParamBasedDuration"/>
+								<Beats_double name="Beats_double" mode="0" numDetectedBeats="-1" numManualBeats="128" detectedTempo="-1" manualTempo="128" detected="0"/>
+							</PhaseSourceTimeline>
+						</BehaviourDouble>
+					</ParamRange>
+				</Params>
+			</Transport>
+			<ClipView name="ClipView">
+				<FoldParams name="FoldParams">
+					<FoldState component="/groupedcomponent/videotrackinfocomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/videotrackinfocomponent/tracksettingscomponent/" folded="0"/>
+				</FoldParams>
+			</ClipView>
+			<VideoTrack name="VideoTrack" manualDuration="60000">
+				<Params name="Params">
+					<ParamRange name="Opacity" default="1" value="0.55000000000000004441"/>
+					<ParamRange storage="3" name="Width" default="1920" value="1920"/>
+					<ParamRange storage="3" name="Height" default="1080" value="1080"/>
+					<Param storage="3" name="RScale" default="1" value="1"/>
+					<Param storage="3" name="GScale" default="1" value="1"/>
+					<Param storage="3" name="BScale" default="1" value="1"/>
+					<Param storage="3" name="AScale" default="1" value="1"/>
+				</Params>
+				<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain">
+					<RenderPass storage="0" name="InfiniteZoom" type="DryWetEffect" uniqueId="P205" baseType="DryWetEffect" index="0">
+						<RenderPass name="InfiniteZoom" type="InfiniteZoom" uniqueId="P205" baseType="Effect" dwType="Effect">
+							<Params name="Params">
+								<ParamRange name="Zoom" default="0.050000000000000002776" value="0.024507905505952359837"/>
+							</Params>
+						</RenderPass>
+						<ChoosableMixer name="Mixer">
+							<RenderPass name="Alpha" type="Alpha" uniqueId="A006" baseType="Mixer"/>
+						</ChoosableMixer>
+					</RenderPass>
+					<RenderPass storage="0" name="Transform" type="TransformEffect" uniqueId="17122039101699797593" baseType="Effect" index="1">
+						<View name="View" bCanBeDisabled="0" bCanBeRemoved="0"/>
+					</RenderPass>
+				</RenderPass>
+				<ChoosableMixer name="Blend"/>
+				<PrimarySource>
+					<VideoSource name="VideoSource" width="1920" height="1080" type="CompositionRouterVideoSource">
+						<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain"/>
+					</VideoSource>
+				</PrimarySource>
+			</VideoTrack>
+		</Clip>
+		<Clip name="Clip" uniqueId="1534111012780" layerIndex="1" columnIndex="6">
+			<Params name="Params">
+				<Param storage="3" name="Name" default="Video Router" value="Infinite Zoom"/>
+				<ParamChoice storage="3" name="TransportType" default="0" value="0" storeChoices="0"/>
+			</Params>
+			<Params name="Dashboard">
+				<ParamRange name="Link 1" default="0" value="0.149606299212598437"/>
+			</Params>
+			<Transport name="Transport">
+				<Params name="Params">
+					<ParamRange name="Position" default="0" value="27485.192125381374353">
+						<ValueRange name="minMax" min="0" max="60000"/>
+						<ValueRange name="startStop" min="0" max="60000"/>
+						<BehaviourDouble name="BehaviourDouble">
+							<PhaseSourceTimeline name="PhaseSourceTimeline" globalSpeedEnabled="1">
+								<Params name="Params">
+									<ParamRange storage="3" name="Beats" default="128" value="128"/>
+									<ParamRange storage="3" name="BPM" default="128" value="128"/>
+									<ParamRange storage="3" name="Speed" default="1" value="1"/>
+									<ParamChoice storage="3" name="Syncmode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayDirection" default="1" value="1" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayMode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayModeAway" default="0" value="0" storeChoices="0"/>
+									<Param storage="3" name="Finished" default="0" value="0"/>
+								</Params>
+								<ParamBasedDuration name="ParamBasedDuration"/>
+								<Beats_double name="Beats_double" mode="0" numDetectedBeats="-1" numManualBeats="128" detectedTempo="-1" manualTempo="128" detected="0"/>
+							</PhaseSourceTimeline>
+						</BehaviourDouble>
+					</ParamRange>
+				</Params>
+			</Transport>
+			<ClipView name="ClipView">
+				<FoldParams name="FoldParams"/>
+			</ClipView>
+			<VideoTrack name="VideoTrack" manualDuration="60000">
+				<Params name="Params">
+					<ParamRange storage="3" name="Width" default="1920" value="1920"/>
+					<ParamRange storage="3" name="Height" default="1080" value="1080"/>
+					<Param storage="3" name="RScale" default="1" value="1"/>
+					<Param storage="3" name="GScale" default="1" value="1"/>
+					<Param storage="3" name="BScale" default="1" value="1"/>
+					<Param storage="3" name="AScale" default="1" value="1"/>
+				</Params>
+				<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain">
+					<RenderPass storage="0" name="InfiniteZoom" type="DryWetEffect" uniqueId="P205" baseType="DryWetEffect" index="0">
+						<Params name="Params">
+							<ParamRange name="Opacity" default="1" value="0.76317452566964272265"/>
+						</Params>
+						<RenderPass name="InfiniteZoom" type="InfiniteZoom" uniqueId="P205" baseType="Effect" dwType="Effect"/>
+						<ChoosableMixer name="Mixer">
+							<RenderPass name="Alpha" type="Alpha" uniqueId="A006" baseType="Mixer"/>
+						</ChoosableMixer>
+					</RenderPass>
+					<RenderPass storage="0" name="Transform" type="TransformEffect" uniqueId="17122039101699797593" baseType="Effect" index="1">
+						<View name="View" bCanBeDisabled="0" bCanBeRemoved="0"/>
+					</RenderPass>
+				</RenderPass>
+				<ChoosableMixer name="Blend"/>
+				<PrimarySource>
+					<VideoSource name="VideoSource" width="1920" height="1080" type="CompositionRouterVideoSource">
+						<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain"/>
+					</VideoSource>
+				</PrimarySource>
+			</VideoTrack>
+		</Clip>
+		<Clip name="Clip" uniqueId="1534111012779" layerIndex="2" columnIndex="6">
+			<Params name="Params">
+				<Param storage="3" name="Name" default="Video Router" value="Circles"/>
+				<ParamChoice storage="3" name="TransportType" default="0" value="0" storeChoices="0"/>
+			</Params>
+			<Transport name="Transport">
+				<Params name="Params">
+					<ParamRange name="Position" default="0" value="24317.91157085875966">
+						<ValueRange name="minMax" min="0" max="60000"/>
+						<ValueRange name="startStop" min="0" max="60000"/>
+						<BehaviourDouble name="BehaviourDouble">
+							<PhaseSourceTimeline name="PhaseSourceTimeline" globalSpeedEnabled="1">
+								<Params name="Params">
+									<ParamRange storage="3" name="Beats" default="128" value="128"/>
+									<ParamRange storage="3" name="BPM" default="128" value="128"/>
+									<ParamRange storage="3" name="Speed" default="1" value="1"/>
+									<ParamChoice storage="3" name="Syncmode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayDirection" default="1" value="1" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayMode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayModeAway" default="0" value="0" storeChoices="0"/>
+									<Param storage="3" name="Finished" default="0" value="0"/>
+								</Params>
+								<ParamBasedDuration name="ParamBasedDuration"/>
+								<Beats_double name="Beats_double" mode="0" numDetectedBeats="-1" numManualBeats="128" detectedTempo="-1" manualTempo="128" detected="0"/>
+							</PhaseSourceTimeline>
+						</BehaviourDouble>
+					</ParamRange>
+				</Params>
+			</Transport>
+			<ClipView name="ClipView">
+				<FoldParams name="FoldParams">
+					<FoldState component="/groupedcomponent/videotrackinfocomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/videotrackinfocomponent/tracksettingscomponent/" folded="0"/>
+				</FoldParams>
+			</ClipView>
+			<VideoTrack name="VideoTrack" manualDuration="60000">
+				<Params name="Params">
+					<ParamRange storage="3" name="Width" default="1920" value="1920"/>
+					<ParamRange storage="3" name="Height" default="1080" value="1080"/>
+					<Param storage="3" name="RScale" default="1" value="1"/>
+					<Param storage="3" name="GScale" default="1" value="1"/>
+					<Param storage="3" name="BScale" default="1" value="1"/>
+					<Param storage="3" name="AScale" default="1" value="1"/>
+				</Params>
+				<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain">
+					<RenderPass storage="0" name="Circles" type="DryWetEffect" uniqueId="A125" baseType="DryWetEffect" index="0">
+						<Params name="Params">
+							<ParamRange name="Opacity" default="1" value="0.80126976376488090459"/>
+						</Params>
+						<RenderPass name="Circles" type="Circles" uniqueId="A125" baseType="Effect" dwType="Effect">
+							<Params name="Params">
+								<ParamRange name="Size" default="0.5" value="0.8469840494791666119"/>
+							</Params>
+						</RenderPass>
+						<ChoosableMixer name="Mixer">
+							<RenderPass name="Alpha" type="Alpha" uniqueId="A006" baseType="Mixer"/>
+						</ChoosableMixer>
+					</RenderPass>
+					<RenderPass storage="0" name="Transform" type="TransformEffect" uniqueId="17122039101699797593" baseType="Effect" index="1">
+						<View name="View" bCanBeDisabled="0" bCanBeRemoved="0"/>
+					</RenderPass>
+				</RenderPass>
+				<ChoosableMixer name="Blend"/>
+				<PrimarySource>
+					<VideoSource name="VideoSource" width="1920" height="1080" type="CompositionRouterVideoSource">
+						<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain"/>
+					</VideoSource>
+				</PrimarySource>
+			</VideoTrack>
+		</Clip>
+		<Clip name="Clip" uniqueId="1534111012781" layerIndex="1" columnIndex="7">
+			<Params name="Params">
+				<Param storage="3" name="Name" default="Video Router" value="Kaleidoscope"/>
+				<ParamChoice storage="3" name="TransportType" default="0" value="0" storeChoices="0"/>
+			</Params>
+			<Transport name="Transport">
+				<Params name="Params">
+					<ParamRange name="Position" default="0" value="43453.518059283160255">
+						<ValueRange name="minMax" min="0" max="60000"/>
+						<ValueRange name="startStop" min="0" max="60000"/>
+						<BehaviourDouble name="BehaviourDouble">
+							<PhaseSourceTimeline name="PhaseSourceTimeline" globalSpeedEnabled="1">
+								<Params name="Params">
+									<ParamRange storage="3" name="Beats" default="128" value="128"/>
+									<ParamRange storage="3" name="BPM" default="128" value="128"/>
+									<ParamRange storage="3" name="Speed" default="1" value="1"/>
+									<ParamChoice storage="3" name="Syncmode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayDirection" default="1" value="1" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayMode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayModeAway" default="0" value="0" storeChoices="0"/>
+									<Param storage="3" name="Finished" default="0" value="0"/>
+								</Params>
+								<ParamBasedDuration name="ParamBasedDuration"/>
+								<Beats_double name="Beats_double" mode="0" numDetectedBeats="-1" numManualBeats="128" detectedTempo="-1" manualTempo="128" detected="0"/>
+							</PhaseSourceTimeline>
+						</BehaviourDouble>
+					</ParamRange>
+				</Params>
+			</Transport>
+			<ClipView name="ClipView">
+				<FoldParams name="FoldParams">
+					<FoldState component="/groupedcomponent/renderpasschaincomponent/kaleidoscope/inputrotation/parambasecomponent/parambasecomponent/" folded="0"/>
+				</FoldParams>
+			</ClipView>
+			<VideoTrack name="VideoTrack" manualDuration="60000">
+				<Params name="Params">
+					<ParamRange storage="3" name="Width" default="1920" value="1920"/>
+					<ParamRange storage="3" name="Height" default="1080" value="1080"/>
+					<Param storage="3" name="RScale" default="1" value="1"/>
+					<Param storage="3" name="GScale" default="1" value="1"/>
+					<Param storage="3" name="BScale" default="1" value="1"/>
+					<Param storage="3" name="AScale" default="1" value="1"/>
+				</Params>
+				<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain">
+					<RenderPass storage="0" name="Kaleidoscope" type="DryWetEffect" uniqueId="sy02" baseType="DryWetEffect" index="0">
+						<RenderPass name="Kaleidoscope" type="FFGLEffect" uniqueId="sy02" baseType="Effect" dwType="Effect">
+							<Params name="Params">
+								<ParamRange name="Angles" default="0.30000001192092895508" value="0.681063123000000048"/>
+								<ParamRange name="Rotation" default="0" value="0.30696586135282960539">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="Gain" default="0" value="-14.59200000000001296"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Zoom" default="0.5" value="0.57807308999999995613"/>
+								<ParamRange name="Input Rotation" default="0" value="0.96744997920644104639">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="Gain" default="0" value="-20.480015625000000057"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+									</BehaviourDouble>
+								</ParamRange>
+								<Param name="Black BG" default="0" value="1"/>
+							</Params>
+							<FFGLPlugin name="FFGLPlugin" uniqueId="sy02" fileName="C:\Program Files\Resolume Arena 6\plugins\vfx\SyzGL_Kaleidoscope.dll"/>
+						</RenderPass>
+						<ChoosableMixer name="Mixer">
+							<Params name="Params">
+								<ParamChoice name="Blend Mode" default="67464115" value="67464114" storeChoices="0"/>
+							</Params>
+							<RenderPass name="Add" type="Add" uniqueId="A005" baseType="Mixer"/>
+						</ChoosableMixer>
+					</RenderPass>
+					<RenderPass storage="0" name="Transform" type="TransformEffect" uniqueId="17122039101699797593" baseType="Effect" index="1">
+						<View name="View" bCanBeDisabled="0" bCanBeRemoved="0"/>
+					</RenderPass>
+				</RenderPass>
+				<ChoosableMixer name="Blend"/>
+				<PrimarySource>
+					<VideoSource name="VideoSource" width="1920" height="1080" type="CompositionRouterVideoSource">
+						<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain"/>
+					</VideoSource>
+				</PrimarySource>
+			</VideoTrack>
+		</Clip>
+		<Clip name="Clip" uniqueId="1534194256378" layerIndex="2" columnIndex="7">
+			<Params name="Params">
+				<Param storage="3" name="Name" default="Video Router" value="Mirror"/>
+				<ParamChoice storage="3" name="TransportType" default="0" value="0" storeChoices="0"/>
+			</Params>
+			<Transport name="Transport">
+				<Params name="Params">
+					<ParamRange name="Position" default="0" value="12350.207511295560835">
+						<ValueRange name="minMax" min="0" max="60000"/>
+						<ValueRange name="startStop" min="0" max="60000"/>
+						<BehaviourDouble name="BehaviourDouble">
+							<PhaseSourceTimeline name="PhaseSourceTimeline" globalSpeedEnabled="1">
+								<Params name="Params">
+									<ParamRange storage="3" name="Beats" default="128" value="128"/>
+									<ParamRange storage="3" name="BPM" default="128" value="128"/>
+									<ParamRange storage="3" name="Speed" default="1" value="1"/>
+									<ParamChoice storage="3" name="Syncmode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayDirection" default="1" value="1" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayMode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayModeAway" default="0" value="0" storeChoices="0"/>
+									<Param storage="3" name="Finished" default="0" value="0"/>
+								</Params>
+								<ParamBasedDuration name="ParamBasedDuration"/>
+								<Beats_double name="Beats_double" mode="0" numDetectedBeats="-1" numManualBeats="128" detectedTempo="-1" manualTempo="128" detected="0"/>
+							</PhaseSourceTimeline>
+						</BehaviourDouble>
+					</ParamRange>
+				</Params>
+			</Transport>
+			<ClipView name="ClipView">
+				<FoldParams name="FoldParams"/>
+			</ClipView>
+			<VideoTrack name="VideoTrack" manualDuration="60000">
+				<Params name="Params">
+					<ParamRange storage="3" name="Width" default="1920" value="1920"/>
+					<ParamRange storage="3" name="Height" default="1080" value="1080"/>
+					<Param storage="3" name="RScale" default="1" value="1"/>
+					<Param storage="3" name="GScale" default="1" value="1"/>
+					<Param storage="3" name="BScale" default="1" value="1"/>
+					<Param storage="3" name="AScale" default="1" value="1"/>
+				</Params>
+				<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain">
+					<RenderPass storage="0" name="Mirror" type="DryWetEffect" uniqueId="A108" baseType="DryWetEffect" index="0">
+						<RenderPass name="Mirror" type="Mirror" uniqueId="A108" baseType="Effect" dwType="Effect">
+							<Params name="Params">
+								<ParamRange name="X" default="0" value="0.50031738281250004441"/>
+								<ParamRange name="Y" default="0" value="0.5"/>
+								<Param name="Flip X" default="0" value="1"/>
+								<Param name="Flip Y" default="0" value="1"/>
+								<Param name="Black BG" default="0" value="1"/>
+							</Params>
+						</RenderPass>
+						<ChoosableMixer name="Mixer">
+							<RenderPass name="Alpha" type="Alpha" uniqueId="A006" baseType="Mixer"/>
+						</ChoosableMixer>
+					</RenderPass>
+					<RenderPass storage="0" name="Transform" type="TransformEffect" uniqueId="17122039101699797593" baseType="Effect" index="1">
+						<View name="View" bCanBeDisabled="0" bCanBeRemoved="0"/>
+					</RenderPass>
+				</RenderPass>
+				<ChoosableMixer name="Blend"/>
+				<PrimarySource>
+					<VideoSource name="VideoSource" width="1920" height="1080" type="CompositionRouterVideoSource">
+						<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain"/>
+					</VideoSource>
+				</PrimarySource>
+			</VideoTrack>
+		</Clip>
+		<Clip name="Clip" uniqueId="1535310008597" layerIndex="0" columnIndex="8">
+			<Params name="Params">
+				<Param storage="3" name="Name" default="sOm-CircleSun" value="sOm-CircleSun"/>
+				<ParamChoice storage="3" name="TransportType" default="0" value="0" storeChoices="0"/>
+			</Params>
+			<Transport name="Transport">
+				<Params name="Params">
+					<ParamRange name="Position" default="0" value="4433.5335048547394763">
+						<BehaviourDouble name="BehaviourDouble">
+							<PhaseSourceTimeline name="PhaseSourceTimeline" globalSpeedEnabled="1">
+								<Params name="Params">
+									<ParamRange storage="3" name="Beats" default="8" value="8"/>
+									<ParamRange storage="3" name="BPM" default="96" value="96"/>
+									<ParamRange storage="3" name="Speed" default="1" value="1"/>
+									<ParamChoice storage="3" name="Syncmode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayDirection" default="1" value="1" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayMode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayModeAway" default="0" value="0" storeChoices="0"/>
+									<Param storage="3" name="Finished" default="0" value="0"/>
+								</Params>
+								<ParamBasedDuration name="ParamBasedDuration"/>
+								<Beats_double name="Beats_double" mode="0" numDetectedBeats="-1" numManualBeats="8" detectedTempo="-1" manualTempo="96" detected="0"/>
+							</PhaseSourceTimeline>
+						</BehaviourDouble>
+					</ParamRange>
+				</Params>
+			</Transport>
+			<ClipView name="ClipView">
+				<FoldParams name="FoldParams">
+					<FoldState component="/groupedcomponent/som-circlesun/rotation1/parambasecomponent/parambasecomponent/" folded="1"/>
+				</FoldParams>
+			</ClipView>
+			<VideoTrack name="VideoTrack" manualDuration="0">
+				<Params name="Params">
+					<ParamRange storage="3" name="Width" default="1920" value="1920"/>
+					<ParamRange storage="3" name="Height" default="1080" value="1080"/>
+					<Param storage="3" name="RScale" default="1" value="1"/>
+					<Param storage="3" name="GScale" default="1" value="1"/>
+					<Param storage="3" name="BScale" default="1" value="1"/>
+					<Param storage="3" name="AScale" default="1" value="1"/>
+				</Params>
+				<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain">
+					<RenderPass storage="0" name="Transform" type="TransformEffect" uniqueId="17122039101699797593" baseType="Effect" index="0">
+						<View name="View" bCanBeDisabled="0" bCanBeRemoved="0"/>
+					</RenderPass>
+				</RenderPass>
+				<ChoosableMixer name="Blend"/>
+				<PrimarySource>
+					<VideoSource storage="0" name="VideoSource" width="1920" height="1080" type="GeneratorVideoSource">
+						<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain"/>
+						<RenderPass name="sOm-CircleSun" type="FFGLGenerator" uniqueId="SM04" baseType="Generator">
+							<Params name="Params">
+								<ParamRange name="Pos X" default="0.5" value="0"/>
+								<ParamRange name="Pos Y" default="0.5" value="0"/>
+								<ParamRange name="Divisions" default="0.5" value="0.9709864603481624945"/>
+								<ParamRange name="Radius 1" default="0.20000000298023223877" value="0.57124443718266437742"/>
+								<ParamRange name="Width 1" default="1" value="0.59058679695055604775"/>
+								<ParamRange name="Height 1" default="0.10000000149011611938" value="0"/>
+								<ParamRange name="Rotation 1" default="1" value="0.020557564785270539959">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Radius 2" default="0.20000000298023223877" value="0"/>
+								<ParamRange name="Width 2" default="1" value="0"/>
+								<ParamRange name="Height 2" default="0.050000000745058059692" value="0"/>
+							</Params>
+							<FFGLPlugin name="FFGLPlugin" uniqueId="SM04" fileName="D:\RESOLUME_PLUGINS\SoM-004-CircleSun.dll"/>
+						</RenderPass>
+					</VideoSource>
+				</PrimarySource>
+			</VideoTrack>
+		</Clip>
+		<Clip name="Clip" uniqueId="1535309322464" layerIndex="0" columnIndex="9">
+			<Params name="Params">
+				<Param storage="3" name="Name" default="SoM Mandelbox" value="SoM Mandelbox"/>
+				<ParamChoice storage="3" name="TransportType" default="0" value="0" storeChoices="0"/>
+			</Params>
+			<Transport name="Transport">
+				<Params name="Params">
+					<ParamRange name="Position" altName="Seed 3 Imag" default="0" value="117.09658833449151416">
+						<BehaviourDouble name="BehaviourDouble">
+							<PhaseSourceTimeline name="PhaseSourceTimeline" globalSpeedEnabled="1">
+								<Params name="Params">
+									<ParamRange storage="3" name="Beats" default="8" value="8"/>
+									<ParamRange storage="3" name="BPM" default="96" value="96"/>
+									<ParamRange storage="3" name="Speed" default="1" value="1"/>
+									<ParamChoice storage="3" name="Syncmode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayDirection" default="1" value="1" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayMode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayModeAway" default="0" value="0" storeChoices="0"/>
+									<Param storage="3" name="Finished" default="0" value="0"/>
+								</Params>
+								<ParamBasedDuration name="ParamBasedDuration"/>
+								<Beats_double name="Beats_double" mode="0" numDetectedBeats="-1" numManualBeats="8" detectedTempo="-1" manualTempo="96" detected="0"/>
+							</PhaseSourceTimeline>
+						</BehaviourDouble>
+					</ParamRange>
+				</Params>
+			</Transport>
+			<ClipView name="ClipView">
+				<FoldParams name="FoldParams">
+					<FoldState component="/groupedcomponent/sommandelbox/seed1imag/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/sommandelbox/seed2imag/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/sommandelbox/seed2real/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/sommandelbox/seed3imag/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/sommandelbox/seed3real/parambasecomponent/parambasecomponent/" folded="0"/>
+				</FoldParams>
+			</ClipView>
+			<VideoTrack name="VideoTrack" manualDuration="0">
+				<Params name="Params">
+					<ParamRange storage="3" name="Width" default="1920" value="1920"/>
+					<ParamRange storage="3" name="Height" default="1080" value="1080"/>
+					<Param storage="3" name="RScale" default="1" value="1"/>
+					<Param storage="3" name="GScale" default="1" value="1"/>
+					<Param storage="3" name="BScale" default="1" value="1"/>
+					<Param storage="3" name="AScale" default="1" value="1"/>
+				</Params>
+				<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain">
+					<RenderPass storage="0" name="Transform" type="TransformEffect" uniqueId="17122039101699797593" baseType="Effect" index="0">
+						<View name="View" bCanBeDisabled="0" bCanBeRemoved="0"/>
+					</RenderPass>
+					<RenderPass storage="0" name="ShiftRGB" type="DryWetEffect" uniqueId="A153" baseType="DryWetEffect" index="1">
+						<View name="View" folded="1"/>
+						<RenderPass name="ShiftRGB" type="ShiftRGB" uniqueId="A153" baseType="Effect" dwType="Effect">
+							<Params name="Params">
+								<ParamRange name="Distance" default="1" value="0">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceLink name="PhaseSourceLink" canSetLinkedParam="1"/>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="R" default="0" value="0.055085180623973828418"/>
+								<ParamRange name="B" default="0" value="-0.050659380131362841126"/>
+							</Params>
+						</RenderPass>
+						<ChoosableMixer name="Mixer">
+							<RenderPass name="Alpha" type="Alpha" uniqueId="A006" baseType="Mixer"/>
+						</ChoosableMixer>
+					</RenderPass>
+				</RenderPass>
+				<ChoosableMixer name="Blend"/>
+				<PrimarySource>
+					<VideoSource storage="0" name="VideoSource" width="1920" height="1080" type="GeneratorVideoSource">
+						<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain"/>
+						<RenderPass name="SoM Mandelbox" type="FFGLGenerator" uniqueId="SM02" baseType="Generator">
+							<Params name="Params">
+								<ParamRange name="Center X" default="0.5" value="0.4990253411306042608"/>
+								<ParamRange name="Center Y" default="0.5" value="0.50032480697185677254"/>
+								<ParamRange name="Zoom" default="0.33000001311302185059" value="0.38466544643944933224"/>
+								<ParamRange name="Rotation" default="0" value="0.13776353644100311491">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="Gain" default="0" value="-9.2160234374999987494"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="MaxIter" default="0.10000000149011611938" value="0.16504215589973197931"/>
+								<ParamRange name="Seed 1 Real" default="0.5" value="0.50999901222724286498">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.5">
+													<ValueRange name="startStop" min="0" max="0.16010530727116142891"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="-12.287999999999996703"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0.5" curve="33"/>
+													<point x="0.27517985611510792365" y="0.48999999999999999112" curve="10"/>
+													<point x="0.50899280575539562754" y="0.51000000000000000888" curve="10"/>
+													<point x="0.74460431654676262347" y="0.48999999999999999112" curve="10"/>
+													<point x="1" y="0.5" curve="10"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Seed 1 Imag" default="0.5" value="0.50999844877231148565">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.5">
+													<ValueRange name="startStop" min="0.18635138564222442081" max="0.33333333333333331483"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="-8.9600156249999969305"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0.5" curve="33"/>
+													<point x="0.27517985611510792365" y="0.48999999999999999112" curve="10"/>
+													<point x="0.50899280575539562754" y="0.51000000000000000888" curve="10"/>
+													<point x="0.74460431654676262347" y="0.48999999999999999112" curve="10"/>
+													<point x="1" y="0.5" curve="10"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Seed 2 Real" default="0.5" value="0.50999101522954670695">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.33333333333333331483">
+													<ValueRange name="startStop" min="0.33333333333333331483" max="0.51181102362204722311"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="7.1680078125000008527"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0.5" curve="33"/>
+													<point x="0.27517985611510792365" y="0.48999999999999999112" curve="10"/>
+													<point x="0.50899280575539562754" y="0.51000000000000000888" curve="10"/>
+													<point x="0.74460431654676262347" y="0.48999999999999999112" curve="10"/>
+													<point x="1" y="0.5" curve="10"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Seed 2 Imag" default="0.5" value="0.50999925087605968432">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.33333333333333331483">
+													<ValueRange name="startStop" min="0.54330708661417326244" max="0.66666666666666662966"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="9.2159999999999939746"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0.5" curve="33"/>
+													<point x="0.27517985611510792365" y="0.48999999999999999112" curve="10"/>
+													<point x="0.50899280575539562754" y="0.51000000000000000888" curve="10"/>
+													<point x="0.74460431654676262347" y="0.48999999999999999112" curve="10"/>
+													<point x="1" y="0.5" curve="10"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Seed 3 Real" default="0.5" value="0.50999948890783652899">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.5">
+													<ValueRange name="startStop" min="0.80577459860974409711" max="1"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="25.600031250000000682"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0.5" curve="33"/>
+													<point x="0.27517985611510792365" y="0.48999999999999999112" curve="10"/>
+													<point x="0.50899280575539562754" y="0.51000000000000000888" curve="10"/>
+													<point x="0.74460431654676262347" y="0.48999999999999999112" curve="10"/>
+													<point x="1" y="0.5" curve="10"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Seed 3 Imag" default="0.5" value="0.54353406139391524654">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.5">
+													<ValueRange name="startStop" min="0.66666666666666662966" max="0.86876672459399606474"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="27.392015624999999091"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0.5" curve="33"/>
+													<point x="0.27517985611510792365" y="0.4500000000000000111" curve="10"/>
+													<point x="0.50899280575539562754" y="0.55000000000000004441" curve="10"/>
+													<point x="0.74460431654676262347" y="0.4500000000000000111" curve="10"/>
+													<point x="1" y="0.5" curve="10"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Color 1 Red" default="1" value="0.91228070175438591427"/>
+								<ParamRange name="Mandelbox Scale " default="0.15000000596046447754" value="0.24072328226468797663">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="Gain" default="0" value="19.199999999999988631"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0.2000000000000000111" curve="4"/>
+													<point x="0.29496402877697847078" y="0.24369747899159671656" curve="4"/>
+													<point x="0.67446043165467628455" y="0.13445378151260511945" curve="4"/>
+													<point x="1" y="0.2000000000000000111" curve="4"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+							</Params>
+							<FFGLPlugin name="FFGLPlugin" uniqueId="SM02" fileName="D:\RESOLUME_PLUGINS\SoM-002-Mandelbox.dll"/>
+						</RenderPass>
+					</VideoSource>
+				</PrimarySource>
+			</VideoTrack>
+		</Clip>
+		<Clip name="Clip" uniqueId="1535273651876" layerIndex="0" columnIndex="10">
+			<Params name="Params">
+				<Param storage="3" name="Name" default="SoM SineWave 1D" value="SoM SineWave 1D"/>
+				<ParamChoice storage="3" name="TransportType" default="0" value="0" storeChoices="0"/>
+			</Params>
+			<Transport name="Transport">
+				<Params name="Params">
+					<ParamRange name="Position" default="0" value="2366.2340848746375741">
+						<BehaviourDouble name="BehaviourDouble">
+							<PhaseSourceTimeline name="PhaseSourceTimeline" globalSpeedEnabled="1">
+								<Params name="Params">
+									<ParamRange storage="3" name="Beats" default="8" value="8"/>
+									<ParamRange storage="3" name="BPM" default="96" value="96"/>
+									<ParamRange storage="3" name="Speed" default="1" value="1"/>
+									<ParamChoice storage="3" name="Syncmode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayDirection" default="1" value="1" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayMode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayModeAway" default="0" value="0" storeChoices="0"/>
+									<Param storage="3" name="Finished" default="0" value="0"/>
+								</Params>
+								<ParamBasedDuration name="ParamBasedDuration"/>
+								<Beats_double name="Beats_double" mode="0" numDetectedBeats="-1" numManualBeats="8" detectedTempo="-1" manualTempo="96" detected="0"/>
+							</PhaseSourceTimeline>
+						</BehaviourDouble>
+					</ParamRange>
+				</Params>
+			</Transport>
+			<ClipView name="ClipView">
+				<FoldParams name="FoldParams">
+					<FoldState component="/groupedcomponent/somsinewave1d/wavelength1/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/somsinewave1d/wavelength2/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/somsinewave1d/wavelength3/parambasecomponent/parambasecomponent/" folded="0"/>
+				</FoldParams>
+			</ClipView>
+			<VideoTrack name="VideoTrack" manualDuration="0">
+				<Params name="Params">
+					<ParamRange storage="3" name="Width" default="1920" value="1920"/>
+					<ParamRange storage="3" name="Height" default="1080" value="1080"/>
+					<Param storage="3" name="RScale" default="1" value="1"/>
+					<Param storage="3" name="GScale" default="1" value="1"/>
+					<Param storage="3" name="BScale" default="1" value="1"/>
+					<Param storage="3" name="AScale" default="1" value="1"/>
+				</Params>
+				<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain">
+					<RenderPass storage="0" name="Transform" type="TransformEffect" uniqueId="17122039101699797593" baseType="Effect" index="0">
+						<View name="View" bCanBeDisabled="0" bCanBeRemoved="0"/>
+					</RenderPass>
+				</RenderPass>
+				<ChoosableMixer name="Blend"/>
+				<PrimarySource>
+					<VideoSource storage="0" name="VideoSource" width="1920" height="1080" type="GeneratorVideoSource">
+						<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain"/>
+						<RenderPass name="SoM SineWave 1D" type="FFGLGenerator" uniqueId="SM03" baseType="Generator">
+							<Params name="Params">
+								<ParamRange name="Wavelength 1" default="0" value="0.075328930554545661669">
+									<ValueRange name="startStop" min="0" max="0.48245614035087719396"/>
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.5">
+													<ValueRange name="startStop" min="0" max="0.33333333333333331483"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="12.54405468749997965"/>
+												<ParamRange name="Fallback" default="1000" value="2000"/>
+											</Params>
+										</PhaseSourceFFT>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Amplitude 1" default="0" value="0.10031738281249999445"/>
+								<ParamRange name="Frequency 2" default="0" value="0.044444521949404763861"/>
+								<ParamRange name="Wavelength 2" default="0" value="0.23562054668322895967">
+									<ValueRange name="startStop" min="0" max="0.47192982456140353253"/>
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.33333333333333331483">
+													<ValueRange name="startStop" min="0.33333333333333331483" max="0.66666666666666662966"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="33.152015624999989996"/>
+												<ParamRange name="Fallback" default="1000" value="2000"/>
+											</Params>
+										</PhaseSourceFFT>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Amplitude 2" default="0" value="0.082539760044642862535"/>
+								<ParamRange name="Frequency 3" default="0" value="0.071111188616071421831"/>
+								<ParamRange name="Wavelength 3" default="0" value="0.018055946827092328455">
+									<ValueRange name="startStop" min="0" max="0.46725153337445174406"/>
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.5">
+													<ValueRange name="startStop" min="0.66666666666666662966" max="1"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="34.176000000000016144"/>
+												<ParamRange name="Fallback" default="1000" value="2000"/>
+											</Params>
+										</PhaseSourceFFT>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Amplitude 3" default="0" value="0.11936500186011904379"/>
+							</Params>
+							<FFGLPlugin name="FFGLPlugin" uniqueId="SM03" fileName="D:\RESOLUME_PLUGINS\SoM-003-Sinewave-1D.dll"/>
+						</RenderPass>
+					</VideoSource>
+				</PrimarySource>
+			</VideoTrack>
+		</Clip>
+		<Clip name="Clip" uniqueId="1535273651877" layerIndex="0" columnIndex="11">
+			<Params name="Params">
+				<Param storage="3" name="Name" default="SoM SineWave 1D" value="SoM SineWave 1D"/>
+				<ParamChoice storage="3" name="TransportType" default="0" value="0" storeChoices="0"/>
+			</Params>
+			<Transport name="Transport">
+				<Params name="Params">
+					<ParamRange name="Position" default="0" value="2578.4565653927575113">
+						<BehaviourDouble name="BehaviourDouble">
+							<PhaseSourceTimeline name="PhaseSourceTimeline" globalSpeedEnabled="1">
+								<Params name="Params">
+									<ParamRange storage="3" name="Beats" default="8" value="8"/>
+									<ParamRange storage="3" name="BPM" default="96" value="96"/>
+									<ParamRange storage="3" name="Speed" default="1" value="1"/>
+									<ParamChoice storage="3" name="Syncmode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayDirection" default="1" value="1" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayMode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayModeAway" default="0" value="0" storeChoices="0"/>
+									<Param storage="3" name="Finished" default="0" value="0"/>
+								</Params>
+								<ParamBasedDuration name="ParamBasedDuration"/>
+								<Beats_double name="Beats_double" mode="0" numDetectedBeats="-1" numManualBeats="8" detectedTempo="-1" manualTempo="96" detected="0"/>
+							</PhaseSourceTimeline>
+						</BehaviourDouble>
+					</ParamRange>
+				</Params>
+			</Transport>
+			<ClipView name="ClipView">
+				<FoldParams name="FoldParams">
+					<FoldState component="/groupedcomponent/somsinewave1d/amplitude3/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/somsinewave1d/frequency1/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/somsinewave1d/frequency2/parambasecomponent/parambasecomponent/" folded="0"/>
+					<FoldState component="/groupedcomponent/somsinewave1d/frequency3/parambasecomponent/parambasecomponent/" folded="0"/>
+				</FoldParams>
+			</ClipView>
+			<VideoTrack name="VideoTrack" manualDuration="0">
+				<Params name="Params">
+					<ParamRange storage="3" name="Width" default="1920" value="1920"/>
+					<ParamRange storage="3" name="Height" default="1080" value="1080"/>
+					<Param storage="3" name="RScale" default="1" value="1"/>
+					<Param storage="3" name="GScale" default="1" value="1"/>
+					<Param storage="3" name="BScale" default="1" value="1"/>
+					<Param storage="3" name="AScale" default="1" value="1"/>
+				</Params>
+				<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain">
+					<RenderPass storage="0" name="Transform" type="TransformEffect" uniqueId="17122039101699797593" baseType="Effect" index="0">
+						<View name="View" bCanBeDisabled="0" bCanBeRemoved="0"/>
+					</RenderPass>
+				</RenderPass>
+				<ChoosableMixer name="Blend"/>
+				<PrimarySource>
+					<VideoSource storage="0" name="VideoSource" width="1920" height="1080" type="GeneratorVideoSource">
+						<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain"/>
+						<RenderPass name="SoM SineWave 1D" type="FFGLGenerator" uniqueId="SM03" baseType="Generator">
+							<Params name="Params">
+								<ParamRange name="Frequency 1" default="0" value="0.019095846213340733621">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.5">
+													<ValueRange name="startStop" min="0.66666666666666662966" max="1"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="33.279984375000012164"/>
+												<ParamRange name="Fallback" default="1000" value="479.99999999999971578"/>
+											</Params>
+										</PhaseSourceFFT>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Wavelength 1" default="0" value="0.075307466891109675622">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0.075630252100840344998" curve="33"/>
+													<point x="0.25" y="0" curve="14"/>
+													<point x="0.39568345323741005437" y="0.092436974789915887785" curve="14"/>
+													<point x="0.76978417266187049162" y="0" curve="14"/>
+													<point x="1" y="0.09243697478991591554" curve="14"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Amplitude 1" default="0" value="0.11482752461791491394">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="Gain" default="0" value="0.89601562500001108447"/>
+												<ParamRange name="Fallback" default="1000" value="513.60023193359370453"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0.20168067226890762367" curve="33"/>
+													<point x="0.25" y="0" curve="10"/>
+													<point x="0.50359712230215825102" y="0.17647058823529404581" curve="10"/>
+													<point x="0.75" y="0" curve="10"/>
+													<point x="1" y="0.2000000000000000111" curve="10"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Frequency 2" default="0" value="0.45272940094683528089">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.33333333333333331483">
+													<ValueRange name="startStop" min="0.33333333333333331483" max="0.66666666666666662966"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="39.679968750000000455"/>
+												<ParamRange name="Fallback" default="1000" value="175.99999999999994316"/>
+											</Params>
+										</PhaseSourceFFT>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Wavelength 2" default="0" value="0.13246054665600365263">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0.10000000000000000555" curve="33"/>
+													<point x="0.32194244604316546443" y="0.016806722689075639932" curve="1"/>
+													<point x="0.60251798561151082012" y="0.19327731092436978289" curve="1"/>
+													<point x="1" y="0.10000000000000000555" curve="4"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Amplitude 2" default="0" value="0.023024023576225932652">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0" curve="33"/>
+													<point x="0.27338129496402879814" y="0.25" curve="10"/>
+													<point x="0.50719424460431650203" y="0.035714285714285698425" curve="10"/>
+													<point x="0.74460431654676262347" y="0.25" curve="10"/>
+													<point x="1" y="0" curve="10"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Frequency 3" default="0" value="0.066188705161645378094">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.5">
+													<ValueRange name="startStop" min="0" max="0.33333333333333331483"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="15.359976562500008868"/>
+												<ParamRange name="Fallback" default="1000" value="373.59999999999990905"/>
+											</Params>
+										</PhaseSourceFFT>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Wavelength 3" default="0" value="0.040357131449534823509">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="Gain" default="0" value="8.9600156249999969305"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0" curve="10"/>
+													<point x="0.51978417266187060264" y="0.075630252100840386631" curve="10"/>
+													<point x="1" y="0" curve="10"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+								<ParamRange name="Amplitude 3" default="0" value="0.029579722197942803774">
+									<BehaviourDouble name="BehaviourDouble">
+										<PhaseSourceFFT name="PhaseSourceFFT" canSetLinkedParam="0" linkId="/audioengine/externalfft">
+											<Params name="Params">
+												<ParamRange name="FrequencyRange" default="0.5" value="0.5">
+													<ValueRange name="startStop" min="0.54330708661417326244" max="1"/>
+												</ParamRange>
+												<ParamRange name="Gain" default="0" value="13.823999999999998067"/>
+												<ParamChoice name="ValueBehaviour" default="0" value="2" storeChoices="0"/>
+											</Params>
+										</PhaseSourceFFT>
+										<Modifier>
+											<ModifierEnvelope name="ModifierEnvelope" altName="Envelope">
+												<points>
+													<point x="0" y="0" curve="33"/>
+													<point x="0.49817518248175174378" y="0.53781512605042014474" curve="10"/>
+													<point x="1" y="0" curve="10"/>
+												</points>
+											</ModifierEnvelope>
+										</Modifier>
+									</BehaviourDouble>
+								</ParamRange>
+							</Params>
+							<FFGLPlugin name="FFGLPlugin" uniqueId="SM03" fileName="D:\RESOLUME_PLUGINS\SoM-003-Sinewave-1D.dll"/>
+						</RenderPass>
+					</VideoSource>
+				</PrimarySource>
+			</VideoTrack>
+		</Clip>
+		<Clip name="Clip" uniqueId="1534194256372" layerIndex="1" columnIndex="11">
+			<Params name="Params">
+				<Param storage="3" name="Name" default="Video Router" value="Tile"/>
+				<ParamChoice storage="3" name="TransportType" default="0" value="0" storeChoices="0"/>
+			</Params>
+			<Transport name="Transport">
+				<Params name="Params">
+					<ParamRange name="Position" default="0" value="2349.8990919739012497">
+						<ValueRange name="minMax" min="0" max="60000"/>
+						<ValueRange name="startStop" min="0" max="60000"/>
+						<BehaviourDouble name="BehaviourDouble">
+							<PhaseSourceTimeline name="PhaseSourceTimeline" globalSpeedEnabled="1">
+								<Params name="Params">
+									<ParamRange storage="3" name="Beats" default="128" value="128"/>
+									<ParamRange storage="3" name="BPM" default="128" value="128"/>
+									<ParamRange storage="3" name="Speed" default="1" value="1"/>
+									<ParamChoice storage="3" name="Syncmode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayDirection" default="1" value="1" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayMode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayModeAway" default="0" value="0" storeChoices="0"/>
+									<Param storage="3" name="Finished" default="0" value="0"/>
+								</Params>
+								<ParamBasedDuration name="ParamBasedDuration"/>
+								<Beats_double name="Beats_double" mode="0" numDetectedBeats="-1" numManualBeats="128" detectedTempo="-1" manualTempo="128" detected="0"/>
+							</PhaseSourceTimeline>
+						</BehaviourDouble>
+					</ParamRange>
+				</Params>
+			</Transport>
+			<ClipView name="ClipView">
+				<FoldParams name="FoldParams"/>
+			</ClipView>
+			<VideoTrack name="VideoTrack" manualDuration="60000">
+				<Params name="Params">
+					<ParamRange storage="3" name="Width" default="1920" value="1920"/>
+					<ParamRange storage="3" name="Height" default="1080" value="1080"/>
+					<Param storage="3" name="RScale" default="1" value="1"/>
+					<Param storage="3" name="GScale" default="1" value="1"/>
+					<Param storage="3" name="BScale" default="1" value="1"/>
+					<Param storage="3" name="AScale" default="1" value="1"/>
+				</Params>
+				<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain">
+					<RenderPass storage="0" name="TileEffect" type="DryWetEffect" uniqueId="A113" baseType="DryWetEffect" index="0">
+						<RenderPass name="TileEffect" type="TileEffect" uniqueId="A113" baseType="Effect" dwType="Effect">
+							<Params name="Params">
+								<ParamRange name="Tile X" default="0.10000000149011611938" value="0.20190476190476189244"/>
+								<ParamRange name="Tile Y" default="0.10000000149011611938" value="0.21206356956845237582"/>
+								<Param name="Black BG" default="0" value="1"/>
+							</Params>
+						</RenderPass>
+						<ChoosableMixer name="Mixer">
+							<RenderPass name="Alpha" type="Alpha" uniqueId="A006" baseType="Mixer"/>
+						</ChoosableMixer>
+					</RenderPass>
+					<RenderPass storage="0" name="Transform" type="TransformEffect" uniqueId="17122039101699797593" baseType="Effect" index="1">
+						<View name="View" bCanBeDisabled="0" bCanBeRemoved="0"/>
+					</RenderPass>
+				</RenderPass>
+				<ChoosableMixer name="Blend"/>
+				<PrimarySource>
+					<VideoSource name="VideoSource" width="1920" height="1080" type="CompositionRouterVideoSource">
+						<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain"/>
+					</VideoSource>
+				</PrimarySource>
+			</VideoTrack>
+		</Clip>
+		<Clip name="Clip" uniqueId="1534187050287" layerIndex="1" columnIndex="12">
+			<Params name="Params">
+				<Param storage="3" name="Name" default="Video Router" value="Mirror"/>
+				<ParamChoice storage="3" name="TransportType" default="0" value="0" storeChoices="0"/>
+			</Params>
+			<Transport name="Transport">
+				<Params name="Params">
+					<ParamRange name="Position" default="0" value="20434.119471598172822">
+						<ValueRange name="minMax" min="0" max="60000"/>
+						<ValueRange name="startStop" min="0" max="60000"/>
+						<BehaviourDouble name="BehaviourDouble">
+							<PhaseSourceTimeline name="PhaseSourceTimeline" globalSpeedEnabled="1">
+								<Params name="Params">
+									<ParamRange storage="3" name="Beats" default="128" value="128"/>
+									<ParamRange storage="3" name="BPM" default="128" value="128"/>
+									<ParamRange storage="3" name="Speed" default="1" value="1"/>
+									<ParamChoice storage="3" name="Syncmode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayDirection" default="1" value="1" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayMode" default="0" value="0" storeChoices="0"/>
+									<ParamChoice storage="3" name="PlayModeAway" default="0" value="0" storeChoices="0"/>
+									<Param storage="3" name="Finished" default="0" value="0"/>
+								</Params>
+								<ParamBasedDuration name="ParamBasedDuration"/>
+								<Beats_double name="Beats_double" mode="0" numDetectedBeats="-1" numManualBeats="128" detectedTempo="-1" manualTempo="128" detected="0"/>
+							</PhaseSourceTimeline>
+						</BehaviourDouble>
+					</ParamRange>
+				</Params>
+			</Transport>
+			<ClipView name="ClipView">
+				<FoldParams name="FoldParams"/>
+			</ClipView>
+			<VideoTrack name="VideoTrack" manualDuration="60000">
+				<Params name="Params">
+					<ParamRange storage="3" name="Width" default="1920" value="1920"/>
+					<ParamRange storage="3" name="Height" default="1080" value="1080"/>
+					<Param storage="3" name="RScale" default="1" value="1"/>
+					<Param storage="3" name="GScale" default="1" value="1"/>
+					<Param storage="3" name="BScale" default="1" value="1"/>
+					<Param storage="3" name="AScale" default="1" value="1"/>
+				</Params>
+				<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain">
+					<RenderPass storage="0" name="Mirror" type="DryWetEffect" uniqueId="A108" baseType="DryWetEffect" index="0">
+						<RenderPass name="Mirror" type="Mirror" uniqueId="A108" baseType="Effect" dwType="Effect">
+							<Params name="Params">
+								<ParamRange name="X" default="0" value="0.50031738281250004441"/>
+								<ParamRange name="Y" default="0" value="0.5"/>
+								<Param name="Flip X" default="0" value="1"/>
+								<Param name="Flip Y" default="0" value="1"/>
+								<Param name="Black BG" default="0" value="1"/>
+							</Params>
+						</RenderPass>
+						<ChoosableMixer name="Mixer">
+							<RenderPass name="Alpha" type="Alpha" uniqueId="A006" baseType="Mixer"/>
+						</ChoosableMixer>
+					</RenderPass>
+					<RenderPass storage="0" name="Transform" type="TransformEffect" uniqueId="17122039101699797593" baseType="Effect" index="1">
+						<View name="View" bCanBeDisabled="0" bCanBeRemoved="0"/>
+					</RenderPass>
+				</RenderPass>
+				<ChoosableMixer name="Blend"/>
+				<PrimarySource>
+					<VideoSource name="VideoSource" width="1920" height="1080" type="CompositionRouterVideoSource">
+						<RenderPass name="RenderPassChain" type="RenderPassChain" uniqueId="RenderPassChain" baseType="RenderPassChain"/>
+					</VideoSource>
+				</PrimarySource>
+			</VideoTrack>
+		</Clip>
+	</Deck>
+	<Deck name="Deck" uniqueId="1503475749193" numLayers="4" numColumns="8" closed="0" deckIndex="1"/>
+</Composition>
+

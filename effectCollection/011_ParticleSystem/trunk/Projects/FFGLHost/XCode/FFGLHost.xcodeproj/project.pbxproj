@@ -1,0 +1,226 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2D4F185E0D70A4B900D929D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D4F185D0D70A4B900D929D8 /* Foundation.framework */; };
+		2DA286070AEE64020030A4DD /* FFGLFBO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2DA284030AE9EA770030A4DD /* FFGLFBO.cpp */; };
+		2DA286080AEE64030030A4DD /* FFGLExtensions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2DA284040AE9EA770030A4DD /* FFGLExtensions.cpp */; };
+		2DA286090AEE64030030A4DD /* OSXMain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2DA284F30AEA03FA0030A4DD /* OSXMain.cpp */; };
+		2DA286D70AEEA3A80030A4DD /* FFGLPluginInstance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2DA286D60AEEA3A80030A4DD /* FFGLPluginInstance.cpp */; };
+		2DA287270AEEA5D90030A4DD /* OSXPluginInstance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2DA287260AEEA5D90030A4DD /* OSXPluginInstance.cpp */; };
+		2DA2872A0AEEA6050030A4DD /* OSXDebugMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2DA287290AEEA6050030A4DD /* OSXDebugMessage.cpp */; };
+		2DA287320AEEA6C70030A4DD /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA287310AEEA6C70030A4DD /* GLUT.framework */; };
+		2DA287360AEEA6D90030A4DD /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA287350AEEA6D90030A4DD /* OpenGL.framework */; };
+		2DA287670AEEA9C60030A4DD /* OSXTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2DA287660AEEA9C60030A4DD /* OSXTimer.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2D4F185D0D70A4B900D929D8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = ../../../../../../../../../System/Library/Frameworks/Foundation.framework; sourceTree = SOURCE_ROOT; };
+		2DA284030AE9EA770030A4DD /* FFGLFBO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.cpp; name = FFGLFBO.cpp; path = ../../../Source/Common/FFGLFBO.cpp; sourceTree = SOURCE_ROOT; tabWidth = 2; usesTabs = 0; };
+		2DA284040AE9EA770030A4DD /* FFGLExtensions.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; indentWidth = 2; name = FFGLExtensions.cpp; path = ../../../Source/Common/FFGLExtensions.cpp; sourceTree = SOURCE_ROOT; tabWidth = 2; usesTabs = 0; };
+		2DA2840D0AE9EAA70030A4DD /* FFGLHost-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "FFGLHost-Info.plist"; sourceTree = "<group>"; };
+		2DA284F30AEA03FA0030A4DD /* OSXMain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.cpp; name = OSXMain.cpp; path = ../../../Source/FFGLHost/OSX/OSXMain.cpp; sourceTree = SOURCE_ROOT; tabWidth = 2; usesTabs = 0; };
+		2DA286010AEE63D00030A4DD /* FFGLHost */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FFGLHost; sourceTree = BUILT_PRODUCTS_DIR; };
+		2DA286D60AEEA3A80030A4DD /* FFGLPluginInstance.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.cpp; name = FFGLPluginInstance.cpp; path = ../../../Source/FFGLHost/FFGLPluginInstance.cpp; sourceTree = SOURCE_ROOT; tabWidth = 2; usesTabs = 0; };
+		2DA287260AEEA5D90030A4DD /* OSXPluginInstance.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.cpp; name = OSXPluginInstance.cpp; path = ../../../Source/FFGLHost/OSX/OSXPluginInstance.cpp; sourceTree = SOURCE_ROOT; tabWidth = 2; usesTabs = 0; };
+		2DA287290AEEA6050030A4DD /* OSXDebugMessage.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; indentWidth = 2; name = OSXDebugMessage.cpp; path = ../../../Source/FFGLHost/OSX/OSXDebugMessage.cpp; sourceTree = SOURCE_ROOT; tabWidth = 2; usesTabs = 0; };
+		2DA287310AEEA6C70030A4DD /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = /System/Library/Frameworks/GLUT.framework; sourceTree = "<absolute>"; };
+		2DA287350AEEA6D90030A4DD /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
+		2DA287660AEEA9C60030A4DD /* OSXTimer.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; indentWidth = 2; name = OSXTimer.cpp; path = ../../../Source/FFGLHost/OSX/OSXTimer.cpp; sourceTree = SOURCE_ROOT; tabWidth = 2; usesTabs = 0; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2DA285FF0AEE63D00030A4DD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2DA287320AEEA6C70030A4DD /* GLUT.framework in Frameworks */,
+				2DA287360AEEA6D90030A4DD /* OpenGL.framework in Frameworks */,
+				2D4F185E0D70A4B900D929D8 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2DA283F40AE9EA060030A4DD = {
+			isa = PBXGroup;
+			children = (
+				2D4F185D0D70A4B900D929D8 /* Foundation.framework */,
+				2DA287660AEEA9C60030A4DD /* OSXTimer.cpp */,
+				2DA287350AEEA6D90030A4DD /* OpenGL.framework */,
+				2DA287310AEEA6C70030A4DD /* GLUT.framework */,
+				2DA287260AEEA5D90030A4DD /* OSXPluginInstance.cpp */,
+				2DA286D60AEEA3A80030A4DD /* FFGLPluginInstance.cpp */,
+				2DA284F30AEA03FA0030A4DD /* OSXMain.cpp */,
+				2DA284030AE9EA770030A4DD /* FFGLFBO.cpp */,
+				2DA284040AE9EA770030A4DD /* FFGLExtensions.cpp */,
+				2DA2840B0AE9EAA70030A4DD /* Products */,
+				2DA2840D0AE9EAA70030A4DD /* FFGLHost-Info.plist */,
+				2DA287290AEEA6050030A4DD /* OSXDebugMessage.cpp */,
+			);
+			sourceTree = "<group>";
+		};
+		2DA2840B0AE9EAA70030A4DD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2DA286010AEE63D00030A4DD /* FFGLHost */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2DA286000AEE63D00030A4DD /* FFGLHost */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2DA286030AEE63EF0030A4DD /* Build configuration list for PBXNativeTarget "FFGLHost" */;
+			buildPhases = (
+				2DA285FE0AEE63D00030A4DD /* Sources */,
+				2DA285FF0AEE63D00030A4DD /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FFGLHost;
+			productName = FFGLHost;
+			productReference = 2DA286010AEE63D00030A4DD /* FFGLHost */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2DA283F60AE9EA060030A4DD /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 2DA283F70AE9EA060030A4DD /* Build configuration list for PBXProject "FFGLHost" */;
+			compatibilityVersion = "Xcode 2.4";
+			hasScannedForEncodings = 0;
+			mainGroup = 2DA283F40AE9EA060030A4DD;
+			productRefGroup = 2DA2840B0AE9EAA70030A4DD /* Products */;
+			projectDirPath = "";
+			projectRoot = ../../..;
+			targets = (
+				2DA286000AEE63D00030A4DD /* FFGLHost */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2DA285FE0AEE63D00030A4DD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2DA286070AEE64020030A4DD /* FFGLFBO.cpp in Sources */,
+				2DA286080AEE64030030A4DD /* FFGLExtensions.cpp in Sources */,
+				2DA286090AEE64030030A4DD /* OSXMain.cpp in Sources */,
+				2DA286D70AEEA3A80030A4DD /* FFGLPluginInstance.cpp in Sources */,
+				2DA287270AEEA5D90030A4DD /* OSXPluginInstance.cpp in Sources */,
+				2DA2872A0AEEA6050030A4DD /* OSXDebugMessage.cpp in Sources */,
+				2DA287670AEEA9C60030A4DD /* OSXTimer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		2DA283F80AE9EA060030A4DD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					i386,
+					ppc,
+				);
+				COPY_PHASE_STRIP = NO;
+				GCC_MODEL_TUNING = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Debug;
+		};
+		2DA283F90AE9EA060030A4DD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					i386,
+					ppc,
+				);
+				COPY_PHASE_STRIP = YES;
+				GCC_MODEL_TUNING = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Release;
+		};
+		2DA286040AEE63EF0030A4DD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = ../../../Binaries/OSX;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"TARGET_OS_MAC=1",
+					"_DEBUG=1",
+				);
+				HEADER_SEARCH_PATHS = ../../../Include;
+				INSTALL_PATH = "$(HOME)/bin";
+				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
+				PREBINDING = NO;
+				PRODUCT_NAME = FFGLHost_debug;
+				ZERO_LINK = NO;
+			};
+			name = Debug;
+		};
+		2DA286050AEE63EF0030A4DD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = ../../../Binaries/OSX;
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = "TARGET_OS_MAC=1";
+				HEADER_SEARCH_PATHS = ../../../Include;
+				INSTALL_PATH = "$(HOME)/bin";
+				MACH_O_TYPE = mh_execute;
+				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
+				PREBINDING = NO;
+				PRODUCT_NAME = FFGLHost;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2DA283F70AE9EA060030A4DD /* Build configuration list for PBXProject "FFGLHost" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2DA283F80AE9EA060030A4DD /* Debug */,
+				2DA283F90AE9EA060030A4DD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2DA286030AEE63EF0030A4DD /* Build configuration list for PBXNativeTarget "FFGLHost" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2DA286040AEE63EF0030A4DD /* Debug */,
+				2DA286050AEE63EF0030A4DD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2DA283F60AE9EA060030A4DD /* Project object */;
+}

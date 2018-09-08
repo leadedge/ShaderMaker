@@ -30,12 +30,16 @@
   - [001 God Rays](#001-god-rays)
     - [Parameters](#parameters-7)
     - [Status](#status-7)
+  - [003 Tilt Shift](#003-tilt-shift)
+    - [Parameters](#parameters-8)
+    - [Status](#status-8)
 - [Shadertoy Conversions](#shadertoy-conversions)
   - [001 Kali Sea Creature](#001-kali-sea-creature)
-    - [Parameters](#parameters-8)
-  - [001 Kali Sea Creature Extended](#001-kali-sea-creature-extended)
     - [Parameters](#parameters-9)
-    - [Status](#status-8)
+    - [Status](#status-9)
+  - [001 Kali Sea Creature Extended](#001-kali-sea-creature-extended)
+    - [Parameters](#parameters-10)
+    - [Status](#status-10)
 
 <!-- TOC END -->
 

@@ -226,7 +226,7 @@ const int Iterations = 25;
 const float detail = .025;
 const vec3 lightdir = -vec3(0., 1., 0.);
  
-float Scales[3] = float[3](inputVector1.x*2.0 -2.0, inputVector1.x*2.0 - 2.0, inputVector1.x*2.0 -2.0);
+float Scales[3] = float[3](inputVector1.x*4.0 -2.0, inputVector1.x*4.0 - 2.0, inputVector1.x*4.0 -2.0);
 
 
 

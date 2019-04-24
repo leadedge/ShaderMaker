@@ -309,9 +309,18 @@ vec3 color(vec3 p) {
 	float ot = 9999.;
 	for (int i = 0; i < Iterations; i++) {
 		p.xy = abs(p.xy);
-		p = p*Scales[i%3] + Julias[i % 3]; 
-
-		p *= rots[i % 3];  
+		if (i % 3 == 0) {
+			p = p * Scales[0] + Julias[0];
+			p *= rots[0];
+		}
+		else if (i % 3 == 1) {
+			p = p * Scales[1] + Julias[1];
+			p *= rots[1];
+		}
+		else {
+			p = p * Scales[2] + Julias[2];
+			p *= rots[2];
+		}
 
 		l = length(p.x);
 		ot = min(l, ot);
@@ -341,7 +350,7 @@ vec3 raymarch(in vec3 from, in vec3 dir, vec2 fragCoord)
 	float  totdist = 0; 
 	vec3 p; 
 	for (int i = 0; i<70; i++) {
-		if (d>detail && totdist<50.)
+		if (d>detail && totdist<150.)
 		{
 			p = from + totdist*dir;
 			d = de(p);
@@ -355,6 +364,7 @@ vec3 raymarch(in vec3 from, in vec3 dir, vec2 fragCoord)
 	}
 	else {
 		col = vec3(0.0,0.0,0.0);
+		col = dir;
 	}
 	// col = mix(col, vec3(backg), 1.0 - exp(-.002*totdist*totdist));
 	return col; // +k*.002;
@@ -362,6 +372,7 @@ vec3 raymarch(in vec3 from, in vec3 dir, vec2 fragCoord)
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {
+	
 	float t =1.0;
 	vec2 uv = -1.0*(fragCoord.xy / iResolution.xy*2. - 1.); 
 	uv.y *= iResolution.y / iResolution.x;
@@ -380,19 +391,29 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 
 
 float de(vec3 p) {
+	float Scale = 1.25;
 	p = objectScale* (p + objectTranslate)* objectRotation;
 		 
 	vec3 pp = p;
 	float l;
 	for (int i = 0; i<Iterations; i++) {
 		p.xy = abs(p.xy);
-		p = p*Scales[i % 3] + Julias[i%3];
+		if (i % 3 == 0) {
+			p = p * Scales[0] + Julias[0];
+			p *= rots[0];
+		}
+		else if (i % 3 == 1) {
+			p = p * Scales[1] + Julias[1];
+			p *= rots[1];
+		}
+		else  {
+			p = p * Scales[2] + Julias[2];
+			p *= rots[2];
+		}
 
-
-		p *= rots[i%3];
 	}
 		l = length(p);
-	return l*pow(Scales[(Iterations-1) % 3], -float(Iterations)) - .1;
+	return l*pow(Scale , -float(Iterations)) - .1;
 }
 
 
@@ -403,7 +424,7 @@ float de(vec3 p) {
 );
 
 
-#define DEBUG_
+#define DEBUG
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //  Constructor and destructor

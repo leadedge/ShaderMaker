@@ -143,7 +143,7 @@ static CFFGLPluginInfo PluginInfo (
 	1,						   			// API major version number 													
 	006,								// API minor version number	
 	1,									// *** Plugin major version number
-	001,								// *** Plugin minor version number
+	002,								// *** Plugin minor version number
 	// FF_EFFECT,							// Plugin type can always be an effect
 	FF_SOURCE,						// or change this to FF_SOURCE for shaders that do not use a texture
 	"SoM Kali Living Creature Extended", // *** Plugin description - you can expand on this
@@ -226,7 +226,7 @@ const int Iterations = 25;
 const float detail = .025;
 const vec3 lightdir = -vec3(0., 1., 0.);
  
-float Scales[3] = float[3](inputVector1.x*4.0 - 2.0, inputVector1.x*4.0 - 2.0, inputVector1.x*4.0 -2.0);
+float Scales[3] = float[3](inputVector1.x*2.0 -2.0, inputVector1.x*2.0 - 2.0, inputVector1.x*2.0 -2.0);
 
 
 
@@ -364,7 +364,7 @@ vec3 raymarch(in vec3 from, in vec3 dir, vec2 fragCoord)
 	}
 	else {
 		col = vec3(0.0,0.0,0.0);
-		col = dir;
+		// col = dir;
 	}
 	// col = mix(col, vec3(backg), 1.0 - exp(-.002*totdist*totdist));
 	return col; // +k*.002;

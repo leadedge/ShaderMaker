@@ -223,10 +223,11 @@ mat3  rotationMatrix3(vec3 v, float angleDegree)
 // util library end
 
 const int Iterations = 25; 
-const float detail = .025;
+const float detail = .02;
 const vec3 lightdir = -vec3(0., 1., 0.);
   
 float Scale  =   inputVector1.x*2.0 -2.0 ;
+
 
 
 
@@ -237,7 +238,7 @@ mat3 objectRotation =rotationMatrix3(vec3(0.0, 1.0, 0.0), inputVector5.z*360 - 1
 
 
 
-vec3 Julias[3] = vec3[3](inputVector2.xyz*6.0 - 3.0, inputVector3.xyz*6.0 - 3.0, inputVector4.xyz*6.0-3.0);
+vec3 Julias[3] = vec3[3](inputVector2.xyz*3.0 , inputVector3.xyz*3.0, inputVector4.xyz*3.0);
 float RotAngles[3] = float [3](inputVector2.w*360.0, inputVector3.w*360.0, inputVector4.w*360.0);
 
 
@@ -337,7 +338,7 @@ vec3 light(in vec3 p, in vec3 dir) {
 	vec3 r = reflect(ldir, n);
 	float spec = max(0., dot(dir, -r));
 	vec3 colo = color(p);
-	return (diff*sh + .15*max(0., dot(normalize(dir), -n))*calcAO(p, n))*colo + pow(spec, 30.)*.5*sh;
+	return (diff*sh + .15*max(0., dot(normalize(dir), -n))*calcAO(p, n))*colo + pow(spec, 30.)*.75*sh;
 }
 
  
@@ -352,15 +353,15 @@ vec3 raymarch(in vec3 from, in vec3 dir, vec2 fragCoord)
 	for (int i = 0; i<70; i++) {
 		if (d>detail && totdist<150.)
 		{
-			p = from + totdist*dir;
+			p = from + totdist*dir ;
 			d = de(p);
-			totdist += d;
+			totdist += d *0.9;
 		}
 		 
 	}
 	// vec3 backg = vec3(.4, .5, .55)*(1. + fragCoord.y / iResolution.y*1.5);
 	if (d<detail) {
-		col = light(p - detail*dir, dir);
+		col = light(p - detail*dir, dir)+0.1;
 	}
 	else {
 		col = vec3(0.0,0.0,0.0);
@@ -391,8 +392,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 
 
 float de(vec3 p) { 
-	p = objectScale* (p + objectTranslate)* objectRotation;
-	vec3 pp = p;
+	p = objectScale* (p + objectTranslate)* objectRotation; 
 	float l;
 	for (int i = 0; i<Iterations; i++) {
 		p.xy = abs(p.xy);
@@ -411,8 +411,8 @@ float de(vec3 p) {
 		}
 
 	}
-		l = length(p); 
-	return l*pow(-Scale, -float(Iterations)) - .1;
+	l = length(p); 
+	return l*pow(-Scale, -float(Iterations));
 }
 
 

@@ -143,7 +143,7 @@ static CFFGLPluginInfo PluginInfo (
 	1,						   			// API major version number 													
 	006,								// API minor version number	
 	1,									// *** Plugin major version number
-	001,								// *** Plugin minor version number
+	002,								// *** Plugin minor version number
 	// FF_EFFECT,							// Plugin type can always be an effect
 	FF_SOURCE,						// or change this to FF_SOURCE for shaders that do not use a texture
 	"SoM Kali Living Creature Extended", // *** Plugin description - you can expand on this
@@ -225,8 +225,8 @@ mat3  rotationMatrix3(vec3 v, float angleDegree)
 const int Iterations = 25; 
 const float detail = .025;
 const vec3 lightdir = -vec3(0., 1., 0.);
- 
-float Scales[3] = float[3](inputVector1.x*4.0 - 2.0, inputVector1.x*4.0 - 2.0, inputVector1.x*4.0 -2.0);
+  
+float Scale  =   inputVector1.x*2.0 -2.0 ;
 
 
 
@@ -309,9 +309,18 @@ vec3 color(vec3 p) {
 	float ot = 9999.;
 	for (int i = 0; i < Iterations; i++) {
 		p.xy = abs(p.xy);
-		p = p*Scales[i%3] + Julias[i % 3]; 
-
-		p *= rots[i % 3];  
+		if (i % 3 == 0) {
+			p = p * Scale + Julias[0];
+			p *= rots[0];
+		}
+		else if (i % 3 == 1) {
+			p = p * Scale  + Julias[1];
+			p *= rots[1];
+		}
+		else {
+			p = p * Scale  + Julias[2];
+			p *= rots[2];
+		}
 
 		l = length(p.x);
 		ot = min(l, ot);
@@ -341,7 +350,7 @@ vec3 raymarch(in vec3 from, in vec3 dir, vec2 fragCoord)
 	float  totdist = 0; 
 	vec3 p; 
 	for (int i = 0; i<70; i++) {
-		if (d>detail && totdist<50.)
+		if (d>detail && totdist<150.)
 		{
 			p = from + totdist*dir;
 			d = de(p);
@@ -355,6 +364,7 @@ vec3 raymarch(in vec3 from, in vec3 dir, vec2 fragCoord)
 	}
 	else {
 		col = vec3(0.0,0.0,0.0);
+		// col = dir;
 	}
 	// col = mix(col, vec3(backg), 1.0 - exp(-.002*totdist*totdist));
 	return col; // +k*.002;
@@ -362,6 +372,7 @@ vec3 raymarch(in vec3 from, in vec3 dir, vec2 fragCoord)
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {
+	
 	float t =1.0;
 	vec2 uv = -1.0*(fragCoord.xy / iResolution.xy*2. - 1.); 
 	uv.y *= iResolution.y / iResolution.x;
@@ -379,20 +390,29 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 
 
 
-float de(vec3 p) {
+float de(vec3 p) { 
 	p = objectScale* (p + objectTranslate)* objectRotation;
-		 
 	vec3 pp = p;
 	float l;
 	for (int i = 0; i<Iterations; i++) {
 		p.xy = abs(p.xy);
-		p = p*Scales[i % 3] + Julias[i%3];
+		if (i % 3 == 0) {
+			p = p * Scale + Julias[0];
+			p *= rots[0];
+		}
+		else if (i % 3 == 1) {
+			p = p * Scale + Julias[1];
+			p *= rots[1];
 
+		}
+		else  { 
+			p = p * Scale + Julias[2];
+			p *= rots[2];
+		}
 
-		p *= rots[i%3];
 	}
-		l = length(p);
-	return l*pow(Scales[(Iterations-1) % 3], -float(Iterations)) - .1;
+		l = length(p); 
+	return l*pow(-Scale, -float(Iterations)) - .1;
 }
 
 
@@ -441,7 +461,7 @@ ShaderMaker::ShaderMaker() :CFreeFrameGLPlugin()
 
 
 
-	SetParamInfo(FFPARAM_VECTOR1_X, "kaliScale", FF_TYPE_STANDARD, 0.2f);
+	SetParamInfo(FFPARAM_VECTOR1_X, "kaliScale", FF_TYPE_STANDARD, 0.4f);
 	SetParamInfo(FFPARAM_VECTOR1_Y, "Object X", FF_TYPE_STANDARD, 0.5f);
 	SetParamInfo(FFPARAM_VECTOR1_Z, "Object Y", FF_TYPE_STANDARD, 0.5f);
 	SetParamInfo(FFPARAM_VECTOR1_W, "Object Z", FF_TYPE_STANDARD, 0.5f);

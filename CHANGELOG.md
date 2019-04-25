@@ -2,6 +2,13 @@
  
  # 2018 +
  
+2.0.1 - [2019-04-25] 
+
+- NVIDIA Fix - most recent nvidia cards do not allow dynamic array access, falling back to
+   expanded style, shouldnt be too much of an calculation impact, due to most global initialisers
+   work, just an if/else branching inside loop
+  [001 Kali Sea Creature Extended](#001-kali-sea-creature-extended)  
+
 2.0.0 - [2018-09-8] 
 
 this 2.0 release is a rework and update for 64bit resolume, all plugins are available as 32 and 64 bit versions. Only Windows

@@ -2,6 +2,13 @@
  
  # 2018 +
  
+2.1.0 - [2019-04-25]
+
+- fine tune kali xt parameters:
+   - scale is only negative
+   - julia is only positive
+   - lighting and distance estimation adjustments
+ 
 2.0.1 - [2019-04-25] 
 
 - NVIDIA Fix - most recent nvidia cards do not allow dynamic array access, falling back to

@@ -2,7 +2,7 @@
  
  # 2018 +
  
-2.1.0 - [2019-06-16]
+2.2.0 - [2019-06-16]
 	
 	- default kali xt parameters to 0 angle for having a clean square starter
 	- kali xt transformation adjustment

@@ -223,7 +223,7 @@ mat3  rotationMatrix3(vec3 v, float angleDegree)
 // util library end
 
 const int Iterations = 25; 
-const float detail = .02;
+const float detail = .01;
 const vec3 lightdir = -vec3(0., 1., 0.);
   
 float Scale  =   inputVector1.x*2.0 -2.0 ;
@@ -343,9 +343,9 @@ vec3 light(in vec3 p, in vec3 dir) {
 
  
 
-vec3 raymarch(in vec3 from, in vec3 dir, vec2 fragCoord)
+vec4 raymarch(in vec3 from, in vec3 dir, vec2 fragCoord)
 {
-	vec3 col = vec3(0.);
+	vec4 col = vec4(0.);
 	float st =  0.0;
 	float d = 1.0;
 	float  totdist = 0; 
@@ -355,16 +355,16 @@ vec3 raymarch(in vec3 from, in vec3 dir, vec2 fragCoord)
 		{
 			p = from + totdist*dir ;
 			d = de(p);
-			totdist += d *0.9;
+			totdist += d ;
 		}
 		 
 	}
 	// vec3 backg = vec3(.4, .5, .55)*(1. + fragCoord.y / iResolution.y*1.5);
 	if (d<detail) {
-		col = light(p - detail*dir, dir)+0.1;
+		col = vec4(light(p - detail*dir, dir)+0.1,1.0);
 	}
 	else {
-		col = vec3(0.0,0.0,0.0);
+		col = vec4(0.0,0.0,0.0,0.0);
 		// col = dir;
 	}
 	// col = mix(col, vec3(backg), 1.0 - exp(-.002*totdist*totdist));
@@ -382,9 +382,9 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 	rot = mat2(cos(-.5), sin(-.5), -sin(-.5), cos(-.5));
 	dir.yz = dir.yz*rot;
 	from.yz = from.yz*rot; 
-	vec3 col = raymarch(from, dir, fragCoord);
-	col *= max(0., .1 - length(uv*.05)) / .1;
-	fragColor = vec4(col, 1.);
+	vec4 col = raymarch(from, dir, fragCoord);
+	col.xyz *= max(0., .1 - length(uv*.05)) / .1;
+	fragColor = col ;
 
 }
  
@@ -461,7 +461,7 @@ ShaderMaker::ShaderMaker() :CFreeFrameGLPlugin()
 
 
 
-	SetParamInfo(FFPARAM_VECTOR1_X, "kaliScale", FF_TYPE_STANDARD, 0.4f);
+	SetParamInfo(FFPARAM_VECTOR1_X, "kaliScale", FF_TYPE_STANDARD, 0.2f);
 	SetParamInfo(FFPARAM_VECTOR1_Y, "Object X", FF_TYPE_STANDARD, 0.5f);
 	SetParamInfo(FFPARAM_VECTOR1_Z, "Object Y", FF_TYPE_STANDARD, 0.5f);
 	SetParamInfo(FFPARAM_VECTOR1_W, "Object Z", FF_TYPE_STANDARD, 0.5f);

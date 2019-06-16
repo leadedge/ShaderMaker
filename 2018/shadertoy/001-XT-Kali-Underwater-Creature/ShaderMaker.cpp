@@ -141,9 +141,9 @@ static CFFGLPluginInfo PluginInfo (
 	"SX01",								// *** Plugin unique ID (4 chars) - this must be unique for each plugin
 	"SoM ST Living XT",						// *** Plugin name - make it different for each plugin 
 	1,						   			// API major version number 													
-	006,								// API minor version number	
+	00,								// API minor version number	
 	1,									// *** Plugin major version number
-	002,								// *** Plugin minor version number
+	003,								// *** Plugin minor version number
 	// FF_EFFECT,							// Plugin type can always be an effect
 	FF_SOURCE,						// or change this to FF_SOURCE for shaders that do not use a texture
 	"SoM Kali Living Creature Extended", // *** Plugin description - you can expand on this

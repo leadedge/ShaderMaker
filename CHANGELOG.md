@@ -2,6 +2,12 @@
  
  # 2018 +
  
+2.1.0 - [2019-06-16]
+	
+	- default kali xt parameters to 0 angle for having a clean square starter
+	- kali xt transformation adjustment
+	- kali xt alpha channel is used for background
+
 2.1.0 - [2019-04-25]
 
 - fine tune kali xt parameters:

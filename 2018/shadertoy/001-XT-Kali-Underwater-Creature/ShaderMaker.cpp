@@ -303,8 +303,8 @@ mat3 rots[3] = mat3[3](
 	rotationMatrix3(normalize(RotVectors[1]  ), RotAngles[1] ),
 	rotationMatrix3(normalize(RotVectors[2]  ), RotAngles[2] ));
 
-vec3 color(vec3 p) { 
-	p = objectScale* (p + objectTranslate)* objectRotation;
+vec3 color(vec3 p) {   
+	p = (objectScale * p) * objectRotation + objectTranslate;
 	vec3 pp = p;
 	float l;
 	float ot = 9999.;
@@ -360,7 +360,7 @@ vec4 raymarch(in vec3 from, in vec3 dir, vec2 fragCoord)
 		 
 	}
 	// vec3 backg = vec3(.4, .5, .55)*(1. + fragCoord.y / iResolution.y*1.5);
-	if (d<detail) {
+	if (d<=detail) {
 		col = vec4(light(p - detail*dir, dir)+0.1,1.0);
 	}
 	else {
@@ -389,10 +389,9 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 }
  
 
-
-
 float de(vec3 p) { 
-	p = objectScale* (p + objectTranslate)* objectRotation; 
+
+	p = (objectScale * p)  * objectRotation + objectTranslate;
 	float l;
 	for (int i = 0; i<Iterations; i++) {
 		p.xy = abs(p.xy);
@@ -412,7 +411,7 @@ float de(vec3 p) {
 
 	}
 	l = length(p); 
-	return l*pow(-Scale, -float(Iterations));
+	return l*pow(-Scale, -float(Iterations))-0.01;
 }
 
 
@@ -461,7 +460,7 @@ ShaderMaker::ShaderMaker() :CFreeFrameGLPlugin()
 
 
 
-	SetParamInfo(FFPARAM_VECTOR1_X, "kaliScale", FF_TYPE_STANDARD, 0.2f);
+	SetParamInfo(FFPARAM_VECTOR1_X, "kaliScale", FF_TYPE_STANDARD, 0.35f);
 	SetParamInfo(FFPARAM_VECTOR1_Y, "Object X", FF_TYPE_STANDARD, 0.5f);
 	SetParamInfo(FFPARAM_VECTOR1_Z, "Object Y", FF_TYPE_STANDARD, 0.5f);
 	SetParamInfo(FFPARAM_VECTOR1_W, "Object Z", FF_TYPE_STANDARD, 0.5f);
@@ -475,7 +474,7 @@ ShaderMaker::ShaderMaker() :CFreeFrameGLPlugin()
 	SetParamInfo(FFPARAM_VECTOR2_X, "Julia1 X", FF_TYPE_STANDARD, 0.3f);
 	SetParamInfo(FFPARAM_VECTOR2_Y, "Julia1 Y", FF_TYPE_STANDARD, 0.3f);
 	SetParamInfo(FFPARAM_VECTOR2_Z, "Julia1 Z", FF_TYPE_STANDARD, 0.3f);
-	SetParamInfo(FFPARAM_VECTOR2_W, "Angle 1", FF_TYPE_STANDARD, 0.86f);
+	SetParamInfo(FFPARAM_VECTOR2_W, "Angle 1", FF_TYPE_STANDARD, 0.0f);
 
 	SetParamInfo(FFPARAM_VECTOR6_X, "Azimut 1", FF_TYPE_STANDARD, 0.1f);
 	SetParamInfo(FFPARAM_VECTOR6_Y, "Latitude 1", FF_TYPE_STANDARD, 0.1f);
@@ -484,13 +483,13 @@ ShaderMaker::ShaderMaker() :CFreeFrameGLPlugin()
 	SetParamInfo(FFPARAM_VECTOR3_X, "Julia2 X", FF_TYPE_STANDARD, 0.3f);
 	SetParamInfo(FFPARAM_VECTOR3_Y, "Julia2 Y", FF_TYPE_STANDARD, 0.3f); 
 	SetParamInfo(FFPARAM_VECTOR3_Z, "Julia2 Z", FF_TYPE_STANDARD, 0.3f);
-	SetParamInfo(FFPARAM_VECTOR3_W, "Angle 2", FF_TYPE_STANDARD, 0.3f);
+	SetParamInfo(FFPARAM_VECTOR3_W, "Angle 2", FF_TYPE_STANDARD, 0.0f);
 
 
 	SetParamInfo(FFPARAM_VECTOR4_X, "Julia 3 X", FF_TYPE_STANDARD, 0.3f);
 	SetParamInfo(FFPARAM_VECTOR4_Y, "Julia 3 Y", FF_TYPE_STANDARD, 0.3f);
 	SetParamInfo(FFPARAM_VECTOR4_Z, "Julia 3 Z", FF_TYPE_STANDARD, 0.3f);
-	SetParamInfo(FFPARAM_VECTOR4_W, "Angle 3", FF_TYPE_STANDARD, 0.26f);
+	SetParamInfo(FFPARAM_VECTOR4_W, "Angle 3", FF_TYPE_STANDARD, 0.0f);
 
 
 	//SetParamInfo(FFPARAM_VECTOR5_W, "-------------", FF_TYPE_STANDARD, 0.5f);
@@ -499,7 +498,7 @@ ShaderMaker::ShaderMaker() :CFreeFrameGLPlugin()
 	SetParamInfo(FFPARAM_VECTOR6_Z, "Azimut 2", FF_TYPE_STANDARD, 0.2f);
 	SetParamInfo(FFPARAM_VECTOR6_W, "Latitude 2", FF_TYPE_STANDARD, 0.2f);
 
-	SetParamInfo(FFPARAM_VECTOR7_X, "Azimut 3", FF_TYPE_STANDARD, 0.86f);
+	SetParamInfo(FFPARAM_VECTOR7_X, "Azimut 3", FF_TYPE_STANDARD, 0.4f);
 	SetParamInfo(FFPARAM_VECTOR7_Y, "Latitude 3", FF_TYPE_STANDARD, 0.4f);
 	//SetParamInfo(FFPARAM_VECTOR7_Z, "------------ 7 Z", FF_TYPE_STANDARD, 0.5f);
 	//SetParamInfo(FFPARAM_VECTOR7_W, "------------ 7", FF_TYPE_STANDARD, 0.5f);

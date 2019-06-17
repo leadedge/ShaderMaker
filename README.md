@@ -31,4 +31,4 @@ This shall be a physical space with musical resting and dancing opportunities - 
 The concept shall barry itself, selling drinks, food (broccoli) and merchandise should produce the income needed to supply the above
 mentioned spaces around the world spreading knowledge and letting most of the money create either other spaces or sense full contributions to the development of the world - where not only art and free minded spaces carry on but following mostly the golden rule to participate in any outcomings ... 
  
-show your affection on [i-love-chaos](http://ilc.fractalforums.com) 
+show your affection on [i-love-chaos](https://i-love-chaos.org) 

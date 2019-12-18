@@ -5,8 +5,7 @@ During compilation, shader and image files are loaded into into resources and sa
 ## How to install and build
 1) Download a zip file of this master branch or from the latest release
 2) Unzip it somewhere
-3) Download the Resolume FFGL 2.1 repository zip file from the ffgl2.1 branch
-https://github.com/resolume/ffgl/tree/ffgl2.1
+3) Download the Resolume FFGL 2.1 repository zip file from the ffgl2.1 branch which is the most recent released version of the sdk - https://github.com/resolume/ffgl/tree/ffgl2.1
 4) Unzip it somewhere
 5) Copy the folder SHADERMAKER4\source\plugins\ShaderMaker4 to the "..\source\plugins\" folder.
 6) Copy the two files in SHADERMAKER4\build\windows to the "..\build\windows" folder

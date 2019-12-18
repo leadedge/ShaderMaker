@@ -7,6 +7,11 @@
 //
 //		Revisions :
 //		18.12.19	Version 1.000
+//					Work on multiple scoped bindings in ProcessOpenGL.
+//					Change all "\\" to "/" for file paths in shaderfiles.h.
+//					Change version number to avoid duplications	with 
+//					previous versions of ShaderMaker.
+//					Version 2.000
 //
 //		------------------------------------------------------------
 //
@@ -60,7 +65,7 @@ static CFFGLPluginInfo PluginInfo(
 	"ShaderMaker4",                // Plugin name - change this as required
 	2,                             // API major version number
 	1,                             // API minor version number
-	1,                             // Plugin major version number
+	2,                             // Plugin major version number
 	000,                           // Plugin minor version number
 #ifdef EFFECT_PLUGIN
 	FF_EFFECT,                     // Plugin is an effect
@@ -70,7 +75,7 @@ static CFFGLPluginInfo PluginInfo(
 	// Plugin description - add your own details
 	"FFGL 2.1 plugin built using ShaderMaker4\n(C) 2019 Lynn Jarvis (http://spout.zeal.co/)",
 	// Include a link and credit to the shader authors where possible
-	"ShaderMaker4"
+	"ShaderMaker4 Version 2.000"
 );
 
 
@@ -119,13 +124,11 @@ void main()
 ShaderMaker4::ShaderMaker4()
 {
 
-	/*
 	// Console window if you need it so that printf works
 	FILE* pCout;
 	AllocConsole();
 	freopen_s(&pCout, "CONOUT$", "w", stdout);
 	printf("ShaderMaker4\n");
-	*/
 
 	// Input properties allow for up to two textures for an effect
 	// For Resolume only one of these is used unless the plugin is a mix plugin
@@ -370,7 +373,7 @@ FFResult ShaderMaker4::ProcessOpenGL( ProcessOpenGLStruct* pGL )
 
 	// FFGL requires us to leave the context in a default state on return, 
 	// so use this scoped binding to help us do that.
-	ScopedShaderBinding shaderBinding(m_shader.GetGLID());
+	ScopedShaderBinding shaderBinding0(m_shader.GetGLID());
 
 	// Set viewport size for the vertex shader
 	m_shader.Set("size", m_vpWidth, m_vpHeight); // for fragCoord
@@ -424,9 +427,36 @@ FFResult ShaderMaker4::ProcessOpenGL( ProcessOpenGLStruct* pGL )
 	}
 
 	// Bind textures if images have been loaded.
-	// Effects do not load image0 which is reserved for the host.
-	// If one is defined, the texture will not be used.
-	BindTextures();
+	// Effects do not load image0 which is reserved for the host
+	// but, if one is defined, the texture will not be used.
+
+	// For scoped binding, the texture bindings are released after ProcessOpenGL
+	// returns. The binding must not be done within a block { } or the scope is
+	// ended after the block and the bindings are lost.
+	// Default value for all texture IDs is 0.
+
+	ScopedSamplerActivation activateSampler0(0);
+	Scoped2DTextureBinding textureBinding0(m_glTexture0);
+	ScopedSamplerActivation activateSampler1(1);
+	Scoped2DTextureBinding textureBinding1(m_glTexture1);
+	ScopedSamplerActivation activateSampler2(2);
+	Scoped2DTextureBinding textureBinding2(m_glTexture2);
+	ScopedSamplerActivation activateSampler3(3);
+	Scoped2DTextureBinding textureBinding3(m_glTexture3);
+
+	// Tell the shader the name of the textures
+	if (bGlslSandbox) {
+		m_shader.Set("tex0", 0);
+		m_shader.Set("tex1", 1);
+		m_shader.Set("tex2", 2);
+		m_shader.Set("tex3", 3);
+	}
+	else {
+		m_shader.Set("iChannel0", 0);
+		m_shader.Set("iChannel1", 1);
+		m_shader.Set("iChannel2", 2);
+		m_shader.Set("iChannel3", 3);
+	}
 
 	//
 	// Effect
@@ -442,12 +472,6 @@ FFResult ShaderMaker4::ProcessOpenGL( ProcessOpenGLStruct* pGL )
 	// Bind the host texture
 	Scoped2DTextureBinding textureBinding(pGL->inputTextures[0]->Handle);
 
-	// Tell the shader the name of the texture
-	if (bGlslSandbox)
-		m_shader.Set("tex0", 0);
-	else
-		m_shader.Set("iChannel0", 0);
-	
 	// The input texture's dimension might change each frame and so might the content area.
 	// We're adopting the texture's maxUV using a uniform because that way we dont have to
 	// update our vertex buffer each frame.
@@ -455,6 +479,8 @@ FFResult ShaderMaker4::ProcessOpenGL( ProcessOpenGLStruct* pGL )
 	m_shader.Set("MaxUV", maxCoords.s, maxCoords.t);
 
 	m_quad.Draw();
+
+	// Done with the scoped binding of the host texture
 
 #else
 
@@ -472,13 +498,14 @@ FFResult ShaderMaker4::ProcessOpenGL( ProcessOpenGLStruct* pGL )
 
 		glViewport(0, 0, (GLsizei)vpWidth, (GLsizei)vpHeight);
 
-		// Render to the scaled texture (m_glTexture) via fbo
+		// We already have the fbo passed in, so we just use OpenGL methods.
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_fbo);
 		glClearColor(0.f, 0.f, 0.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glFramebufferTexture2DEXT(GL_READ_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_glTexture, 0);
 		ScopedSamplerActivation activateSampler(4); // Unused texture unit
 		Scoped2DTextureBinding textureBinding(m_glTexture);
+		// Done with these scoped bindings
 	}
 
 	// All done so draw
@@ -496,19 +523,19 @@ FFResult ShaderMaker4::ProcessOpenGL( ProcessOpenGLStruct* pGL )
 		glViewport(0, 0, (GLsizei)m_vpWidth, (GLsizei)m_vpHeight);
 
 		// Draw the texture
-		ScopedShaderBinding shaderBinding(m_drawShader.GetGLID());
+		ScopedShaderBinding shaderBinding1(m_drawShader.GetGLID());
 		ScopedSamplerActivation activateSampler(4);
 		Scoped2DTextureBinding textureBinding(m_glTexture);
 		m_drawShader.Set("inputTexture", 4);
 		m_drawShader.Set("size", m_vpWidth, m_vpHeight);
 		m_drawShader.Set("MaxUV", 1.0, 1.0);
 		m_quad.Draw();
+		// Done with these scoped bindings
 	}
 
 #endif
 
-	// All finished with the image textures
-	UnbindTextures();
+	// Done with all scoped bindings
 
 	return FF_SUCCESS;
 }
@@ -521,77 +548,6 @@ FFResult ShaderMaker4::DeInitGL()
 	return FF_SUCCESS;
 }
 
-
-void ShaderMaker4::BindTextures()
-{
-	// TODO : Scoped bindings do not work for some reason
-	if (bGlslSandbox) {
-		if (m_glTexture0) {
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, m_glTexture0);
-			m_shader.Set("tex0", 0);
-		}
-		if (m_glTexture1) {
-			glActiveTexture(GL_TEXTURE0 + 1);
-			glBindTexture(GL_TEXTURE_2D, m_glTexture1);
-			m_shader.Set("tex1", 1);
-		}
-		if (m_glTexture2) {
-			glActiveTexture(GL_TEXTURE0 + 2);
-			glBindTexture(GL_TEXTURE_2D, m_glTexture2);
-			m_shader.Set("tex2", 2);
-		}
-		if (m_glTexture3) {
-			glActiveTexture(GL_TEXTURE0 + 3);
-			glBindTexture(GL_TEXTURE_2D, m_glTexture3);
-			m_shader.Set("tex3", 3);
-		}
-	}
-	else {
-		if (m_glTexture0) {
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, m_glTexture0);
-			m_shader.Set("iChannel0", 0);
-		}
-		if (m_glTexture1) {
-			glActiveTexture(GL_TEXTURE0 + 1);
-			glBindTexture(GL_TEXTURE_2D, m_glTexture1);
-			m_shader.Set("iChannel1", 1);
-		}
-		if (m_glTexture2) {
-			glActiveTexture(GL_TEXTURE0 + 2);
-			glBindTexture(GL_TEXTURE_2D, m_glTexture2);
-			m_shader.Set("iChannel2", 2);
-		}
-		if (m_glTexture3) {
-			glActiveTexture(GL_TEXTURE0 + 3);
-			glBindTexture(GL_TEXTURE_2D, m_glTexture3);
-			m_shader.Set("iChannel3", 3);
-		}
-	}
-	glActiveTexture(GL_TEXTURE0);
-}
-
-void ShaderMaker4::UnbindTextures()
-{
-	if (m_glTexture3) {
-		glActiveTexture(GL_TEXTURE0 + 3);
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-	if (m_glTexture2) {
-		glActiveTexture(GL_TEXTURE0 + 2);
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-	if (m_glTexture3) {
-		glActiveTexture(GL_TEXTURE0 + 3);
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-	if (m_glTexture0) {
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-	glActiveTexture(GL_TEXTURE0);
-}
 
 
 void ShaderMaker4::SetDefaults() {

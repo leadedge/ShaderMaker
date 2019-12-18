@@ -34,8 +34,8 @@ IDC_IMAGEFILE3     RCDATA         IMAGEFILE3
 //
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 VS_VERSION_INFO VERSIONINFO
-    FILEVERSION     1,0,0,0
-    PRODUCTVERSION  1,0,0,0
+    FILEVERSION     2,0,0,0
+    PRODUCTVERSION  2,0,0,0
     FILEOS          VOS_NT
     FILETYPE        VFT_APP
     FILESUBTYPE     VFT2_UNKNOWN
@@ -48,12 +48,12 @@ VS_VERSION_INFO VERSIONINFO
         {
             VALUE "CompanyName", "Leading Edge Pty Ltd\0"
             VALUE "FileDescription", "ShaderMaker4\0"
-            VALUE "FileVersion", "1.000\0"
+            VALUE "FileVersion", "2.000\0"
             VALUE "InternalName", "ShaderMaker4\0"
             VALUE "LegalCopyright", "Copyright \251 Lynn Jarvis 2019\0"
             VALUE "OriginalFilename", "ShaderMaker4.dll\0"
             VALUE "ProductName", "ShaderMaker4\0"
-            VALUE "ProductVersion", "1.000\0"
+            VALUE "ProductVersion", "2.000\0"
         }
     }
     BLOCK "VarFileInfo"

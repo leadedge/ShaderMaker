@@ -1,11 +1,9 @@
 # ShaderMaker4
-
 A source code template to build FreeframeGL 2.1 plugins for Resolume from GLSL Sandbox or ShaderToy shaders.\
-During compilation, shader and image files are loaded into into resources and saved with the plugin. The plugin then accesses these resources when it loads. ShaderToy multiple buffers are not supported.
+During compilation, shader and image files are loaded into into resources and saved with the plugin. The plugin then accesses these resources when it loads. ShaderToy multiple buffers are not supported. This is a Windows project for Visual Studio 2017.
 
 ## How to install and build
-
-1) Download a zip file of this ffgl2.1 branch\
+1) Download a zip file of this master branch\
 2) Unzip it somewhere\
 3) Download the Resolume FFGL 2.1 repository zip file from the ffgl2.1 branch\
 https://github.com/resolume/ffgl/tree/ffgl2.1
@@ -20,21 +18,23 @@ https://github.com/resolume/ffgl/tree/ffgl2.1
 12) The resulting ShaderMaker4.dll plugin is in "..\binaries\x64\Release".
 
 ## How to use
-
 Copy the shader text file you require into the SHADERS folder, subfolder SOURCE or EFFECT.
 Copy any images that the shader will use to the TEXTURES folder.
 Edit "shaderfiles.h" to reference those files (see examples in "shaderfiles.h")..
 - Define "EFFECT_PLUGIN" for an effect that uses a texture from the host.
 - Define the RESOLUTION_WIDTH for a source plugin to balance performance with resolution.
-- Change the plugin Name, ID and information in ShaderMaker.cpp, build and rename the resulting dll.
+- Change the plugin Name, ID and information in ShaderMaker.cpp, build and rename the resulting dll.\
 Example shaders and details in "shaderfiles.h".
 
-##Credits
-Implementation by Lynn Jarvis http://spout.zeal.co/ - licence LGPL3
-OpenGL image loading library SOIL http://www.lonesock.net/soil.html - licence public domain.
+## FreeframeGL 1.6
+The orginal ShaderMaker project for FreeframeGL 1.6 is preserved un-changed in the ffgl1.6 branch. It is self-contained and will build 32 bit and 64 bit plugins for both Windows and OSX. These are not compatible with Resolume 7 bit are suitable for other host programs using FreeframeGL 1.6.
+
+## Credits
+Implementation by Lynn Jarvis http://spout.zeal.co/ - licence LGPL3\
+OpenGL image loading library SOIL http://www.lonesock.net/soil.html - licence public domain.\
 Shaders from the ShaderToy website, are licensed under Attribution - NonCommercial - ShareAlike 3.0 unless otherwise specified.
-(https://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US)
-GLSL Sandbox is MIT licence. No default licence is documented for submitted shaders but, where specifically indicated, the licencing terms of the author must be observed.
+(https://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US) \
+GLSL Sandbox is MIT licence. No default licence is documented for submitted shaders but, where specifically indicated, the licencing terms of the author must be observed.\
 Include a link and credit to the author in the shader source and in the plugin description or about field where possible. 
 
 

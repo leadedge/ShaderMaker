@@ -3,7 +3,7 @@ A source code template to build FreeframeGL 2.1 plugins for Resolume from GLSL S
 During compilation, shader and image files are loaded into into resources and saved with the plugin. The plugin then accesses these resources when it loads. ShaderToy multiple buffers are not supported. This is a Windows project for Visual Studio 2017.
 
 ## How to install and build
-1) Download a zip file of this master branch
+1) Download a zip file of this master branch or from the latest release
 2) Unzip it somewhere
 3) Download the Resolume FFGL 2.1 repository zip file from the ffgl2.1 branch
 https://github.com/resolume/ffgl/tree/ffgl2.1

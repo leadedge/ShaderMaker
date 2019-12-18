@@ -1,27 +1,40 @@
-# ShaderMaker
-A source code template to create FreeframeGL plugins from GLSL Sandbox and ShaderToy shaders.
+# ShaderMaker4
 
-For the shaders that you find useful with "ShaderLoader" and will use a lot,
-it is useful to have a dedicated FreeFrameGL plugin that does not not rely on a shader file.
+A source code template to build FreeframeGL 2.1 plugins for Resolume from GLSL Sandbox or ShaderToy shaders.\
+During compilation, shader and image files are loaded into into resources and saved with the plugin. The plugin then accesses these resources when it loads. ShaderToy multiple buffers are not supported.
 
-## Windows
-This is a Visual Studio C++ project that can make any number of them.
-Download everything and unzip into in any folder, open the VS2010 solution file with
-Visual Studio and change to "release", it should build OK as-is. More examples are in the source file.
+## How to install and build
 
-## Mac
-In build/osx there are both and XCode project and a makefile. In both cases, the resulting bundle will be created in
-Binaries/osx. 
+1) Download a zip file of this ffgl2.1 branch\
+2) Unzip it somewhere\
+3) Download the Resolume FFGL 2.1 repository zip file from the ffgl2.1 branch\
+https://github.com/resolume/ffgl/tree/ffgl2.1
+4) Unzip it somewhere
+5) Copy the folder SHADERMAKER4\source\plugins\ShaderMaker4 to the "..\source\plugins\" folder.
+6) Copy the two files in SHADERMAKER4\build\windows to the "..\build\windows" folder
+7) Open "..\build\windows\FFGLPlugins.sln" in Visual Studio 2017
+8) RH click on "sources" in the Solution Explorer and select "Add > Existing project"
+9) Browse to "..\build\windows" and select "ShaderMaker4.vcxproj"
+10) Change to "Release" and "x64" build
+11) RH click on the ShaderMaker4 project and "Build"
+12) The resulting ShaderMaker4.dll plugin is in "..\binaries\x64\Release".
 
 ## How to use
-To make your own shader plugin, all you do is copy/paste the shader code into the source file,
-change the plugin information and rename the resulting dll. There are some things to take note of, 
-but hopefully the code and documentation are clear enough.
 
-Refer to the documentation for further details.
+Copy the shader text file you require into the SHADERS folder, subfolder SOURCE or EFFECT.
+Copy any images that the shader will use to the TEXTURES folder.
+Edit "shaderfiles.h" to reference those files (see examples in "shaderfiles.h")..
+- Define "EFFECT_PLUGIN" for an effect that uses a texture from the host.
+- Define the RESOLUTION_WIDTH for a source plugin to balance performance with resolution.
+- Change the plugin Name, ID and information in ShaderMaker.cpp, build and rename the resulting dll.
+Example shaders and details in "shaderfiles.h".
 
-## Credits
-Implementation by Lynn Jarvis spout@zeal.co  
-MacOSX port by Amaury Hazan amaury@billaboop.com  
-The MacOSX port was supported by Coldcut/Ninja Tune as a contribution to the Visuals Community  
+##Credits
+Implementation by Lynn Jarvis http://spout.zeal.co/ - licence LGPL3
+OpenGL image loading library SOIL http://www.lonesock.net/soil.html - licence public domain.
+Shaders from the ShaderToy website, are licensed under Attribution - NonCommercial - ShareAlike 3.0 unless otherwise specified.
+(https://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US)
+GLSL Sandbox is MIT licence. No default licence is documented for submitted shaders but, where specifically indicated, the licencing terms of the author must be observed.
+Include a link and credit to the author in the shader source and in the plugin description or about field where possible. 
+
 

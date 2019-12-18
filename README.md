@@ -26,7 +26,7 @@ Edit "shaderfiles.h" to reference those files (see examples in "shaderfiles.h").
 Example shaders and details in "shaderfiles.h".
 
 ## FreeframeGL 1.6
-The orginal ShaderMaker project for FreeframeGL 1.6 is preserved un-changed in the ffgl1.6 branch. It is self-contained and will build 32 bit and 64 bit plugins for both Windows and OSX. These are not compatible with Resolume 7 bit are suitable for other host programs using FreeframeGL 1.6.
+The orginal ShaderMaker project for FreeframeGL 1.6 is preserved un-changed in the ffgl1.6 branch. It is self-contained and will build 32 bit and 64 bit plugins for both Windows and OSX. These are not compatible with Resolume 7 but are suitable for other host programs using FreeframeGL 1.6.
 
 ## Credits
 Implementation by Lynn Jarvis http://spout.zeal.co/ - licence LGPL3\

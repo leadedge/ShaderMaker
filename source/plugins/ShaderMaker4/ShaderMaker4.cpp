@@ -124,11 +124,13 @@ void main()
 ShaderMaker4::ShaderMaker4()
 {
 
+	/*
 	// Console window if you need it so that printf works
 	FILE* pCout;
 	AllocConsole();
 	freopen_s(&pCout, "CONOUT$", "w", stdout);
 	printf("ShaderMaker4\n");
+	*/
 
 	// Input properties allow for up to two textures for an effect
 	// For Resolume only one of these is used unless the plugin is a mix plugin

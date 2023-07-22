@@ -1,0 +1,19 @@
+-----Effects-----
+
+AddSubtract				RF01
+
+
+
+
+-----Mixers-----
+Add						RM01
+
+
+
+
+-----Sources-----
+Fireworks				OFPX
+Gradients               RS01
+Particles Example       RS02
+CustomThumbnail         RS03
+ShaderMaker4            SHM4

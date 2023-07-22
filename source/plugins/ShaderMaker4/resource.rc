@@ -1,0 +1,63 @@
+#include <windows.h>
+#include <commctrl.h>
+#include "resource.h"
+
+// Shaders
+#include "shaderfiles.h"
+
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+IDC_SHADERFILE     RCDATA         SHADERFILE
+
+#ifdef IMAGEFILE0
+IDC_IMAGEFILE0     RCDATA         IMAGEFILE0
+#endif
+
+#ifdef IMAGEFILE1
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+IDC_IMAGEFILE1     RCDATA         IMAGEFILE1
+#endif
+
+#ifdef IMAGEFILE2
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+IDC_IMAGEFILE2     RCDATA         IMAGEFILE2
+#endif
+
+#ifdef IMAGEFILE3
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+IDC_IMAGEFILE3     RCDATA         IMAGEFILE3
+#endif
+
+//
+// Version Information resources
+//
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+VS_VERSION_INFO VERSIONINFO
+    FILEVERSION     2,0,0,0
+    PRODUCTVERSION  2,0,0,0
+    FILEOS          VOS_NT
+    FILETYPE        VFT_APP
+    FILESUBTYPE     VFT2_UNKNOWN
+    FILEFLAGSMASK   VS_FF_PRERELEASE
+    FILEFLAGS       0
+{
+    BLOCK "StringFileInfo"
+    {
+        BLOCK "080904E4"
+        {
+            VALUE "CompanyName", "Leading Edge Pty Ltd\0"
+            VALUE "FileDescription", "ShaderMaker4\0"
+            VALUE "FileVersion", "2.000\0"
+            VALUE "InternalName", "ShaderMaker4\0"
+            VALUE "LegalCopyright", "Copyright \251 Lynn Jarvis 2019\0"
+            VALUE "OriginalFilename", "ShaderMaker4.dll\0"
+            VALUE "ProductName", "ShaderMaker4\0"
+            VALUE "ProductVersion", "2.000\0"
+        }
+    }
+    BLOCK "VarFileInfo"
+    {
+        VALUE "Translation", 0x0809, 0x04E4
+    }
+}

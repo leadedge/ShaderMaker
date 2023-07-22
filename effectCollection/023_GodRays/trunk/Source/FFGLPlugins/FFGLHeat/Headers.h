@@ -1,3 +1,0 @@
-
-#define STRINGIFY(A) #A
-
